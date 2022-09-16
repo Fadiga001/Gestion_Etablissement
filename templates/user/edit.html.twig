@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="fr">
+{% include 'home/head.html.twig' %}
+
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
+
+  {% include 'home/navbar.html.twig' %}
+ <div class="card border-info mb-4" style="max-width: 60rem; margin: auto;">
+        <div class="card-header">
+            <div class="row">
+
+                <div class="col-md-2">
+
+                        <a href="{{path('liste_users')}}" class="h2">
+                            <i class="fa fa-arrow-circle-left" aria-hidden="true"></i>
+                        </a>
+
+                </div>
+
+                <div class="col-md-6">
+                    <h3 class="h3">
+                         Modification des utilisateurs
+                    </h3>
+                </div>       
+            </div>  
+        </div>
+            <div class="card-body">
+
+                <div class="container w-58">
+                    {{ form_start(form) }}
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    
+                                    {{ form_row(form.typeUtilisateur) }}
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group mr-3">
+                                
+                                    {{ form_row(form.username) }}
+                                </div>
+                                <div class="form-group mr-3">
+                                
+                                    {{ form_row(form.nom) }}
+                                </div>
+                                <div class="form-group">
+                                
+                                {{ form_row(form.prenoms) }}
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                            
+                                {{ form_row(form.telephone) }}
+                            </div>
+                            <div class="form-group">
+                                
+                                {{ form_row(form.email) }}
+                            </div>
+                            <div class="form-group">
+                                
+                                {{ form_row(form.imageFile) }}
+                            </div>
+                           
+                        
+                        {{ form_end(form) }}
+                </div>
+
+
+                
+            </div>
+    </div>
+
+  
+
+  </div>
+</body>
+</html>
+
+{% include 'home/footer.html.twig' %}
+

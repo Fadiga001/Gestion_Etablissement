@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="fr">
+{% include 'home/head.html.twig' %}
+
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
+
+  {% include 'home/navbar.html.twig' %}
+
+  <div class="container">
+
+    {% for notice in app.flashes('notice') %}
+        <div class=" alert alert-danger">
+
+            {{ notice }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            
+        </div>
+        
+    {% endfor %}
+
+
+   <div class="card border-info" style="max-width: 80rem;">
+        <div class="card-header">
+            <div class="row">
+                <div class="col-md-4">
+                    <h3 class="h3">
+                         Gestion des utilisateurs
+                    </h3>
+                </div>
+                <div class="col-md-3">
+                     <a href="{{ path('app_register')}}" class="btn btn-warning">Ajouter un nouveau utilisateur</a>
+                </div>
+            </div>
+           
+            
+        </div>
+            <div class="card-body">
+
+                 <table class="table">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Type Utilisateur</th>
+                        <th scope="col">Login</th>
+                        <th scope="col">Nom</th>
+                        <th scope="col">Prénoms</th>
+                        <th scope="col">E-mail</th>
+                        <th scope="col">Téléphone</th>
+                        <th scope="col">Photo</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    {% for user in users %}
+
+                        <tr>
+                            <th>{{ user.typeUtilisateur}}</th>
+                            <td>{{ user.username}}</td>
+                            <td>{{ user.nom}}</td>
+                            <td>{{ user.prenoms}}</td>
+                            <td>{{ user.email}}</td>
+                            <td>{{ user.telephone}}</td>
+                            <td> <img src="{{ vich_uploader_asset(user, 'imageFile') }}" height="35" width="35"></td>
+                            <td>
+                                 <a class="btn btn-primary" href="{{ path('user_edit', {'username': user.username})}}">
+                                    <i class="fa fa-pencil-square" aria-hidden="true"></i>
+                                </a>
+
+                                <a class="btn btn-danger" href="#" data-toggle="modal" data-target="#exampleModal">
+                                       <i class="fa fa-trash" aria-hidden="true"></i>
+                                </a>
+                                    <!-- Modal -->
+                                    <div class="modal fade border-danger" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title text-success" id="exampleModalLabel">SUPPRESSION</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    Etes-vous sure de vouloir supprimer cet utilisateur ?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    
+                                                    <a class="btn btn-danger" href="{{ path('user_delete', {'username': user.username} )}}">
+                                                       Oui
+                                                    </a>
+
+                                                    <a href="{{ path('liste_users')}}">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Non</button>
+                                                    </a>
+
+                                                
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                                                
+                            </td>
+                        </tr>
+                
+                    {% endfor %}
+                     
+                </tbody>
+            </table>
+
+                
+            </div>
+    </div>
+
+
+   
+  </div>
+
+  
+
+  </div>
+</body>
+</html>
+
+{% include 'home/footer.html.twig' %}
+

@@ -1,0 +1,15 @@
+vich_uploader:
+    db_driver: orm
+
+    metadata:
+        type: attribute
+
+
+    mappings:
+        userImage:
+            uri_prefix: /images/img
+            upload_destination: '%kernel.project_dir%/public/images/img'
+  
+
+       
+           
