@@ -1,0 +1,96 @@
+ <div class="container w-60 {{page}} ">
+
+    {% if page == 'creer' %}
+                               {{ form_start(form) }}
+                                    
+                                    <div class="form-row ">
+                                        <div class="form-group mr-5">
+                                            {{ form_row(form.typeUtilisateur) }}
+                                        </div>
+                                        <div class="form-group mr-5">
+                                           {{ form_row(form.username) }}
+                                        </div>
+                                    </div>
+                                
+                                    <div class="form-row">
+                                        <div class="form-group mr-5">
+                                            {{ form_row(form.nom) }}
+                                        </div>
+                                        <div class="form-group mr-5">
+                                            {{ form_row(form.prenoms) }}
+                                        </div>
+                                        
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                         {{ form_row(form.email) }}
+                                    </div>
+
+                                    <div class="form-group">
+                                        {{ form_row(form.telephone) }}
+                                    </div>
+
+                                    <div class="form-group">
+                                        {{ form_row(form.plainPassword, {
+                                            label: 'Password'
+                                        }) }}
+                                    </div>
+
+                                    <div class="form-group">
+                                        {{ form_row(form.imageFile) }}
+                                    </div>
+                                    <div class="form-group">
+                                        {{ form_row(form.userRoles) }}
+                                    </div>
+                                    <div class="form-submit">
+
+                                       {% include 'configuration/btnTest.html.twig' %}
+
+                                    </div>
+                             {{ form_end(form) }}
+
+                    {% else %}
+
+                               {{ form_start(form) }}
+                                    
+                                    <div class="form-row ">
+                                        <div class="form-group mr-5">
+                                            {{ form_row(form.typeUtilisateur) }}
+                                        </div>
+                                        <div class="form-group mr-5">
+                                           {{ form_row(form.username) }}
+                                        </div>
+                                    </div>
+                                
+                                    <div class="form-row">
+                                        <div class="form-group mr-5">
+                                            {{ form_row(form.nom) }}
+                                        </div>
+                                        <div class="form-group mr-5">
+                                            {{ form_row(form.prenoms) }}
+                                        </div>
+                                        
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                         {{ form_row(form.email) }}
+                                    </div>
+
+                                    <div class="form-group">
+                                        {{ form_row(form.telephone) }}
+                                    </div>
+
+                                    <div class="form-group">
+                                        {{ form_row(form.userRoles) }}
+                                    </div>
+
+                                    <div class="form-submit">
+
+                                       {% include 'configuration/btnTest.html.twig' %}
+
+                                    </div>
+                             {{ form_end(form) }}     
+
+                {% endif %}                    
+
+                    </div>

@@ -1,0 +1,76 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Se connecter | Gestion des notes BTS/DTS{% endblock %}
+
+{% block head %}
+
+
+{% endblock %}
+
+
+{% block body %}
+
+<html lang="fr">
+{% include 'home/head.html.twig' %}
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
+
+  {% include 'home/navbar.html.twig' %}
+
+
+   <div class="card border-info mb-5" style="max-width: 40rem; margin: auto;">
+        <div class="card-header">
+              {% include 'configuration/btnRetour.html.twig' with {
+                    'path': 'liste_typeMatiere', 
+                    'text_header': 'MODIFICATION D\'UN TYPE DE MATIERE '
+                    
+            
+            } %}
+           
+        </div>
+            <div class="card-body">
+
+                <div class="container w-50">
+                    {{ form_start(form) }}
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    
+                                    {{ form_row(form.codeTypeMatiere) }}
+                                </div>
+                            </div>
+                            
+
+                            <div class="form-group">
+
+                                <div id="datepicker">
+                                        {{ form_row(form.denomination) }}
+                                </div>
+                            
+                            
+                            </div>
+                           
+                            <div class="form-submit">
+                           
+                                 <button type="submit" class="btn btn-primary" data-dismiss="modal">Modifier</button>
+                                  
+                            </div>
+                        
+                        {{ form_end(form) }}
+                </div>
+
+
+                
+            </div>
+    </div>
+
+
+</div>
+  
+
+</body>
+{% include 'home/footer.html.twig' %}
+</html>
+    
+{% endblock %}
+

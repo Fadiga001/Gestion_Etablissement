@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Se connecter | Gestion des notes BTS/DTS{% endblock %}
+
+{% block head %}
+
+
+{% endblock %}
+
+
+{% block body %}
+
+<html lang="fr">
+{% include 'home/head.html.twig' %}
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
+
+  {% include 'home/navbar.html.twig' %}
+
+
+   <div class="card border-info mb-3" style="max-width: 40rem; margin: auto;">
+        <div class="card-header">
+            {% include 'configuration/btnRetour.html.twig' with {
+                    'path': 'liste_prof', 
+                    'text_header': 'MODIFICATION DES INFOS D\'UN PROFESSEUR '
+                    
+            
+            } %}
+        </div>
+            <div class="card-body">
+                {% include 'professeurs/_formProf.html.twig' with {
+                
+                'btn_submit': 'Modifier', 
+                'Text_Modifier': 'Modification les informations d\'un professeur',
+                'MBody': 'Voulez-vous modifier les informations de ce professeur?',
+                'path': "edit_prof",
+                'param': {'nom': prof.nom }
+                
+                }%}
+            </div>
+    </div>
+
+
+</div>
+  
+
+</body>
+{% include 'home/footer.html.twig' %}
+</html>
+    
+{% endblock %}
+

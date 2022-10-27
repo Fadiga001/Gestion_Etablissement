@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="fr">
+{% include 'home/head.html.twig' %}
+
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
+
+  {% include 'home/navbar.html.twig' %}
+
+   <div class="py-3 px-5">
+
+       {% include 'configuration/messageFlash.html.twig' %}
+
+
+   <div class="card border-info" >
+        <div class="card-header">
+            <div class="row">
+                    <h2 class="h3">
+                         AJOUTER UNE NOTE DE GROUPE
+                    </h2>
+            </div>    
+        </div>
+            <div class="card-body">
+
+                <div class="row alert alert-info">
+
+                    <h4 class="text-light">Pour ajouter une note grouppée, choisissez l'année scolaire et la classe</h4>
+                </div>
+               
+                <div class="row">
+                   
+                        {{form_start(form)}}
+                        <div class="form-row">
+                                    <div class="form-group mr-3">
+                                        
+                                        {{ form_widget(form.AnneeScolaire) }}
+                                    </div>
+
+                                    <div class="form-group mr-3">
+
+                                        {{ form_widget(form.codeClasse) }}
+                                
+                                    </div>
+
+                                <div class="form-submit">
+                                    <button type="submit" class="btn btn-primary"> Valider </button>
+                                </div>
+
+                        </div>
+    
+                        {{form_end(form)}}
+                </div>
+                  
+
+                {% if app.request.method == 'POST' %}
+
+                    <div class="row mb-2">
+                        <div class="col-md-6">
+                            &nbsp;
+                        </div>
+                        <div class="col-md-6 text-right">
+                            <a href="{{ path('noteGroupee_parMatiere', {'idClasse': classe.id, 'annee': annee.id})}}" class="text-light btn btn-warning">
+                                Ajouter une Note de Groupe
+                            </a>
+                        </div>
+                        
+                    </div>
+
+                <div class="row">
+                    <table class="table table-hover">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">MATRICULE</th>
+                                <th scope="col">NOM</th>
+                                <th scope="col">PRENOMS</th>
+                                <th scope="col">SEXE</th>
+                                <th scope="col">ORIENTE</th>
+                                <th scope="col">CLASSE</th>
+                                <th class="ms-5">Date de naissance</th>
+            
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            {% for etudiants in etudiants %}
+
+                                <tr>
+                                    <th>{{ etudiants.etud.matricule | upper}}</th>
+                                    <td>{{ etudiants.etud.nom | upper}}</td>
+                                    <td>{{ etudiants.etud.prenoms | upper}}</td>
+                                    <td>{{ etudiants.etud.sexe | upper}}</td>
+                                    <td>{{ etudiants.etud.status | upper}}</td>
+                                    <td>{{ etudiants.etud.classe | upper}} {{ etudiants.etud.filieres | upper}}</td>
+
+                                
+                                    <td class="ms-4">
+                                       {{etudiants.etud.dateNaissance|date('d-m-Y')}}
+                                    </td>
+                                </tr>
+                        
+                            {% endfor %}
+                            
+
+                            
+                            
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
+
+           
+            </div>
+
+    </div>
+
+  </div>
+
+  
+
+  </div>
+</body>
+</html>
+
+{% include 'home/footer.html.twig' %}
+
+
+

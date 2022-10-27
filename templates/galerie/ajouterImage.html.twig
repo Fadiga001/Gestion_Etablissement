@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter une image | Gestion des notes BTS/DTS{% endblock %}
+
+{% block head %}
+
+
+{% endblock %}
+
+
+{% block body %}
+
+<html lang="fr">
+{% include 'home/head.html.twig' %}
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
+
+  {% include 'home/navbar.html.twig' %}
+
+
+   <div class="card border-info mt-5" style="max-width: 40rem; margin: auto;">
+        <div class="card-header">
+             {% include 'configuration/btnRetour.html.twig' with {
+                    'path': 'liste_photo', 
+                    'text_header': 'ENREGISTRER UNE NOUVELLE IMAGE '
+                    
+            
+            } %}
+        </div>
+            <div class="card-body">
+                 {% include 'galerie/_formGalerie.html.twig' with {
+
+                    'btn_submit': 'Valider',
+                     'Text_Valider': 'Enregistrer une nouvelle image',
+                     'VBody': 'Voulez-vous enregistrer une nouvelle image?',
+                     'path': 'liste_photo',
+                     
+                     
+                     }%}
+            </div>
+    </div>
+
+
+</div>
+  
+
+</body>
+{% include 'home/footer.html.twig' %}
+</html>
+    
+{% endblock %}
+

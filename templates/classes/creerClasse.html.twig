@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Creation de Filière | Gestion des notes BTS/DTS{% endblock %}
+
+{% block head %}
+
+
+{% endblock %}
+
+
+{% block body %}
+
+<html lang="fr">
+{% include 'home/head.html.twig' %}
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
+
+  {% include 'home/navbar.html.twig' %}
+
+
+   <div class="card border-info mb-5" style="max-width: 40rem; margin: auto;">
+        <div class="card-header">
+
+            {% include 'configuration/btnRetour.html.twig' with {
+                    'path': 'liste_classes', 
+                    'text_header': 'CREATION D\'UNE CLASSE '
+                    
+            
+            } %}
+
+        </div>
+            <div class="card-body">
+
+                {% include 'classes/_formClasse.html.twig' with {
+
+                    'btn_submit': 'Valider',
+                     'Text_Valider': 'Creation d\'une nouvelle classe',
+                     'VBody': 'Voulez-vous créer cette classe?',
+                     'path': 'liste_classes',
+                     
+                     
+                     }
+                
+                 %}
+            </div>
+    </div>
+
+
+</div>
+  
+
+</body>
+{% include 'home/footer.html.twig' %}
+</html>
+    
+{% endblock %}
+

@@ -1,0 +1,37 @@
+<div class="container w-50">
+                    {{ form_start(form) }}
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    
+                                    {{ form_row(form.nom) }}
+                                </div>
+                            </div>
+                            
+
+                            <div class="form-group">
+
+                                <div id="datepicker">
+                                        {{ form_row(form.matricule) }}
+                                </div>
+                            
+                            
+                            </div>
+                            
+                            <div class="form-group">
+                                
+                                {{ form_row(form.statut) }}
+                            </div>
+
+                            <div class="form-group">
+                                
+                                {{ form_row(form.imageFile) }}
+                            </div>
+                            <div class="form-submit">
+                           
+                                {% include 'configuration/btnTest.html.twig' %}
+                                   
+                            </div>
+                        
+                        {{ form_end(form) }}
+                </div>

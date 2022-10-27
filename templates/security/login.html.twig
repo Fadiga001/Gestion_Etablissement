@@ -1,167 +1,95 @@
-{% extends 'base.html.twig' %}
-
-{% block title %}Se connecter | Gestion des notes BTS/DTS{% endblock %}
-
-{% block head %}
-
+<!DOCTYPE html>
+<html lang="en" >
 <head>
-    <meta charset="UTF-8">
-    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'>
-    <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css'>
-    <link rel="stylesheet" href="{{ asset ('dist/css/style.css') }}">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="author" content="Ismael Jr C.">
-	<link rel="stylesheets" href="{{ asset('js/app.js')}}">
+  <meta charset="UTF-8">
+  <title>Connexion|AGITEL-FORMATION</title>
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'>
+	<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css'>
+	<link rel="stylesheet" href="./style.css">
+	<link rel="stylesheet" href="{{ asset ('dist/css/style.css') }}">
 
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="author" content="Ismael Jr C.">
 	<style>
+		body{
+			margin: 0;
+			padding: 0;
+			height: 100%;
+			width: 100%;
+			background-image: url(dist/img/img1.jpeg);
+			background-size: cover;
+			background-position: center;
+			background-repeat: no-repeat;
+			transition: 5s;
 
-	.bg-img{
-	height: 978px;
-	background-image: url("dist/img/b4.jpg");
-	position: relative;
-	background-size: contain;
-	border: 2px solid darkgray;
-	color: #000; text-shadow: 1px 1px 0 #fff;
-
-	
-}
-
-.back-frem{
-	width: 35rem;
-	height: 6rem;
-	background: blue;
-	border-radius: 23px;
-	position: fixed;
-	bottom: 10px;
-	display: flex;
-	justify-content: space-around;
-	align-items: center;
-}
-
-.back-frem .back-chang{
-	width: 55px;
-	height: 50px;
-	background: black;
-	overflow: hidden;
-	cursor: pointer;
-	border-radius: 23px;
-}
-
-.back-chang{
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
-}
-	
-	</style>
-	
-
-</head>
-
-{% endblock %}
-
-
-
-{% block body %}
-
-<div class="bg-img" >
-		<!-- Main Content -->
-
-		<div class="back-frem">
-			
-			<div class="back-chang" onclick="back1()"><img src="{{ asset ('dist/img/back.jpg') }}"/></div>
-			<div class="back-chang" onclick="back2()"><img src="{{ asset ('dist/img/b4.jpg') }}"/></div>
-			<div class="back-chang" onclick="back3()"><img src="{{ asset ('dist/img/b1.jpg') }}"/></div>
-			<div class="back-chang" onclick="back4()"><img src="{{ asset ('dist/img/b2.jpg') }}"/></div>
-			<div class="back-chang" onclick="back5()"><img src="{{ asset ('dist/img/b3.jpg') }}"/></div>
-		</div>
+			animation-name: animate;
+			animation-direction: alternate-reverse;
+			animation-duration: 30s;
+			animation-fill-mode: forwards;
+			animation-iteration-count: infinite;
+			animation-play-state: running;
+			animation-timing-function: ease-in-out;
+		}
 		
-		<div class="container-fluide">
 
-			<div class="row main-content bg-success text-center">
-				<div class="col-md-4 text-center company__info">
-					<span class="company__logo"><h2><span class=""><img src="{{ asset ('dist/img/agitel3.png') }}" height="140" width="200"/></span></h2></span>
-					<h4 class="company_title">GESTION DES NOTES<br> BTS / DTS</h4>
-				</div>
-				<div class="col-md-8 col-xs-12 col-sm-12 login_form ">
-					<div class="container-fluid">
-						<div class="row">
-							<h2>AGITEL - FORMATION <span class=""><img src="{{ asset ('dist/img/logo-tete.jpg') }}" height="80" width="80"/></span></h2>
-						</div>
-
-                        <div class="row">
-                            {% if error %}
-                                <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-                            {% endif %}
-
-                            {% if app.user %}
-                                <div class="mb-3">
-                                    You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
-                                </div>
-                            {% endif %}
-                        </div>
-
-						<div class="row">
-							<form control="" class="form-group" form method="post">
-								<div class="row">
-                                    <input type="text" value="{{ last_username }}" name="username" id="inputUsername" class="form-control" placeholder="Type Utilisateur" autocomplete="username" required autofocus>
-								</div>
-								<div class="row">
-
-                                    <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Mot de passe" autocomplete="current-password" required>
-
-                                    <input type="hidden" name="_csrf_token"
-                                        value="{{ csrf_token('authenticate') }}"
-                                    >
-
-								</div>
-								
-								<div class="row">
-
-									<div class="col-md-6" >
-										<button class="bouton " type="submit" height="120%">
-											 Se connecter
-										</button>
-									</div>
-
-									<div class="col-md-6" >
-										<button class="bouton" id="fermer" type="button">
-											 Quitter
-										</button>
-									</div>									 
-								</div>
-							</form>
-						</div>
-						
+	</style>
+</head>
+<body>
+	<!-- Main Content -->
+	<div class="container-fluid">
+		<div class="row main-content bg-success text-center">
+			<div class="col-md-4 text-center company__info">
+				<span class="company__logo"> <img src=" dist/img/agitel3.png" alt="" height="200" width="250"> </span>
+				<h4 class="company_title">Gestion Etudiants <br> BTS & DTS | AGITEL FORMATION</h4>
+			</div>
+			<div class="col-md-8 col-xs-12 col-sm-12 login_form ">
+				<div class="container-fluid">
+					<div class="row">
+						<h2 class="h3 mb-3 font-weight-normal">AGITEL - FORMATION  <img class="direct-chat-img" src="dist/img/logo-tete.jpg" alt="" height="100" width="100"></h2>
 					</div>
+
+					<div class="row">
+						{% if error %}
+							<div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+						{% endif %}
+				
+						{% if app.user %}
+							<div class="mb-3">
+								You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
+							</div>
+						{% endif %}
+					</div>
+
+					<div class="row">
+						<form method="post" control="" class="form-group">
+							<div class="row">
+								<input type="text" value="{{ last_username }}" name="username" id="inputUsername" class="form-control" autocomplete="username" required autofocus placeholder="username">
+							</div>
+							<div class="row">
+								<!-- <span class="fa fa-lock"></span> -->
+								<input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required placeholder="Mot de passe">
+
+								<input type="hidden" name="_csrf_token"
+									value="{{ csrf_token('authenticate') }}"
+								>
+							</div>
+							<div class="row">
+								<button class="bouton" type="submit">
+									Se connecter
+								</button>
+							</div>
+						</form>
+					</div>
+					
 				</div>
 			</div>
 		</div>
-
-
 	</div>
-
-	<script>
-		function back1(){
-			document.querySelector(".bg-img").style.background = " url('{{ asset ('dist/img/back.jpg') }}') center center / cover ";
-		}
-		function back2(){
-			document.querySelector(".bg-img").style.background = " url('{{ asset ('dist/img/b4.jpg') }}') center center / cover ";
-		}
-		function back3(){
-			document.querySelector(".bg-img").style.background = " url('{{ asset ('dist/img/b1.jpg') }}') center center / cover ";
-		}
-		function back4(){
-			document.querySelector(".bg-img").style.background = " url('{{ asset ('dist/img/b2.jpg') }}') center center / cover ";
-		}
-		function back5(){
-			document.querySelector(".bg-img").style.background = " url('{{ asset ('dist/img/b3.jpg') }}') center center / cover ";
-		}
-
-
-	</script>
-
-{% endblock %}
-
-
+	<!-- Footer -->
+	
+</body>
+<!-- partial -->
+  
+</body>
+</html>

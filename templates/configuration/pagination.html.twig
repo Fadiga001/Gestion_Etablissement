@@ -1,0 +1,10 @@
+<div class="row mt-5">
+    
+    <div class="col-md-6  d-flex align-items-center justify-content-center">
+       <h6 class="btn btn-info">Total d'éléments:  {{ pagination.getTotalItemCount }}</h6>
+    </div>
+
+    <div class="col-md-6 text-right d-flex align-items-right justify-content-center">
+        {{ knp_pagination_render( classe , 'configuration/templatePagination.html.twig') }}
+    </div>
+</div>

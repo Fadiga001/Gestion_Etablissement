@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier un étudiant | Gestion des notes BTS/DTS{% endblock %}
+
+{% block head %}
+
+
+{% endblock %}
+
+
+{% block body %}
+
+<html lang="fr">
+
+{% include 'home/head.html.twig' %}
+
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
+
+  {% include 'home/navbar.html.twig' %}
+
+
+   <div class="card border-info mb-5" style="max-width: 80rem; margin: auto;">
+        <div class="card-header">
+            <div class="row">
+                <div class="col-md-2">
+                    <a href="{{path('details_etudiant', {'id': etudiant.id })}}" class="h2">
+                        <i class="fa fa-arrow-circle-left" aria-hidden="true"></i>
+                    </a>
+                </div>
+                <div class="col-md-6">
+                    <h3 class="h3">
+                         MODIFICATION DES INFORMATIONS DES ETUDIANTS
+                    </h3>
+                </div>       
+            </div>  
+        </div>
+            <div class="card-body">
+                   {% include 'etudiant/_formEtudiant.html.twig' with {
+                
+                    'btn_submit': 'Modifier', 
+                    'Text_Modifier': 'Modification des informations des étudiants',
+                    'MBody': 'Voulez-vous modifier les informations de cet étudiant?',
+                    'path': "edit_etudiant",
+                    'param': {'id': etudiant.id }
+                    
+                    } %}      
+            </div>    
+    </div>
+
+
+</div>
+  
+
+</body>
+{% include 'home/footer.html.twig' %}
+</html>
+    
+{% endblock %}
+
+

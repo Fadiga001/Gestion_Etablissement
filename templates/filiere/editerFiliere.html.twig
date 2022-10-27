@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modification de filière | Gestion des notes BTS/DTS{% endblock %}
+
+{% block head %}
+
+
+{% endblock %}
+
+
+{% block body %}
+
+<html lang="fr">
+{% include 'home/head.html.twig' %}
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
+
+  {% include 'home/navbar.html.twig' %}
+
+
+   <div class="card border-info mb-5" style="max-width: 40rem; margin: auto;">
+        <div class="card-header">
+             {% include 'configuration/btnRetour.html.twig' with {
+                    'path': 'liste_classes', 
+                    'text_header': 'MODIFICATION D\'UNE FILIERE '
+                    
+            
+            } %}
+             
+        </div>
+            <div class="card-body">
+                 {% include 'classes/_formClasse.html.twig' with {
+                
+                    'btn_submit': 'Modifier', 
+                    'Text_Modifier': 'Modification d\'une filière',
+                    'MBody': 'Voulez-vous modifier cette filière?',
+                    'path': "liste_filiere",
+                    'param': {'denomination': filiere.denomination }
+                
+                } %}      
+            </div>
+    </div>
+
+
+</div>
+  
+
+</body>
+{% include 'home/footer.html.twig' %}
+</html>
+    
+{% endblock %}
+

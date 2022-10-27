@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="fr">
+{% include 'home/head.html.twig' %}
+
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
+
+  {% include 'home/navbar.html.twig' %}
+
+   <div class="container">
+
+       {% include 'configuration/messageFlash.html.twig' %}
+
+
+   <div class="card border-info" style="max-width: 80rem;">
+        <div class="card-header">
+            <div class="row">
+                <div class="col-md-4">
+                    <h3 class="h3">
+                         GESTIONS DES IMAGES
+                    </h3>
+                </div>
+                <div class="col-md-3">
+                     <a href="{{ path('ajouter_image')}}" class="btn btn-warning">Ajouter une image</a>
+                </div>
+            </div>
+           
+            
+        </div>
+            <div class="card-body">
+
+                 <table class="table">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Titre de l'image</th>
+                        <th scope="col">Image</th>
+                        <th scope="col">Actions</th>
+    
+                    </tr>
+                </thead>
+                <tbody>
+
+                     {% for galeries in galeries %}
+
+                        <tr>
+                            <th>{{ galeries.title}}</th>
+                            <td><img src="{{ vich_uploader_asset(galeries, 'imageFile') }}" height="35" width="35"></td>
+          
+                            <td>
+                                 <a class="btn btn-primary" href="{{ path('editer_image', {'id': galeries.id} )}}">
+                                    <i class="fa fa-pencil-square" aria-hidden="true"></i>
+                                </a>
+
+                               {% include 'configuration/btnDelete.html.twig' with {
+                                    'btnDelete': 'fa fa-trash' ,
+                                    'Text_Delete': 'SUPPRESSION',
+                                    'SBody': 'Voulez-vous supprimer cette image?',
+                                    'path': "delete_image",
+                                    'param': {'id': galeries.id },
+                                    'paths': 'liste_photo'
+
+                               }%}
+
+                            </td>
+                        </tr>
+                
+                    {% endfor %}
+                     
+
+                    
+                     
+                </tbody>
+            </table>
+
+                
+            </div>
+    </div>
+
+
+   
+  </div>
+
+  
+
+  </div>
+</body>
+</html>
+
+{% include 'home/footer.html.twig' %}
+
+
+

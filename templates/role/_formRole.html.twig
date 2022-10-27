@@ -1,0 +1,19 @@
+
+<div class="container w-50">
+                    {{ form_start(form) }}
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    
+                                    {{ form_row(form.title) }}
+                                </div>
+                            </div>
+
+                            <div class="form-submit">
+
+                                {% include 'configuration/btnTest.html.twig' %}
+                                
+                            </div>
+                        
+                        {{ form_end(form) }}
+                </div>

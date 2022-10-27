@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="fr">
+{% include 'home/head.html.twig' %}
+
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
+
+  {% include 'home/navbar.html.twig' %}
+
+   <div class="container">
+
+       {% include 'configuration/messageFlash.html.twig' %}
+
+
+   <div class="card" >
+        <div class="card-header">
+            {% include 'configuration/btnRetour.html.twig' with {
+                'path': 'liste_classes',
+                'text_header': 'GESTION DES CLASSES'
+                } %}
+           
+            
+        </div>
+        <div class="card-body">
+            <div class="row">
+
+                {% for classe in classe %}
+
+                    <div class="col-md-3">
+
+                        <div class="card border-info mb-3 text-center" style="max-width: 13rem; height: 17rem;">
+                            <div class="card-header alert alert-primary">
+                                <img src="{{ asset('dist/img/salle.jpg') }}" height="70" width="70" class="img-circle mx-auto ">
+                            </div>
+                            <div class="card-body">
+                                <h4 class="card-title">{{ classe.denomination }} {{ classe.filiere }}</h4>
+                                <p class="card-text">
+                                    <a class="btn btn-warning mt-3 text-light" href="{{ path('details_classes', {'id':  classe.id})}}">
+                                        Ouvrir <i class="fa fa-folder-open-o" aria-hidden="true"></i>
+                                    </a>
+                                </p>
+                            </div>
+                        </div>
+                    
+                    </div>
+
+                {% endfor %}
+
+            </div>
+                
+        </div>
+    </div>
+
+
+   
+  </div>
+
+  
+
+  </div>
+</body>
+</html>
+
+{% include 'home/footer.html.twig' %}
+
+
+
+
+

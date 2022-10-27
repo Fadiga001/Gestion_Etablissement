@@ -2,7 +2,9 @@
 
 namespace App\Form;
 
+use App\Entity\Role;
 use App\Entity\User;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -28,34 +30,42 @@ class RegistrationFormType extends AbstractType
             ]
             ];
     }
+     
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('username', TextType::class, $this->configForm("Identifiant", "group-form", "Identifiant"))
-            ->add('typeUtilisateur', TextType::class, $this->configForm("Type d'utilisateur", "group-form", "Type Utilisateur"))
-            ->add('nom', TextType::class, $this->configForm("Nom", "group-form", "Nom"))
-            ->add('prenoms', TextType::class, $this->configForm("Prénoms", "group-form", "Prénoms"))
-            ->add('telephone', TextType::class, $this->configForm("Téléphone", "group-form", "+225 "))
-            ->add('email', EmailType::class, $this->configForm("E-mail", "group-form", "E-mail"))
-            ->add('imageFile', VichImageType::class, $this->configForm("Photo", "group-form", "Photo"))
-           
+            ->add('username', TextType::class, $this->configForm("Username", "form-group", "Username"))
+            ->add('typeUtilisateur', TextType::class, $this->configForm("Type Utilisateur", "form-group", "Type Utilisateur"))
+            ->add('nom', TextType::class, $this->configForm("Nom", "form", "Nom"))
+            ->add('prenoms', TextType::class, $this->configForm("Prénoms", "form-group", "Prénoms"))
+            ->add('telephone', TextType::class, $this->configForm("Téléphone", "form-group", "+225 "))
+            ->add('email', EmailType::class, $this->configForm("E-mail", "form-group", "E-mail"))
+            ->add('imageFile', VichImageType::class, $this->configForm("Photo", "form-group", "Choisissez une photo"))
+            ->add('userRoles', EntityType::class, [
+                'label'=>'Roles',
+                'class'=> Role::class,
+                'choice_label'=>'title',
+                'expanded'=> true,
+                'multiple'=>true,
+                'attr'=>[
+                    'class'=>'form-select',
+                    
+                ]
+            ])
             ->add('plainPassword', PasswordType::class, [
                 // instead of being set onto the object directly,
                 // this is read and encoded in the controller
                 'mapped' => false,
                 'attr' => [
                     'autocomplete' => 'new-password',
-                    'class'=>'group-form',
-                    'placeholder'=> 'Mot de passe'
+                    'placeholder'=>'Mot de passe'
                 ],
-                'label'=> 'Mot de passe',
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter a password',
+                        'message' => 'Veuillez entrez un mot de passe svp ',
                     ]),
                     new Length([
                         'min' => 6,
-                        'minMessage' => 'Your password should be at least {{ limit }} characters',
                         // max length allowed by Symfony for security reasons
                         'max' => 4096,
                     ]),

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="fr">
+{% include 'home/head.html.twig' %}
+
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
+
+  {% include 'home/navbar.html.twig' %}
+
+   <div class="container">
+
+       {% include 'configuration/messageFlash.html.twig' %}
+
+
+   <div class="card border-info" style="max-width: 80rem;">
+        <div class="card-header">
+            <div class="row">
+                <div class="col-md-6">
+                    <h3 class="h3">
+                         GESTIONS DES PROFESSEURS
+                    </h3>
+                </div>
+                <div class="col-md-3">
+                     <a href="{{ path('creer_prof')}}" class="btn btn-warning">Enregistrer un professeur</a>
+                </div>
+            </div>
+           
+            
+        </div>
+            <div class="card-body">
+
+                 <table class="table">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Nom et Prénoms</th>
+                        <th scope="col">Matricule</th>
+                        <th scope="col">Photo</th>
+                        <th scope="col">Statut</th>
+                        <th scope="col">Actions</th>
+    
+                    </tr>
+                </thead>
+                <tbody>
+
+                     {% for profs in prof %}
+
+                        <tr>
+                            <th>{{ profs.nom}}</th>
+                            <td>{{ profs.matricule }}</td>
+                            <td><img src="{{ vich_uploader_asset(profs, 'imageFile') }}" height="35" width="35"></td>
+                            <td>{{ profs.statut }}</td>
+          
+                            <td>
+                                 <a class="btn btn-primary" href="{{ path('edit_prof', {'nom': profs.nom} )}}">
+                                    <i class="fa fa-pencil-square" aria-hidden="true"></i>
+                                </a>
+
+                               {% include 'configuration/btnDelete.html.twig' with {
+                                    'btnDelete': 'fa fa-trash' ,
+                                    'Text_Delete': 'SUPPRESSION',
+                                    'SBody': 'Voulez-vous supprimer ce professeur?',
+                                    'path': "delete_prof",
+                                    'param': {'nom': profs.nom },
+                                    'paths': 'liste_prof'
+
+                               }%}
+
+                            </td>
+                        </tr>
+                
+                    {% endfor %}
+                     
+
+                    
+                     
+                </tbody>
+            </table>
+
+                
+            </div>
+    </div>
+
+
+   
+  </div>
+
+  
+
+  </div>
+</body>
+</html>
+
+{% include 'home/footer.html.twig' %}
+
+
+

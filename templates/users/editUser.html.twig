@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Se connecter | Gestion des notes BTS/DTS{% endblock %}
+
+{% block head %}
+
+
+{% endblock %}
+
+
+{% block body %}
+
+<html lang="fr">
+{% include 'home/head.html.twig' %}
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
+
+  {% include 'home/navbar.html.twig' %}
+
+
+   <div class="card border-info mb-3" style="max-width: 40rem; margin: auto;">
+        <div class="card-header">
+            {% include 'configuration/btnRetour.html.twig' with {
+                    'path': 'liste_users', 
+                    'text_header': 'MODIFICATION DES INFOS D\'UN UTILISATEUR '
+                    
+            
+            } %}
+        </div>
+            <div class="card-body">
+                {% include 'users/_formUser.html.twig' with {
+                
+                'btn_submit': 'Modifier', 
+                'Text_Modifier': 'Modification les informations d\'un utilisateur',
+                'MBody': 'Voulez-vous modifier les informations de ce utilisateur?',
+                'path': "edit_user",
+                'param': {'id': users.id },
+                'page': 'edit'
+                
+                }%}
+            </div>
+    </div>
+
+
+</div>
+  
+
+</body>
+{% include 'home/footer.html.twig' %}
+</html>
+    
+{% endblock %}
+

@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Se connecter | Gestion des notes BTS/DTS{% endblock %}
+
+{% block head %}
+
+
+{% endblock %}
+
+
+{% block body %}
+
+<html lang="fr">
+{% include 'home/head.html.twig' %}
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
+
+  {% include 'home/navbar.html.twig' %}
+
+
+   <div class="card border-info mb-5" style="max-width: 40rem; margin: auto;">
+        <div class="card-header">
+
+             {% include 'configuration/btnRetour.html.twig' with {
+                    
+                    'path':'liste_annee',
+                    'Text_header': ' MODIFICATION D\'UNE ANNEE ACADEMIQUE'
+                } %}
+                
+        </div>
+            <div class="card-body">
+
+                {% include 'annee_academique/_formAnnee.html.twig' with {
+
+                    'btn_submit': 'Modifier',
+                    'Text_Modifier': 'Modification d\'une année',
+                    'MBody': 'Voulez-vous modifier cette année?',
+                    'path': "annee_edit",
+                    'param': {'anneeScolaire': anneeAcademik.anneeScolaire }
+                    
+                    } %}  
+                
+            </div>
+    </div>
+
+
+</div>
+  
+
+</body>
+{% include 'home/footer.html.twig' %}
+</html>
+    
+{% endblock %}
+

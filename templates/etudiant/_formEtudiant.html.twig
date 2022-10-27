@@ -1,0 +1,95 @@
+ <div class="container w-60">
+
+                               {{ form_start(form) }}
+                                    
+                                    <div class="form-row ">
+                                        <div class="form-group mr-5">
+                                            {{ form_row(form.nom) }}
+                                        </div>
+                                        <div class="form-group mr-5">
+                                           {{ form_row(form.prenoms) }}
+                                        </div>
+                                        <div class="form-group">
+                                            {{ form_row(form.matricule) }}
+                                        </div>
+                                    </div>
+                                
+                                    <div class="form-row">
+                                        <div class="form-group mr-5">
+                                            {{ form_row(form.dateNaissance) }}
+                                        </div>
+                                        <div class="form-group mr-5">
+                                            {{ form_row(form.lieuNaissance) }}
+                                        </div>
+                                        <div class="form-group mr-5">
+                                            {{ form_row(form.paysNaissance) }}
+                                        </div>
+                                        <div class="form-group">
+                                            {{ form_row(form.nationalite) }}
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group mr-5">
+                                            {{ form_row(form.sexe) }}
+                                        </div>
+                                        <div class="form-group">
+                                             {{ form_row(form.status) }}
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group mr-5">
+
+                                            {{ form_row(form.anneeScolaire) }}
+                                            
+                                        </div>
+                                        <div class="form-group mr-5">
+                                           
+                                            {{ form_row(form.classe) }}
+                                           
+                                        </div>
+                                        <div class="form-group mr-5">
+                                           
+                                            {{ form_row(form.filieres) }}
+                                           
+                                        </div>
+                                        <div class="form-group">
+                                           
+                                            {{ form_row(form.examenPrepare) }}
+                                           
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                         {{ form_row(form.etablissementDeProvenance) }}
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group mr-5">
+                                            {{ form_row(form.telephone) }}
+                                        </div>
+                                        <div class="form-group">
+                                            {{ form_row(form.adresse) }}
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        {{ form_row(form.personneAContacter) }}
+                                    </div>
+                                    <div class="form-group">
+                                        {{ form_row(form.adresseDePersonneAContacter) }}
+                                    </div>
+                                    <div class="form-group">
+                                        {{ form_row(form.telephoneDePersonneAContacter) }}
+                                    </div>
+
+                                    <div class="form-group">
+                                        {{ form_row(form.imageFile) }}
+                                    </div>
+                                    <div class="form-submit">
+
+                                       {% include 'configuration/btnTest.html.twig' %}
+
+                                    </div>
+                             {{ form_end(form) }}                         
+
+                    </div>

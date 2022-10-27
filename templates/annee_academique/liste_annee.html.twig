@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr">
+{% include 'home/head.html.twig' %}
+
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
+
+  {% include 'home/navbar.html.twig' %}
+
+   <div class="container">
+
+       {% include 'configuration/messageFlash.html.twig' %}
+
+
+   <div class="card border-info" style="max-width: 80rem;">
+        <div class="card-header">
+            <div class="row">
+                <div class="col-md-4">
+                    <h3 class="h3">
+                         ANNEES ACADEMIQUES
+                    </h3>
+                </div>
+                <div class="col-md-3">
+                     <a href="{{ path('creer_annee')}}" class="btn btn-warning">Créer Année Academique</a>
+                </div>
+            </div>
+           
+            
+        </div>
+            <div class="card-body">
+
+                 <table class="table">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Année scolaire</th>
+                        <th scope="col">Debut</th>
+                        <th scope="col">Fin du 1er semestre</th>
+                        <th scope="col">Fin</th>
+                        <th scope="col">Actions</th>
+    
+                    </tr>
+                </thead>
+                <tbody>
+
+                     {% for annee in annee %}
+
+                        <tr>
+                            <th>{{ annee.anneeScolaire}}</th>
+                            <td>{{ annee.debut | date('d-m-y')}}</td>
+                            <td>{{ annee.finPremierSemestre | date('d-m-y')}}</td>
+                            <td>{{ annee.fin | date('d-m-y')}}</td>
+          
+                            <td>
+                                 <a class="btn btn-primary" href="{{ path('app_home', {'anneeScolaire': annee.anneeScolaire})}}">
+                                    Consuter
+                                </a>
+                                                                
+                            </td>
+                        </tr>
+                
+                    {% endfor %}
+                     
+
+                    
+                     
+                </tbody>
+            </table>
+
+                
+            </div>
+    </div>
+
+
+   
+  </div>
+
+  
+
+  </div>
+</body>
+</html>
+
+{% include 'home/footer.html.twig' %}
+
+

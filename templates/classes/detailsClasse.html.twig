@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="fr">
+{% include 'home/head.html.twig' %}
+
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
+
+  {% include 'home/navbar.html.twig' %}
+
+   <div class="container">
+
+       {% include 'configuration/messageFlash.html.twig' %}
+
+
+   <div class="card" >
+        <div class="card-header">
+
+           <div class="row">
+
+                <div class="col-md-2">
+                    <a href="{{path('voir_classes')}}" class="h2">
+                        <i class="fa fa-arrow-circle-left" aria-hidden="true"></i>
+                    </a>
+                </div>
+                <div class="col-md-5">
+                    <h3 class="h3">
+                        DETAILS DE LA CLASSE
+                    </h3>
+                </div> 
+
+                <div class="col-md-5">
+                    {{ form_start(searchForm) }}
+
+                        <div class="form-row ">
+                            <div class="form-group mr-5">
+                                {{ form_widget(searchForm.annee) }}
+                            </div>
+
+                            <div class="form-submit mr-5">
+                                <button type="submit" class="btn btn-primary">valider</button>
+                            </div>
+                        </div>
+                    {{ form_end(searchForm) }}
+                </div>       
+            </div> 
+            
+        </div>
+        <div class="card-body">
+
+          <div class="container">
+            <div class="row">
+              <div class="col-md-4 text-center">
+                <td><img src="{{ asset('dist/img/salle.jpg') }}" height="200" width="200" class="img-circle mx-auto mb-5"></td>
+              </div>
+              <div class="col-md-8 mt-5">
+
+                  <h3> CLASSE : <strong class="text-primary">{{ classe.denomination }}  {{ classe.filiere }}</strong></h1>
+                  <h3> EFFECTIF : <strong class="text-primary">{{ detail|length }}</strong></h1>
+
+               
+              </div>
+            </div>
+          </div>
+           <div class="row mb-5">
+
+                    {% if app.request.method == 'POST' %}
+                      <div class="col-md-6 text-right">
+                        {% include 'classes/modalbtnClasse.html.twig' with {
+                          'button': 'Liste de la classe', 
+                          'btn': 'btn btn-warning',
+                          'messagesClasse': 'LISTE DE LA CLASSE'
+                          
+                          } %}
+                      </div>
+
+                      <div class="col-md-6 ">
+                         {% include 'classes/modalBtnMatiere.html.twig' with {
+                          'buttonMat': 'Liste des matières',
+                          'btn': 'btn btn-info',
+                          'messagesMatiere': 'LISTE DES MATIERES'
+                          
+                          } %}
+                      </div>
+                    {% endif %}
+          </div>
+
+
+         
+        </div>
+    </div>
+
+  </div>
+
+  
+
+  </div>
+</body>
+</html>
+
+{% include 'home/footer.html.twig' %}
+
+
+
+
+
