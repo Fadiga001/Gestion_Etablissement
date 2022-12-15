@@ -19,38 +19,26 @@ class Notes
     #[ORM\Column(length: 255)]
     private ?string $semestre = null;
 
-    #[ORM\Column]
-    #[Assert\NotBlank]
-    #[Assert\Positive]
-    private ?int $coefficient = null;
-
-
-    #[ORM\ManyToOne(inversedBy: 'note')]
-    private ?Matieres $matiere = null;
-
-
-    #[ORM\Column(nullable: true)]
-    #[Assert\NotBlank]
-    #[Assert\Positive]
-    #[Assert\Length(
-        min: 0,
-        max: 20,
-        minMessage: 'La note minimale a attribué est 0',
-        maxMessage: 'La note maximale a attribué est 20',
-    )]
-    private ?float $noteEtudiant = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $classe = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $etudiant = null;
 
     #[ORM\Column(length: 255)]
     private ?string $anneeScolaire = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $createAt = null;
+
+    #[ORM\ManyToOne(inversedBy: 'notes')]
+    private ?Etudiant $etudiants = null;
+
+    #[ORM\ManyToOne(inversedBy: 'notes')]
+    private ?Classe $classes = null;
+
+    #[ORM\ManyToOne(inversedBy: 'notes')]
+    private ?Matieres $matieres = null;
+
+    #[ORM\ManyToOne(inversedBy: 'notes')]
+    private ?Professeurs $professeur = null;
+
+
 
 
     #[ORM\PrePersist]
@@ -102,18 +90,6 @@ class Notes
     }
 
 
-    public function getNoteEtudiant(): ?float
-    {
-        return $this->noteEtudiant;
-    }
-
-    public function setNoteEtudiant(float $noteEtudiant): self
-    {
-        $this->noteEtudiant = $noteEtudiant;
-
-        return $this;
-    }
-
     public function getClasse(): ?string
     {
         return $this->classe;
@@ -122,18 +98,6 @@ class Notes
     public function setClasse(string $classe): self
     {
         $this->classe = $classe;
-
-        return $this;
-    }
-
-    public function getEtudiant(): ?string
-    {
-        return $this->etudiant;
-    }
-
-    public function setEtudiant(string $etudiant): self
-    {
-        $this->etudiant = $etudiant;
 
         return $this;
     }
@@ -158,6 +122,67 @@ class Notes
     public function setCreateAt(\DateTimeInterface $createAt): self
     {
         $this->createAt = $createAt;
+
+        return $this;
+    }
+
+
+    public function getNoteEtudiant(): array
+    {
+        return $this->noteEtudiant;
+    }
+
+    public function setNoteEtudiant(?array $noteEtudiant): self
+    {
+        $this->noteEtudiant = $noteEtudiant;
+
+        return $this;
+    }
+
+    public function getEtudiants(): ?Etudiant
+    {
+        return $this->etudiants;
+    }
+
+    public function setEtudiants(?Etudiant $etudiants): self
+    {
+        $this->etudiants = $etudiants;
+
+        return $this;
+    }
+
+    public function getClasses(): ?Classe
+    {
+        return $this->classes;
+    }
+
+    public function setClasses(?Classe $classes): self
+    {
+        $this->classes = $classes;
+
+        return $this;
+    }
+
+    public function getMatieres(): ?Matieres
+    {
+        return $this->matieres;
+    }
+
+    public function setMatieres(?Matieres $matieres): self
+    {
+        $this->matieres = $matieres;
+
+        return $this;
+    }
+
+    public function getProfesseur(): ?Professeurs
+    {
+        return $this->professeur;
+    }
+
+    public function setProfesseur(?Professeurs $professeur): self
+    {
+        $this->professeur = $professeur;
 
         return $this;
     }

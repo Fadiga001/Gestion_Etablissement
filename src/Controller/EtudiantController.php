@@ -7,6 +7,7 @@ use App\Form\EtudiantType;
 use App\Form\searchFormType;
 use App\Services\EtudiantServices;
 use App\Repository\EtudiantRepository;
+use App\Services\paginationServices;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -15,25 +16,16 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class EtudiantController extends AbstractController
 {
-    #[Route('/etudiant/liste-des/differents-etudiants', name: 'liste_etudiants')]
+    #[Route('/etudiant/liste-des/differents-etudiants/{page<\d+>?1}', name: 'liste_etudiants')]
     #[IsGranted("ROLE_USER")]
-    public function index(EtudiantServices $etudiantServices, EtudiantRepository $etudiantRepo, Request $request): Response
+    public function index(paginationServices $pagination, Request $request, $page=1): Response
     {
 
-        $form = $this->createForm(searchFormType::class);
-        $form->handleRequest($request);
-        $searching = [];
-        if($form->isSubmitted() && $form->isValid())
-        {
-            $search = $form->getData();
-            $searching = $etudiantRepo->findBySearch($search);
-        }
-
-        $etudiant = $etudiantServices->getPaginateEtudiant();
+       $pagination->setEntityClass(Etudiant::class)
+                  ->setPage($page);
+    
         return $this->render('etudiant/listeEtudiant.html.twig', [
-            'form'=> $form->createView(),
-            'etudiants' => $etudiant,
-            'search'=> $searching
+            'pagination'=>$pagination
         ]);
 
     }

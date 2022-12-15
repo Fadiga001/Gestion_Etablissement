@@ -54,13 +54,72 @@ class NotesRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?Notes
-//    {
-//        return $this->createQueryBuilder('n')
-//            ->andWhere('n.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+   public function noteEtudiantMG($mat, $semestre, $typeMat): array
+   {
+        return $this->createQueryBuilder('n')
+                    ->select(' n as note')
+                    ->join('n.matiere', 'matiere')
+                    ->join('matiere.TypeMatiere', 'typeMat')
+                    ->where('n.etudiant = :mat')
+                    ->setParameter('mat', $mat)
+                    ->andWhere('n.semestre = :semestre')
+                    ->setParameter('semestre', $semestre)
+                    ->andWhere('typeMat.denomination = :denomination')
+                    ->setParameter(':denomination', $typeMat)
+                    ->getQuery()
+                    ->getResult()
+                    ;
+  }
+
+   public function noteEtudiantMP($mat, $semestre, $typeMat): array
+   {
+        return $this->createQueryBuilder('n')
+                    ->select(' n as note')
+                    ->join('n.matiere', 'matiere')
+                    ->join('matiere.TypeMatiere', 'typeMat')
+                    ->where('n.etudiant = :mat')
+                    ->setParameter('mat', $mat)
+                    ->andWhere('n.semestre = :semestre')
+                    ->setParameter('semestre', $semestre)
+                    ->andWhere('typeMat.denomination = :denomination')
+                    ->setParameter(':denomination', $typeMat)
+                    ->getQuery()
+                    ->getResult()
+                    ;
+  }
+
+   public function noteEtudiantMA($mat, $semestre, $typeMat): array
+   {
+        return $this->createQueryBuilder('n')
+                    ->select(' n as note, SUM(n.coeffient) as sumCoef')
+                    ->join('n.matiere', 'matiere')
+                    ->join('matiere.TypeMatiere', 'typeMat')
+                    ->where('n.etudiant = :mat')
+                    ->setParameter('mat', $mat)
+                    ->andWhere('n.semestre = :semestre')
+                    ->setParameter('semestre', $semestre)
+                    ->andWhere('typeMat.denomination = :denomination')
+                    ->setParameter(':denomination', $typeMat)
+                    ->getQuery()
+                    ->getResult()
+                    ;
+  }
+
+   public function coeffMG($mat, $semestre, $typeMat): array
+   {
+        return $this->createQueryBuilder('n')
+                    ->select('SUM(n.coefficient) as sumCoef')
+                    ->join('n.matiere', 'matiere')
+                    ->join('matiere.TypeMatiere', 'typeMat')
+                    ->where('n.etudiant = :mat')
+                    ->setParameter('mat', $mat)
+                    ->andWhere('n.semestre = :semestre')
+                    ->setParameter('semestre', $semestre)
+                    ->andWhere('typeMat.denomination = :denomination')
+                    ->setParameter(':denomination', $typeMat)
+                    ->getQuery()
+                    ->getResult()
+                    ;
+  }
+
 }

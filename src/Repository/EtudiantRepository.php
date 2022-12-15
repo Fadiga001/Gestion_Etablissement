@@ -57,7 +57,7 @@ class EtudiantRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
-    public function listeEtudiantDuneClasseEtAnnee($id, $annee): array
+    public function listeEtudiantDuneClasseEtAnnee($id): array
     {
         return $this->createQueryBuilder('e')
             ->select('c.id as id, e as etud')
@@ -65,19 +65,33 @@ class EtudiantRepository extends ServiceEntityRepository
             ->join('e.anneeScolaire', 'a')
             ->where('c.id = :id')
             ->setParameter('id', $id)
-            ->andwhere('a.id = :annee')
-            ->setParameter('annee', $annee)
+            ->andwhere('a.active = :active')
+            ->setParameter('active', true)
+            ->orderBy('e.nom', 'ASC')
             ->getQuery()
             ->getResult()
         ;
     }
-    public function listeEtudiantDuneAnnee( $annee): array
+    public function listeEtudiantDuneAnnee(): array
     {
         return $this->createQueryBuilder('e')
             ->select('a.id as id, e as etud')
             ->join('e.anneeScolaire', 'a')
-            ->andwhere('a.AnneeScolaire = :annee')
-            ->setParameter('annee', $annee)
+            ->andwhere('a.active = :active')
+            ->setParameter('active', true)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    public function listeEtudiantDuneAnneeActive($limit): array
+    {
+        return $this->createQueryBuilder('e')
+            ->select('a.id as id, e as etud')
+            ->join('e.anneeScolaire', 'a')
+            ->andwhere('a.active = :active')
+            ->setParameter('active', true)
+            ->setMaxResults($limit)
             ->getQuery()
             ->getResult()
         ;
@@ -108,12 +122,23 @@ class EtudiantRepository extends ServiceEntityRepository
         ;
     }
 
+    public function matricule($id): array
+    {
+        return $this->createQueryBuilder('e')
+            ->select('e.matricule as mat')
+            ->where('e.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
     public function findByYear($annee): array
     {
         return $this->createQueryBuilder('e')
             ->select('a.id as id, e as etud')
             ->join('e.anneeScolaire', 'a')
-            ->andwhere('a.AnneeScolaire = :annee')
+            ->Where('a.AnneeScolaire = :annee')
             ->setParameter('annee', $annee)
             ->getQuery()
             ->getResult()
@@ -170,6 +195,7 @@ class EtudiantRepository extends ServiceEntityRepository
             ->setParameter('codeClasse', $criteria['codeClasse']->getCodeClasse())
             ->andwhere('a.AnneeScolaire = :AnneeScolaire')
             ->setParameter('AnneeScolaire', $criteria['AnneeScolaire']->getAnneeScolaire())
+            ->orderBy('e.nom', 'ASC')
             ->getQuery()
             ->getResult()
     ;

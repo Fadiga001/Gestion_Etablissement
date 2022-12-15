@@ -36,11 +36,9 @@ class Classe
     #[ORM\ManyToMany(targetEntity: Matieres::class, mappedBy: 'classe')]
     private Collection $matieres;
 
-    #[ORM\ManyToOne(inversedBy: 'classe')]
-    private ?Notes $notes = null;
+    #[ORM\OneToMany(mappedBy: 'classes', targetEntity: Notes::class)]
+    private Collection $notes;
 
-    #[ORM\OneToMany(mappedBy: 'classe', targetEntity: Notes::class)]
-    private Collection $note;
 
 
 
@@ -48,7 +46,7 @@ class Classe
     {
         $this->etudiants = new ArrayCollection();
         $this->matieres = new ArrayCollection();
-        $this->note = new ArrayCollection();
+        $this->notes = new ArrayCollection();
     }
 
    
@@ -155,17 +153,36 @@ class Classe
         return $this;
     }
 
-    public function getNotes(): ?Notes
+    /**
+     * @return Collection<int, Notes>
+     */
+    public function getNotes(): Collection
     {
         return $this->notes;
     }
 
-    public function setNotes(?Notes $notes): self
+    public function addNote(Notes $note): self
     {
-        $this->notes = $notes;
+        if (!$this->notes->contains($note)) {
+            $this->notes->add($note);
+            $note->setClasses($this);
+        }
 
         return $this;
     }
+
+    public function removeNote(Notes $note): self
+    {
+        if ($this->notes->removeElement($note)) {
+            // set the owning side to null (unless already changed)
+            if ($note->getClasses() === $this) {
+                $note->setClasses(null);
+            }
+        }
+
+        return $this;
+    }
+
 
    
 }

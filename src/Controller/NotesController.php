@@ -120,52 +120,6 @@ class NotesController extends AbstractController
     }
 
 
-    #[Route('/ajout-de-note-groupee/{idClasse}/{annee}/Ajouter-Par-Matiere', name: 'noteGroupee_parMatiere', methods: ['GET', 'POST'])]
-    public function ajouterNoterGroupee(Request $request, $idClasse, EtudiantRepository $etudiantRepo, ClasseRepository $classeRepo, AnneeAcademiqueRepository $anneeRepo, $annee, EntityManagerInterface $manager): Response
-    {
-        $classe = $classeRepo->findOneById($idClasse);
-        $annees = $anneeRepo->findOneById($annee);
-       
-
-        $etudiants= $etudiantRepo->listeEtudiantDuneClasseEtAnnee($idClasse, $annee);
-
-            $note = new Notes();
-            $form = $this->createForm(noteGroupeeType::class, $note);
-            $form->handleRequest($request);
-            
-            if($request->getMethod()=='POST')
-            {
-                $mat = $request->get('matEtudiant');
-                $notes = $request->get('noteEtudiant');
-                $note->setEtudiant($mat);
-                $note->setNoteEtudiant($notes);
-                $manager->persist($note);
-                $manager->flush();
-            }
-        
-    
-            if($form->isSubmitted() && $form->isValid())
-            {
-               $note= $form->getData();
-               $manager->persist($note);
-               $manager->flush();
-            }
-
-            
-    
-        
-       
-
-        return $this->render('notes/AjouterNoteGroupee.html.twig', [
-            'form'=> $form->createView(),
-            'etudiants'=>$etudiants,
-            'classe'=>$classe,
-            'annees'=>$annees
-        ]);
-
-    }
-
-
 
 
 

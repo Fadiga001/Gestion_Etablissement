@@ -38,6 +38,9 @@ class AnneeAcademique
     #[ORM\OneToMany(mappedBy: 'anneeScolaire', targetEntity: Etudiant::class)]
     private Collection $etudiants;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $active = null;
+
     public function __construct()
     {
         $this->etudiants = new ArrayCollection();
@@ -130,5 +133,17 @@ class AnneeAcademique
     public function __toString()
     {
         return $this->AnneeScolaire;
+    }
+
+    public function isActive(): ?bool
+    {
+        return $this->active;
+    }
+
+    public function setActive(?bool $active): self
+    {
+        $this->active = $active;
+
+        return $this;
     }
 }

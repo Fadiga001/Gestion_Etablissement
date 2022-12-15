@@ -52,6 +52,7 @@ class MatiereType extends AbstractType
             ->add('classe', EntityType::class, [
                 'label'=> 'Classes',
                 'class'=> Classe::class,
+                'choice_label'=>'codeClasse',
                 'expanded'=> true,
                 'multiple'=> true
             ])

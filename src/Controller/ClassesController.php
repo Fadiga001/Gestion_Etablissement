@@ -100,36 +100,19 @@ class ClassesController extends AbstractController
     }
 
     #[Route('/classes/voir-les-differentes-classes/details-classe/{id}/', name: 'details_classes')]
-    public function detailsClasse( Request $request, EtudiantRepository $etudiant,ClasseRepository $classeRepo, MatieresRepository $mat, Classe $classe, $id, EntityManagerInterface $manager): Response
+    public function detailsClasse(EtudiantRepository $etudiantRepo, MatieresRepository $matRepo, Classe $classe, $id, ClasseRepository $classeRepo): Response
     {
 
-
-        
-
-        $searchEtudiantParAnneeForm = $this->createForm(searchEtudiantParAnneeType::class);
-        $searchEtudiantParAnneeForm->handleRequest($request);
-        $listeEtudiant=[];
-        $listeMatieres =[];
-    
-        if($searchEtudiantParAnneeForm->isSubmitted() && $searchEtudiantParAnneeForm->isValid())
-        {
-            $annee = $searchEtudiantParAnneeForm->getData();
-
-            $listeEtudiant = $etudiant->listeEtudiantDuneClasse($id,$annee);
-
-            $listeMatieres = $mat->listeMatieresParClasse($id);
-
-                
-        }
-
+        $etudiant = $etudiantRepo->listeEtudiantDuneClasseEtAnnee($id);
+        $classe = $classeRepo->findOneById($id);
+        $matiere = $matRepo->listeMatieresParClasse($id);
+       
+       
 
         return $this->render('classes/detailsClasse.html.twig', [
-
-            'searchForm'=> $searchEtudiantParAnneeForm->createView(),
-            'detail'=>$listeEtudiant,
-            'classe'=> $classe,
-            'listeMatieres'=>$listeMatieres,
- 
+            'etudiant' => $etudiant,
+            'classe' => $classe,
+            'matiere'=> $matiere
         ]);
     }
 

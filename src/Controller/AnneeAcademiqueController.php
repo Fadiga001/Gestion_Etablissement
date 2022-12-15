@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Form\ActiverType;
 use App\Entity\AnneeAcademique;
 use App\Form\AnneeAcademiqueType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -12,7 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class AnneeAcademiqueController extends AbstractController
 {
@@ -22,16 +23,37 @@ class AnneeAcademiqueController extends AbstractController
     */
     #[Route('/annee/academique', name: 'liste_annee')]
     #[IsGranted("ROLE_USER")]
-    public function index(AnneeAcademiqueRepository $anneeRepo): Response
+    public function index(AnneeAcademiqueRepository $anneeRepo, Request $request, SessionInterface $session): Response
     {
         $annee = $anneeRepo->findAll();
 
+        $form = $this->createForm(ActiverType::class);
+        $form->handleRequest($request);
+
+        $yearId = [];
+        $myYear = [];
+        if($form->isSubmitted() && $form->isValid()){
+            $annees = $form->getData(); 
+            $myYear = $anneeRepo->Year($annees);
+            $session->get('an', []); 
+            $session->set('an', $annees);
+
+        }else{
+            $yearId = $anneeRepo->MaxIdYear();
+            $session->get('an', []); 
+            $session->set('an', $yearId);
+        }
+
+
         return $this->render('annee_academique/liste_annee.html.twig', [
             'annee' => $annee,
+            'id' => $yearId,
+            'an'=> $myYear,
+            'form'=>$form->createView()
         ]);
     }
 
-
+    
     /*
     * Création des Années Academiques
     */
@@ -40,30 +62,58 @@ class AnneeAcademiqueController extends AbstractController
     public function CreerAnnee( Request $request, EntityManagerInterface $entitymanager): Response
     {
 
-        $annees = new AnneeAcademique();
-        $form = $this->createForm(AnneeAcademiqueType::class, $annees);
+        $annee = new AnneeAcademique();
+
+        $form = $this->createForm(AnneeAcademiqueType::class, $annee);
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid())
         {
-                
             
-            $annees = $form->getData();
-            $entitymanager->persist($annees);
-            $entitymanager->flush();
-    
-            $this->addFlash('success', 'La nouvelle année academique a été créée avec succès !');
-    
-            return $this->redirectToRoute("liste_annee");
         }
         
        
         return $this->render('annee_academique/creerAnnee.html.twig', [
             'form' => $form->createView(),
-            'annee'=>$annees
+            'annee'=>$annee
         ]);
 
     }
+
+
+    /*
+    * Affichage de la liste des années academiques
+    */
+    #[Route('/annee/academique/{id}', name: 'activer')]
+    #[IsGranted("ROLE_USER")]
+    public function Activer($id, AnneeAcademique $annee, EntityManagerInterface $manager, AnneeAcademiqueRepository $anneeRepo): Response
+    {
+       
+        $annees = $anneeRepo->findAll();
+        
+        for($i=0; $i<sizeof($annees); $i++)
+        {
+            if($annees[$i]->getId() == $id)
+            {
+                $annees[$i]->setActive(($annees[$i]->isActive() ? false : true));
+                $manager->persist($annees[$i]);
+                $manager->flush();
+            }else{
+                $annees[$i]->setActive(($annees[$i]->isActive() ? false : 0));
+                $manager->persist($annees[$i]);
+                $manager->flush();
+            }
+        }
+       
+        
+
+        return $this->redirectToRoute('liste_annee', [
+            'id' => $id
+        ]);
+    }
+
+   
+
 
 
     #[Route('/annee/academique/edit/{anneeScolaire}', name: 'annee_edit')]

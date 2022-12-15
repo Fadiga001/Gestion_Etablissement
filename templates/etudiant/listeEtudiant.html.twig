@@ -27,56 +27,7 @@
             
         </div>
             <div class="card-body">
-                <div class="row">
-                     {% include 'configuration/searchBar.html.twig' with {recherche: form.search} %}
-                </div>
-
-                {% if app.request.method == 'POST' %}
-
-                    {% if search | length == 0 %}
-
-                        <div class="row text-center">
-                            <h3>Aucun résultat pour votre recherche</h3>
-                        </div>
-
-                    {% else %}
-
-                              <table class="table table-hover mb-5">
-                                <thead class="thead-dark">
-                                    <tr>
-                                        <th scope="col">Nom</th>
-                                        <th scope="col">Prénoms</th>
-                                        <th scope="col">Matricule</th>
-                                        <th scope="col">Classe</th>
-                                    
-                                        <th class="ms-5">Actions</th>
-                    
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                {% for search in search %}
-                       
-                                    <tr>
-                                    <th>{{ search.nom | upper}}</th>
-                                    <td>{{ search.prenoms | upper}}</td>
-                                    <td>{{ search.matricule | upper}}</td>
-                                    <td>{{ search.classe | upper}}  {{ search.filieres | upper}}</td>
-                                
-                                    <td class="ms-4">
-                                        <a class="btn btn-primary" href="{{ path('details_etudiant', {'id': search.id}) }}">
-                                            Détails
-                                        </a>
-
-                                    </td>
-                                </tr>
-
-                        {% endfor %}
-
-                         </tbody>
-                    </table>
-                    {% endif %}
-                {% else %}
-
+               
                     <table class="table table-hover mb-5">
                     <thead class="thead-dark">
                         <tr>
@@ -91,7 +42,7 @@
                     </thead>
                     <tbody>
 
-                        {% for etudiant in etudiants %}
+                        {% for etudiant in pagination.data %}
 
                             <tr>
                                 <th>{{ etudiant.nom | upper}}</th>
@@ -115,12 +66,8 @@
                     </tbody>
                 </table>
             
-            {% endif %}
 
-           {% include 'configuration/pagination.html.twig' with {
-                classe: etudiants,
-                pagination : etudiants
-            } %}
+           {% include 'configuration/pagination.html.twig' %}
                 
             </div>
 

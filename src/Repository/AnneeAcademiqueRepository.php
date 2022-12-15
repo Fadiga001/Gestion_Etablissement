@@ -64,12 +64,34 @@ class AnneeAcademiqueRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-    public function findByYear($annee)
+    public function findByYear($annee): array
     {
         return $this->createQueryBuilder('a')
-                ->andWhere('a.AnneeScolaire = :val')
-                ->setParameter('val', $annee)
-                ->getQuery()
-                ->getResult();
+                    ->select('a.AnneeScolaire as annee')
+                    ->where('a.id = :id')
+                    ->setParameter('id', $annee)
+                    ->getQuery()
+                    ->getResult()
+        ;
     }
+    public function Year($annee)
+    {
+        return $this->createQueryBuilder('a')
+                    ->select('a.AnneeScolaire as annee')
+                    ->where('a.id = :id')
+                    ->setParameter('id', $annee)
+                    ->getQuery()
+                    ->getSingleScalarResult()
+        ;
+    }
+
+    public function MaxIdYear()
+    {
+        return $this->createQueryBuilder('a')
+                    ->select('Max(a.AnneeScolaire) as yearId')
+                    ->getQuery()
+                    ->getSingleScalarResult()
+        ;
+    }
+
 }

@@ -23,6 +23,7 @@
                 <div class="col-md-3">
                      <a href="{{ path('creer_annee')}}" class="btn btn-warning">Créer Année Academique</a>
                 </div>
+               
             </div>
            
             
@@ -36,6 +37,7 @@
                         <th scope="col">Debut</th>
                         <th scope="col">Fin du 1er semestre</th>
                         <th scope="col">Fin</th>
+                        <th scope="col">Statut</th>
                         <th scope="col">Actions</th>
     
                     </tr>
@@ -49,13 +51,25 @@
                             <td>{{ annee.debut | date('d-m-y')}}</td>
                             <td>{{ annee.finPremierSemestre | date('d-m-y')}}</td>
                             <td>{{ annee.fin | date('d-m-y')}}</td>
-          
                             <td>
-                                 <a class="btn btn-primary" href="{{ path('app_home', {'anneeScolaire': annee.anneeScolaire})}}">
-                                    Consuter
-                                </a>
-                                                                
+                                {% if annee.active %}
+                                    <h4 class="text-success">
+                                        Activer
+                                    </h4>
+                                {% else %}
+                                    <h4 class="text-danger">
+                                        Desactiver
+                                    </h4>
+                                {% endif %}
                             </td>
+                            <th>
+                                {% if annee.active %}
+                                    <a class="btn btn-danger" href="{{ path('activer', {'id': annee.id})}}">Desactiver</a>
+                                {% else %}
+                                    <a class="btn btn-primary" href="{{ path('activer', {'id': annee.id})}}">Activer</a>
+                                {% endif %}
+                            </th>
+                            
                         </tr>
                 
                     {% endfor %}
@@ -77,9 +91,31 @@
   
 
   </div>
+
+  
 </body>
 </html>
 
 {% include 'home/footer.html.twig' %}
+
+{% block javascript %}
+
+    <script type="text/javascript">
+    window.onload = ()=>{
+        let activer = document.querySelectorAll("[type=checkbox]")
+        for(let bouton of activer){
+            bouton.addEventListener('click', function(){
+                let htmlttp = new HTMLTTPRequest;
+
+                htmlttp.open("get", `/annee/academique/activer/${this.dataset.id}`)
+
+                htmlttp.send()
+            })
+        }
+        }
+    </script>
+{% endblock %}
+
+
 
 

@@ -40,11 +40,15 @@ class Matieres
     #[ORM\OneToMany(mappedBy: 'matiere', targetEntity: Notes::class)]
     private Collection $note;
 
+    #[ORM\OneToMany(mappedBy: 'matieres', targetEntity: Notes::class)]
+    private Collection $notes;
+
 
     public function __construct()
     {
         $this->classe = new ArrayCollection();
         $this->note = new ArrayCollection();
+        $this->notes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -124,19 +128,26 @@ class Matieres
         return $this;
     }
 
+
+
+    public function __toString()
+    {
+        return $this->denomination;
+    }
+
     /**
      * @return Collection<int, Notes>
      */
-    public function getNote(): Collection
+    public function getNotes(): Collection
     {
-        return $this->note;
+        return $this->notes;
     }
 
     public function addNote(Notes $note): self
     {
-        if (!$this->note->contains($note)) {
-            $this->note->add($note);
-            $note->setMatiere($this);
+        if (!$this->notes->contains($note)) {
+            $this->notes->add($note);
+            $note->setMatieres($this);
         }
 
         return $this;
@@ -144,19 +155,14 @@ class Matieres
 
     public function removeNote(Notes $note): self
     {
-        if ($this->note->removeElement($note)) {
+        if ($this->notes->removeElement($note)) {
             // set the owning side to null (unless already changed)
-            if ($note->getMatiere() === $this) {
-                $note->setMatiere(null);
+            if ($note->getMatieres() === $this) {
+                $note->setMatieres(null);
             }
         }
 
         return $this;
-    }
-
-    public function __toString()
-    {
-        return $this->denomination;
     }
    
 }

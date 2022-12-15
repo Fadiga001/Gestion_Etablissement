@@ -3,95 +3,172 @@
 {% include 'home/head.html.twig' %}
 
 <body class="hold-transition sidebar-mini layout-fixed">
-<div class="wrapper">
+  <div class="wrapper">
 
-  {% include 'home/navbar.html.twig' %}
+    {% include 'home/navbar.html.twig' %}
 
-   <div class="container">
+    <div class="container">
 
        {% include 'configuration/messageFlash.html.twig' %}
 
 
-   <div class="card" >
-        <div class="card-header">
+      <div class="card" >
+          <div class="card-header">
 
-           <div class="row">
-
-                <div class="col-md-2">
-                    <a href="{{path('voir_classes')}}" class="h2">
-                        <i class="fa fa-arrow-circle-left" aria-hidden="true"></i>
-                    </a>
-                </div>
-                <div class="col-md-5">
-                    <h3 class="h3">
-                        DETAILS DE LA CLASSE
-                    </h3>
-                </div> 
-
-                <div class="col-md-5">
-                    {{ form_start(searchForm) }}
-
-                        <div class="form-row ">
-                            <div class="form-group mr-5">
-                                {{ form_widget(searchForm.annee) }}
-                            </div>
-
-                            <div class="form-submit mr-5">
-                                <button type="submit" class="btn btn-primary">valider</button>
-                            </div>
-                        </div>
-                    {{ form_end(searchForm) }}
-                </div>       
-            </div> 
-            
-        </div>
-        <div class="card-body">
-
-          <div class="container">
             <div class="row">
-              <div class="col-md-4 text-center">
-                <td><img src="{{ asset('dist/img/salle.jpg') }}" height="200" width="200" class="img-circle mx-auto mb-5"></td>
+
+                  <div class="col-md-2">
+                      <a href="{{path('voir_classes')}}" class="h2">
+                          <i class="fa fa-arrow-circle-left" aria-hidden="true"></i>
+                      </a>
+                  </div>
+                  <div class="col-md-5">
+                      <h3 class="h3">
+                          DETAILS DE LA CLASSE
+                      </h3>
+                  </div> 
+    
+              </div> 
+              
+          </div>
+          <div class="card-body">
+
+            <div class="container">
+              <div class="row">
+                <div class="col-md-4 text-center">
+                  <td><img src="{{ asset('dist/img/salle.jpg') }}" height="200" width="200" class="img-circle mx-auto mb-5"></td>
+                </div>
+                <div class="col-md-8 mt-5">
+
+                    <h3> CLASSE : <strong class="text-primary">{{ classe.denomination }}</strong></h1>
+                    <h3> EFFECTIF : <strong class="text-primary">{{ etudiant|length}}</strong></h1>
+
+                
+                </div>
               </div>
-              <div class="col-md-8 mt-5">
+            </div>
+            <div class="row mb-5">
+                
+              <!-- LISTE DES ETUDIANTS -->
+              <div class="card direct-chat direct-chat-primary">
+                <div class="card-header">
+                  <h3 class="card-title">LISTE DES ETUDIANTS DE LA CLASSE</h3>
 
-                  <h3> CLASSE : <strong class="text-primary">{{ classe.denomination }}  {{ classe.filiere }}</strong></h1>
-                  <h3> EFFECTIF : <strong class="text-primary">{{ detail|length }}</strong></h1>
+                  <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                      <i class="fas fa-minus"></i>
+                    </button>
 
-               
+                    <button type="button" class="btn btn-tool" data-card-widget="remove">
+                      <i class="fas fa-times"></i>
+                    </button>
+                  </div>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                    <table class="table table-hover mb-5">
+                      <thead class="thead-dark">
+                          <tr>
+                              <th scope="col">Nom</th>
+                              <th scope="col">Prénoms</th>
+                              <th scope="col">Matricule</th>
+                              <th scope="col">Classe</th>
+                          
+                              <th class="ms-5">Actions</th>
+          
+                          </tr>
+                      </thead>
+                      <tbody>
+
+                          {% for etudiant in etudiant %}
+
+                              <tr>
+                                  <th>{{ etudiant.etud.nom | upper}}</th>
+                                  <td>{{ etudiant.etud.prenoms | upper}}</td>
+                                  <td>{{ etudiant.etud.matricule | upper}}</td>
+                                  <td>{{ etudiant.etud.classe | upper}}  {{ etudiant.etud.filieres | upper}}</td>
+                              
+                                  <td class="ms-4">
+                                      <a class="btn btn-primary" href="{{ path('details_etudiant', {'id': etudiant.etud.id}) }}">
+                                          Détails
+                                      </a>
+
+                                  </td>
+                              </tr>
+                      
+                          {% endfor %}
+                          
+
+                          
+                          
+                      </tbody>
+                  </table>
+                </div>
+                <!-- /.card-body -->
+
+              </div>
+            </div>
+            <div class="row mb-3">
+                
+              <!-- LISTE DES MATIERES -->
+              <div class="card direct-chat direct-chat-primary">
+                <div class="card-header">
+                  <h3 class="card-title">LISTE DES MATIERES DE LA CLASSE</h3>
+
+                  <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                      <i class="fas fa-minus"></i>
+                    </button>
+
+                    <button type="button" class="btn btn-tool" data-card-widget="remove">
+                      <i class="fas fa-times"></i>
+                    </button>
+                  </div>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                    <table class="table table-hover mb-5">
+                      <thead class="thead-dark">
+                          <tr>
+                              <th scope="col">Dénomination</th>
+                              <th scope="col">Professeurs</th>
+                              <th scope="col">Type de matière</th>
+                       
+                              <th class="ms-5">Actions</th>
+          
+                          </tr>
+                      </thead>
+                      <tbody>
+
+                          {% for matiere in matiere %}
+
+                              <tr>
+                                  <th>{{ matiere.mat.denomination | upper}}</th>
+                                  <td>{{ matiere.mat.prof | upper}}</td>
+                                  <td>{{ matiere.mat.TypeMatiere | upper}}</td>
+                                  <td>
+                                    <a href="" class="btn btn-warning">
+                                      Evaluer
+                                    </a>
+                                    <a href="" class="btn btn-primary">
+                                      Consulter
+                                    </a>
+                                  </td>
+                              </tr>
+                      
+                          {% endfor %}
+   
+                      </tbody>
+                  </table>
+                </div>
+                <!-- /.card-body -->
+
               </div>
             </div>
           </div>
-           <div class="row mb-5">
+      </div>
 
-                    {% if app.request.method == 'POST' %}
-                      <div class="col-md-6 text-right">
-                        {% include 'classes/modalbtnClasse.html.twig' with {
-                          'button': 'Liste de la classe', 
-                          'btn': 'btn btn-warning',
-                          'messagesClasse': 'LISTE DE LA CLASSE'
-                          
-                          } %}
-                      </div>
-
-                      <div class="col-md-6 ">
-                         {% include 'classes/modalBtnMatiere.html.twig' with {
-                          'buttonMat': 'Liste des matières',
-                          'btn': 'btn btn-info',
-                          'messagesMatiere': 'LISTE DES MATIERES'
-                          
-                          } %}
-                      </div>
-                    {% endif %}
-          </div>
-
-
-         
-        </div>
     </div>
-
-  </div>
-
-  
 
   </div>
 </body>

@@ -112,8 +112,9 @@ class Etudiant
      #[ORM\Column(length: 255)]
      private ?string $filieres = null;
 
-     #[ORM\OneToMany(mappedBy: 'etudiant', targetEntity: Notes::class)]
+     #[ORM\OneToMany(mappedBy: 'etudiants', targetEntity: Notes::class)]
      private Collection $notes;
+
 
      public function __construct()
      {
@@ -412,6 +413,36 @@ class Etudiant
     public function __toString()
     {
         return $this->matricule;
+    }
+
+    /**
+     * @return Collection<int, Notes>
+     */
+    public function getNotes(): Collection
+    {
+        return $this->notes;
+    }
+
+    public function addNote(Notes $note): self
+    {
+        if (!$this->notes->contains($note)) {
+            $this->notes->add($note);
+            $note->setEtudiants($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNote(Notes $note): self
+    {
+        if ($this->notes->removeElement($note)) {
+            // set the owning side to null (unless already changed)
+            if ($note->getEtudiants() === $this) {
+                $note->setEtudiants(null);
+            }
+        }
+
+        return $this;
     }
 
     

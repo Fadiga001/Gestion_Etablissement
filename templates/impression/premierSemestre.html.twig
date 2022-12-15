@@ -57,7 +57,7 @@
                         
                     </div>
                     <div class="col-md-6 text-right">
-                        <a class="btn btn-danger" href="{{ path('listeClasseImprimee')}}">Imprimer la liste</a>
+                        <a class="btn btn-danger" href="{{ path('listeClasseImprimee', {'annee': annees.id, 'idClasse': classe.id})}}">Imprimer la liste</a>
                         <button class="btn btn-secondary" type="button">Imprimer les bulletins</button>
                     </div>
                 </div>
@@ -90,7 +90,7 @@
 
                                 
                                     <td class="ms-4">
-                                       <a href="{{ path('donner_note', {'id': etudiants.etud.id, 'idClasse': etudiants.id}) }}" class="btn btn-primary">
+                                       <a href="{{ path('belletinPS', {'id': etudiants.etud.id, 'idClasse': etudiants.id, 'annee': annees.id}) }}" class="btn btn-primary">
                                             Bulletin
                                        </a>
                                     </td>
