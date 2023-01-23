@@ -2,10 +2,11 @@
 
 namespace App\Form;
 
+use App\Entity\Classe;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+
 
 
 class searchFormType extends AbstractType
@@ -17,12 +18,13 @@ class searchFormType extends AbstractType
     {
         $builder
           
-            ->add('search', TextType::class, [
-                'attr'=>[
-                    'class'=>'group-form ',
-                    'placeholder'=> 'Recherche'
-                ]
-            ])
+                ->add('codeClasse', EntityType::class, [
+                    'class'=> Classe::class,
+                    'choice_label'=> 'codeClasse',
+                    'attr'=>[
+                        'class'=>'form-select'
+                    ]
+                ])
            
 
         ;

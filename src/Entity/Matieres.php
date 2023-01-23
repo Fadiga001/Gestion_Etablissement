@@ -37,18 +37,13 @@ class Matieres
     #[ORM\ManyToMany(targetEntity: Classe::class, inversedBy: 'matieres')]
     private Collection $classe;
 
-    #[ORM\OneToMany(mappedBy: 'matiere', targetEntity: Notes::class)]
-    private Collection $note;
-
-    #[ORM\OneToMany(mappedBy: 'matieres', targetEntity: Notes::class)]
-    private Collection $notes;
+    #[ORM\Column(nullable: true)]
+    private ?int $coefficient = null;
 
 
     public function __construct()
     {
         $this->classe = new ArrayCollection();
-        $this->note = new ArrayCollection();
-        $this->notes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -128,41 +123,24 @@ class Matieres
         return $this;
     }
 
-
-
+   
     public function __toString()
     {
         return $this->denomination;
     }
 
-    /**
-     * @return Collection<int, Notes>
-     */
-    public function getNotes(): Collection
+    public function getCoefficient(): ?int
     {
-        return $this->notes;
+        return $this->coefficient;
     }
 
-    public function addNote(Notes $note): self
+    public function setCoefficient(?int $coefficient): self
     {
-        if (!$this->notes->contains($note)) {
-            $this->notes->add($note);
-            $note->setMatieres($this);
-        }
+        $this->coefficient = $coefficient;
 
         return $this;
     }
 
-    public function removeNote(Notes $note): self
-    {
-        if ($this->notes->removeElement($note)) {
-            // set the owning side to null (unless already changed)
-            if ($note->getMatieres() === $this) {
-                $note->setMatieres(null);
-            }
-        }
-
-        return $this;
-    }
+   
    
 }

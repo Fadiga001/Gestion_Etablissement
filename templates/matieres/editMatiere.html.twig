@@ -16,31 +16,32 @@
 <div class="wrapper">
 
   {% include 'home/navbar.html.twig' %}
+    <div class="container">
+        {% include 'configuration/messageFlash.html.twig' %}
 
-
-   <div class="card border-info mb-5" style="max-width: 40rem; margin: auto;">
-        <div class="card-header">
-            {% include 'configuration/btnRetour.html.twig' with {
-                    'path': 'liste_matieres', 
-                    'text_header': 'MODIFICATION D\'UNE MATIERE '
+        <div class="card border-info mb-5" style="max-width: 40rem; margin: auto;">
+            <div class="card-header">
+                {% include 'configuration/btnRetour.html.twig' with {
+                        'path': 'liste_matieres', 
+                        'text_header': 'MODIFICATION D\'UNE MATIERE '
                     
             
-            } %}
-        </div>
+                } %}
+            </div>
             <div class="card-body">
 
-            {% include 'matieres/_formMatiere.html.twig' with {
+                {% include 'matieres/_formMatiere.html.twig' with {
                 
-                'btn_submit': 'Modifier', 
-                'Text_Modifier': 'Modification de matière',
-                'MBody': 'Voulez-vous modifier cette matière?',
-                'path': "editer_matieres",
-                'param': {'denomination': matiere.denomination }
+                    'btn_submit': 'Modifier', 
+                    'Text_Modifier': 'Modification de matière',
+                    'MBody': 'Voulez-vous modifier cette matière?',
+                    'path': "editer_matieres",
+                    'param': {'denomination': matiere.denomination }
                 
-                }%}
+                    }%}
             </div>
+        </div>
     </div>
-
 
 </div>
   

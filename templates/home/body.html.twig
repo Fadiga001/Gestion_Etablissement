@@ -68,7 +68,7 @@
         <!-- Main row -->
         <div class="row">
           <!-- Left col -->
-          <div class="col-md-6">
+          <div class="col-md-12">
             <!-- Custom tabs (Charts with tabs)-->
             
 
@@ -119,7 +119,7 @@
                                     <th>{{ search.nom | upper}}</th>
                                     <td>{{ search.prenoms | upper}}</td>
                                     <td>{{ search.matricule | upper}}</td>
-                                    <td>{{ search.classe | upper}}  {{ search.filieres | upper}}</td>
+                                    <td>{{ search.classe | upper}}</td>
                                 
                                     <td><img src="{{ vich_uploader_asset(search, 'imageFile') }}" class="image-circle" height="35" width="35"></td>
                                 </tr>
@@ -148,11 +148,11 @@
                         {% for etudiant in etudiant %}
 
                             <tr>
-                                <th>{{ etudiant.nom | upper}}</th>
-                                <td>{{ etudiant.prenoms | upper}}</td>
-                                <td>{{ etudiant.matricule | upper}}</td>
-                                <td>{{ etudiant.classe | upper}}  {{ etudiant.filieres | upper}}</td>
-                                <td><img src="{{ vich_uploader_asset(etudiant, 'imageFile') }}" class="image-circle" height="35" width="35"></td>
+                                <th>{{ etudiant.etud.nom | upper}}</th>
+                                <td>{{ etudiant.etud.prenoms | upper}}</td>
+                                <td>{{ etudiant.etud.matricule | upper}}</td>
+                                <td>{{ etudiant.etud.classe | upper}}</td>
+                                <td><img src="{{ vich_uploader_asset(etudiant.etud, 'imageFile') }}" class="image-circle" height="35" width="35"></td>
                             </tr>
                     
                         {% endfor %}
@@ -171,73 +171,6 @@
             </div>
           </div>
 
-          <div class="col-md-6">
-            <!-- Custom tabs (Charts with tabs)-->  
-            <!-- Calendar -->
-            <div class="card bg-gradient-success">
-              <div class="card-header border-0">
-
-                <h3 class="card-title">
-                  <i class="fa fa-camera-retro" aria-hidden="true"></i>
-                  GALERIE
-                </h3>
-                <!-- tools card -->
-                <div class="card-tools">
-                  <!-- button with a dropdown -->
-                  <div class="btn-group">
-                    <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown" data-offset="-52">
-                      <i class="fas fa-bars"></i>
-                    </button>
-                    <div class="dropdown-menu" role="menu">
-                      <a href="{{ path('ajouter_image')}}" class="dropdown-item">Ajouter une photo</a>
-                      <a href="{{ path('liste_photo')}}" class="dropdown-item">Toutes les photos</a>
-                      
-                    </div>
-                  </div>
-                  <button type="button" class="btn btn-success btn-sm" data-card-widget="collapse">
-                    <i class="fas fa-minus"></i>
-                  </button>
-                  <button type="button" class="btn btn-success btn-sm" data-card-widget="remove">
-                    <i class="fas fa-times"></i>
-                  </button>
-                </div>
-                <!-- /. tools -->
-              </div>
-              <!-- /.card-header -->
-              <div class="card-body pt-0">
-                  <div class="container">
-                      <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
-                        <div class="carousel-indicators">
-                          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
-                        </div>
-                          <div class="carousel-inner">
-                           {% for allImage in allImage %}
-                            <div class="carousel-item active">
-                              <img src="{{ vich_uploader_asset(allImage, 'imageFile') }}" class="d-block w-100" alt="...">
-                              
-                            </div>
-                            {% endfor %}
-                          </div>
-                        
-                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-                          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                          <span class="visually-hidden">Previous</span>
-                        </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-                          <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                          <span class="visually-hidden">Next</span>
-                        </button>
-                      </div>
-                  </div>
-                <div id="calendar" style="width: 100%"></div>
-              </div>
-              <!-- /.card-body -->
-            </div>
-            <!-- /.card -->
-          </div>
-          <!-- right col -->
         </div>
         <!-- /.row (main row) -->
       </div><!-- /.container-fluid -->

@@ -8,6 +8,7 @@ use App\Entity\Professeurs;
 use App\Entity\TypeMatieres;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -56,6 +57,7 @@ class MatiereType extends AbstractType
                 'expanded'=> true,
                 'multiple'=> true
             ])
+            ->add('coefficient', IntegerType::class,  $this->configForm("Coefficient", "form-group", "Donner un coefficient"))
         ;
     }
 

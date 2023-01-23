@@ -85,13 +85,17 @@ class AnneeAcademiqueRepository extends ServiceEntityRepository
         ;
     }
 
-    public function MaxIdYear()
+    public function actifYear()
     {
         return $this->createQueryBuilder('a')
-                    ->select('Max(a.AnneeScolaire) as yearId')
+                    ->select('a')
+                    ->where('a.active = :active')
+                    ->setParameter('active', true)
                     ->getQuery()
-                    ->getSingleScalarResult()
+                    ->getScalarResult()
         ;
     }
+
+    
 
 }

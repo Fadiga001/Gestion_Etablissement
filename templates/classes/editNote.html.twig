@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="fr">
+{% include 'home/head.html.twig' %}
+
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
+
+  {% include 'home/navbar.html.twig' %}
+
+   <div class="container">
+
+       {% include 'configuration/messageFlash.html.twig' %}
+
+
+   <div class="card border-info" style="max-width: 80rem;">
+        <div class="card-header">
+            <div class="row">
+
+                  <div class="col-md-2">
+                      <a href="{{path('consulter_note', {'id': classe.id, 'idMat': matiere.id, 'matricule': mat.etudiants})}}" class="h2">
+                          <i class="fa fa-arrow-circle-left" aria-hidden="true"></i>
+                      </a>
+                  </div>
+                  <div class="col-md-10">
+                      <h3 class="h3">
+                          <span>MODIFICATION DE LA NOTE</span>
+                      </h3>
+                  </div> 
+    
+            </div> 
+           
+            
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+                    <div class="col-md-6">
+                        <h4 class="text-success">Veuillez selectionner le Type d'évaluation d'abord !</h4>
+                    </div>
+
+                     <div class="col-md-6">
+                        <form method='post'>
+                            <div class="form-row">
+                                <div class="form-group mr-4">  
+                                    <select id="inputState" class="form-control" name="typeEvaluation">
+                                        <option>Partiel(Premier Semestre)</option>
+                                        <option>Partiel(Deuxième Semestre)</option>
+                                        <option>Note de classe</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary">valider</button>
+                            </div>
+                        </form>
+                    </div>
+            </div>
+
+            {% if app.request.method =="POST" %}
+                <div class="container mb-3">
+                        <div class="jumbotron">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h3> Nom : {{etudiant.nom}}<h3>
+                                    <h4> 
+                                        Prénoms : {{etudiant.prenoms }}
+                                    <h4>
+                                    <h4> Matricule : {{etudiant.matricule}}</h4>
+                                </div>
+                                <div class="col-md-6">
+                                    <h3> CLASSE : {{classe}}<h3>
+                                    <h4> 
+                                        Semestre : {{ note.semestre }} 
+                                    <h4>
+                                    <h4> Matière : {{matiere}}</h4>
+                                </div>
+                            </div>
+                                <div class="row mt-5 d-flex justify-content-center">
+                                    <div class="col-md-6 text-center ">
+                                        <h4 class=" btn btn-warning"> Type d'évaluation : {{ typeEvaluation }}</h4>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <a href="{{ path('modifier_note', {'id': classe.id, 'idMat': matiere.id, 'matricule': note.etudiants, 'evaluation': note.typeEvaluation }) }}" class="btn btn-primary">Cliquez ici pour modifier la note</a>
+                                    </div>
+                                    
+                                </div>
+                        </div>
+                    </div>
+                    
+                    
+            {% endif %}    
+        </div>
+    </div>
+
+
+   
+  </div>
+
+  
+
+  </div>
+</body>
+</html>
+
+{% include 'home/footer.html.twig' %}
+
+
+
+
+

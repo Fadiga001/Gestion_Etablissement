@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\Filiere;
 use App\Form\FiliereType;
 use App\Repository\FiliereRepository;
-use Doctrine\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

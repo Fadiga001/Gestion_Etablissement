@@ -74,6 +74,16 @@ class MatieresRepository extends ServiceEntityRepository
                 ->getResult();
         }
 
+        public function MatieresParClasse($classe){
+            return $this->createQueryBuilder('m')
+                ->select('m as mat')
+                ->join('m.classe', 'c')
+                ->Where('c.codeClasse = :codeClasse')
+                ->setParameter('codeClasse', $classe)
+                ->getQuery()
+                ->getResult();
+        }
+
        
 
 }

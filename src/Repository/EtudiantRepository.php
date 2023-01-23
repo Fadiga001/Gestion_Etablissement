@@ -57,10 +57,11 @@ class EtudiantRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+    
     public function listeEtudiantDuneClasseEtAnnee($id): array
     {
         return $this->createQueryBuilder('e')
-            ->select('c.id as id, e as etud')
+            ->select('e')
             ->join('e.classe', 'c')
             ->join('e.anneeScolaire', 'a')
             ->where('c.id = :id')
@@ -72,6 +73,26 @@ class EtudiantRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+
+
+    public function classeAReinscrire($classe): array
+    {
+        return $this->createQueryBuilder('e')
+            ->select('e')
+            ->join('e.classe', 'c')
+            ->join('e.anneeScolaire', 'a')
+            ->where('c.codeClasse = :codeClasse')
+            ->setParameter('codeClasse', $classe)
+            ->andwhere('a.active = :active')
+            ->setParameter('active', true)
+            ->orderBy('e.nom', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+
+    
     public function listeEtudiantDuneAnnee(): array
     {
         return $this->createQueryBuilder('e')

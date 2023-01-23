@@ -2,9 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\AnneeAcademique;
-use App\Entity\User;
-use App\Form\searchFormType;
 use App\Repository\AnneeAcademiqueRepository;
 use App\Repository\UserRepository;
 use App\Repository\ClasseRepository;
@@ -14,7 +11,6 @@ use App\Repository\ProfesseursRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -38,7 +34,7 @@ class HomeController extends AbstractController
 
 
 
-        $etudiant = $etudiantRepo->findAllStudents();
+        $etudiant = $etudiantRepo->listeEtudiantDuneAnnee();
 
         return $this->render('home/index.html.twig', [
           'lengthEtudiant'=> $lengthEtudiant,

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Entity\AnneeAcademique;
 use Doctrine\ORM\EntityManagerInterface;
 
 class paginationServices
@@ -35,9 +36,10 @@ class paginationServices
         $offset = $this->currentPage * $this->limit - $this->limit;
 
         // 2) Demander au repository de troyver les elements
-
+        $anneeRepo = $this->manager->getRepository(AnneeAcademique::class);
+        $anneeActive = $anneeRepo->findOneByActive(true);
         $repo = $this->manager->getRepository($this->entityClass);
-        $data = $repo->findBy([], [], $this->limit, $offset);
+        $data = $repo->findBy(['anneeScolaire' => $anneeActive], [], $this->limit, $offset);
 
         //Renvoyer les elements en question
 

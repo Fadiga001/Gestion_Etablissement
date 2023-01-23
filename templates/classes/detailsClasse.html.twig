@@ -83,13 +83,13 @@
                           {% for etudiant in etudiant %}
 
                               <tr>
-                                  <th>{{ etudiant.etud.nom | upper}}</th>
-                                  <td>{{ etudiant.etud.prenoms | upper}}</td>
-                                  <td>{{ etudiant.etud.matricule | upper}}</td>
-                                  <td>{{ etudiant.etud.classe | upper}}  {{ etudiant.etud.filieres | upper}}</td>
+                                  <th>{{ etudiant.nom | upper}}</th>
+                                  <td>{{ etudiant.prenoms | upper}}</td>
+                                  <td>{{ etudiant.matricule | upper}}</td>
+                                  <td>{{ etudiant.classe | upper}}</td>
                               
                                   <td class="ms-4">
-                                      <a class="btn btn-primary" href="{{ path('details_etudiant', {'id': etudiant.etud.id}) }}">
+                                      <a class="btn btn-primary" href="{{ path('details_etudiant', {'id': etudiant.id}) }}">
                                           Détails
                                       </a>
 
@@ -147,10 +147,10 @@
                                   <td>{{ matiere.mat.prof | upper}}</td>
                                   <td>{{ matiere.mat.TypeMatiere | upper}}</td>
                                   <td>
-                                    <a href="" class="btn btn-warning">
+                                    <a href="{{ path('donner_note', {'id': classe.id, 'idMat': matiere.mat.id})}}" class="btn btn-warning">
                                       Evaluer
                                     </a>
-                                    <a href="" class="btn btn-primary">
+                                    <a href="{{ path('consulter_note', {'id': classe.id, 'idMat': matiere.mat.id})}}" class="btn btn-primary">
                                       Consulter
                                     </a>
                                   </td>

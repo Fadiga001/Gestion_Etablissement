@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="fr">
+{% include 'home/head.html.twig' %}
+
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
+
+  {% include 'home/navbar.html.twig' %}
+
+   <div class="container">
+
+    {% include 'configuration/messageFlash.html.twig' %}
+    
+   <div class="card border-info mb-5">
+        <div class="card-header">
+            <div class="row">
+                <div class="col-md-10">
+                    <h3 class="h3">
+                         LISTE DES ETUDIANTS A REINSCRIRE
+                    </h3>
+                </div>
+            </div>
+           
+            
+        </div>
+            
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-8 ">
+                        <h4 class="text-success">Veuillez selectionner la classe d'abord !</h4>
+                    </div>
+                    <div class="col-md-4">
+                        {{form_start(form)}}
+                            <div class="form-row">
+                                <div class="form-group mr-3">
+                                    {{ form_widget(form.codeClasse) }}
+                                </div>
+                                <div class="form-group">
+                                    <button class="btn btn-primary" type="submit">Valider</button>
+                                </div>
+                            </div>
+                        {{form_end(form)}}
+                    </div>
+                </div>
+
+                <div class="row">
+                
+
+                    {% if app.request.method =="POST" %}
+                        <div class="container mb-3">
+                            <div class="jumbotron">
+                                <h3> FILIERE : {{ classe.filiere.denomination }}<h3>
+                                <h4> Classe : {{ classe.denomination }}<h4>
+                                <p> Année active : {{ anneeActive }}</p>
+                            </div>
+                        </div>
+
+                        <table class="table table-hover mt-5">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col">Nom</th>
+                                    <th scope="col">Prénoms</th>
+                                    <th scope="col">Matricule</th>
+                                    <th scope="col">Moyenne générale</th>
+                                    <th class="ms-5">Actions</th>
+        
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for etudiant in etudiant %}
+                                    <tr>
+
+                                        <td>{{etudiant.nom}}</td>
+                                        <td>{{etudiant.prenoms}}</td>
+                                        <td>{{etudiant.matricule}}</td>
+                                        <td>
+                                            {{ (moy1 + moy2)/2 }}
+                                        </td>
+                                        <td>
+                                            {% if ((moy1 + moy2)/2) >= 10 and ((moy1 + moy2)/2) <= 20 %}
+
+                                                {% if etudiant.reinscrire %}
+                                                    <h5 class="text-success"> Valider <h5>
+                                                {% else %}
+                                                    <a href="{{ path('etudiant_reinscrit', {'classe': etudiant.classe ,'matricule': etudiant.matricule}) }}" class="btn btn-primary">Réinscrire</a>
+                                                {% endif %}
+
+                                            {% else %}
+
+                                               <h5 class="text-danger"> Ajourné <h5>
+
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+
+
+                    {% endif %}
+                </div>
+                
+            </div>
+
+            
+    </div>
+
+
+   
+  </div>
+
+  
+
+  </div>
+</body>
+</html>
+
+{% include 'home/footer.html.twig' %}
+
+
+

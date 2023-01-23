@@ -27,29 +27,11 @@ class AnneeAcademiqueController extends AbstractController
     {
         $annee = $anneeRepo->findAll();
 
-        $form = $this->createForm(ActiverType::class);
-        $form->handleRequest($request);
-
-        $yearId = [];
-        $myYear = [];
-        if($form->isSubmitted() && $form->isValid()){
-            $annees = $form->getData(); 
-            $myYear = $anneeRepo->Year($annees);
-            $session->get('an', []); 
-            $session->set('an', $annees);
-
-        }else{
-            $yearId = $anneeRepo->MaxIdYear();
-            $session->get('an', []); 
-            $session->set('an', $yearId);
-        }
+       
 
 
         return $this->render('annee_academique/liste_annee.html.twig', [
             'annee' => $annee,
-            'id' => $yearId,
-            'an'=> $myYear,
-            'form'=>$form->createView()
         ]);
     }
 

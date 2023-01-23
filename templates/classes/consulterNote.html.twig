@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="fr">
+{% include 'home/head.html.twig' %}
+
+<style>
+    #mat{
+        border : none;
+    }
+</style>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+  <div class="wrapper">
+
+    {% include 'home/navbar.html.twig' %}
+
+    <div class="container">
+
+       {% include 'configuration/messageFlash.html.twig' %}
+
+
+    <div class="card" >
+        <div class="card-header">
+
+            <div class="row">
+
+                  <div class="col-md-2">
+                      <a href="{{path('details_classes', {'id': classe.id, 'idMat': matiere.id})}}" class="h2">
+                          <i class="fa fa-arrow-circle-left" aria-hidden="true"></i>
+                      </a>
+                  </div>
+                  <div class="col-md-10">
+                      <h3 class="h3">
+                          <span>NOTES DES ELEVES</span>
+                      </h3>
+                  </div> 
+    
+              </div> 
+              
+        </div>
+        <div class="card-body">
+
+            <div class="row">
+                    <div class="col-md-8 ">
+                        <h4 class="text-success">Veuillez selectionner le semestre d'abord !</h4>
+                    </div>
+                    <div class="col-md-4">
+                        {{form_start(form)}}
+                            <div class="form-row">
+                                <div class="form-group mr-3">
+                                    {{ form_widget(form.semestre) }}
+                                </div>
+                                <div class="form-group">
+                                    <button class="btn btn-primary" type="submit">Valider</button>
+                                </div>
+                            </div>
+                        {{form_end(form)}}
+                    </div>
+            </div>
+
+            {% if app.request.method =="POST" %}
+                <div class="container mb-3">
+                            <div class="jumbotron">
+                                <h3> CLASSE : {{classe}}<h3>
+                                <h4> 
+                                    Semestre : {% for semestre in semestre %} {{ semestre }} {% endfor %}
+                                <h4>
+                                <h4> Matière : {{matiere|lower}}</h4>
+                            </div>
+                        </div>
+
+                <table class="table table-hover mb-5">
+                      <thead class="thead-dark">
+                          <tr>
+                              <th scope="col">Matricule</th>
+                              <th scope="col">Nom</th>
+                              <th scope="col">Prénoms</th>
+                              <th scope="col">Moyenne de classe</th>
+                              <th scope="col">Note de partiel</th>
+                              <th scope="col">Moyenne Obtenue</th>
+                              <th scope="col">Actions</th>
+          
+                          </tr>
+                      </thead>
+                      <tbody>
+
+                          {% for etudiant in etudiant %}
+                                
+                              <tr>
+                                    <td>
+                                        {{etudiant.matricule}}
+                                    </td>
+                                    <th>{{ etudiant.nom | upper}}</th>
+                                    <td>{{ etudiant.prenoms | upper}}</td>
+
+                                    {% set som = 0 %}
+
+                                    <td>
+                                        {% set note = 0 %}
+                                        {% for listenote in listenote %}
+                                            {% if etudiant.matricule == listenote.etudiants and matiere == listenote.matieres and listenote.typeEvaluation == 'Note de classe' and etudiant.classe == listenote.classes and etudiant.anneeScolaire == listenote.annee %}
+                                                {% set note =  listenote.noteEtudiant %}
+                                            {% endif %}
+                                        {% endfor %}
+
+                                        {% if note == 0 %}
+                                            ...
+                                        {% else %}
+                                            {{ note }}
+                                        {% endif %}
+
+
+                                    </td>
+
+                                    <td>
+                                        {% set note = 0 %}
+                                        {% for listenote in listenote %}
+                                            {% if etudiant.matricule == listenote.etudiants and matiere == listenote.matieres and listenote.typeEvaluation == 'Partiel(Premier Semestre)' and etudiant.classe == listenote.classes and etudiant.anneeScolaire == listenote.annee %}
+                                                {% set note =  listenote.noteEtudiant %}
+                                            {% endif %}
+                                        {% endfor %}
+
+                                        {% if note == 0 %}
+                                            ...
+                                        {% else %}
+                                            {{ note }}
+                                        {% endif %}
+
+                                    </td>
+
+                                    <td> 
+                                        {% set som = 0 %}
+                                        {% for listenote in listenote %}
+                                            {% if etudiant.matricule == listenote.etudiants and matiere == listenote.matieres and etudiant.classe == listenote.classes and etudiant.anneeScolaire == listenote.annee  %}
+                                                {% set som = som + listenote.noteEtudiant %}
+                                            {% endif %}
+                                        {% endfor %}
+                                         {% if som == 0 %}
+                                            ...
+                                        {% else %}
+                                            {{ som / 2 }}
+                                        {% endif %}
+                                    </td>
+
+                                    <td>
+                                        {% set som = 0 %}
+                                        {% for listenote in listenote %}
+                                            {% if etudiant.matricule == listenote.etudiants and matiere == listenote.matieres and etudiant.classe == listenote.classes and etudiant.anneeScolaire == listenote.annee %}
+                                                {% set som = som + listenote.noteEtudiant %}
+                                            {% endif %}
+                                        {% endfor %}
+                                         {% if som == 0 %}
+                                            ...
+                                        {% else %}
+                                            <a class="btn btn-primary" href="{{ path('edit_note',{'id': classe.id, 'idMat': matiere.id, 'matricule': etudiant.matricule})}}">
+                                                Modifier
+                                            </a>
+                                        {% endif %}
+                                         
+                                    </td>
+                                 
+                              </tr>
+                      
+                          {% endfor %}  
+                          
+                      </tbody>
+                  </table>
+
+                {% endif %} 
+            </div>
+      </div>
+
+    </div>
+
+  </div>
+</body>
+</html>
+
+{% include 'home/footer.html.twig' %}
+
+
+
+
+

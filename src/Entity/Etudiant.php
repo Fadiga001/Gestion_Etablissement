@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 
-
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -106,20 +105,10 @@ class Etudiant
      #[ORM\Column(type: 'string', nullable: true)]
      private ?string $imageName = null;
 
-     #[ORM\Column(length: 255, nullable: true)]
-     private ?string $examenPrepare = null;
 
-     #[ORM\Column(length: 255)]
-     private ?string $filieres = null;
+     #[ORM\Column(nullable: true)]
+     private ?bool $reinscrire = null;
 
-     #[ORM\OneToMany(mappedBy: 'etudiants', targetEntity: Notes::class)]
-     private Collection $notes;
-
-
-     public function __construct()
-     {
-         $this->notes = new ArrayCollection();
-     }
 
 
     public function getId(): ?int
@@ -356,12 +345,6 @@ class Etudiant
     public function setImageFile(?File $imageFile = null): void
     {
         $this->imageFile = $imageFile;
-
-        if (null !== $imageFile) {
-            // It is required that at least one field changes if you are using doctrine
-            // otherwise the event listeners won't be called and the file is lost
-            $this->updatedAt = new \DateTimeImmutable();
-        }
     }
 
     public function getImageFile(): ?File
@@ -379,71 +362,29 @@ class Etudiant
         return $this->imageName;
     }
 
-    public function getExamenPrepare(): ?string
-    {
-        return $this->examenPrepare;
-    }
-
-    public function setExamenPrepare(?string $examenPrepare): self
-    {
-        $this->examenPrepare = $examenPrepare;
-
-        return $this;
-    }
-
+    
     #[ORM\PrePersist]
     public function onPrePersist(){
         $this->dateInscription = new \DateTime();
     }
-
-    public function getFilieres(): ?string
-    {
-        return $this->filieres;
-    }
-
-    public function setFilieres(string $filieres): self
-    {
-        $this->filieres = $filieres;
-
-        return $this;
-    }
-
-   
 
     public function __toString()
     {
         return $this->matricule;
     }
 
-    /**
-     * @return Collection<int, Notes>
-     */
-    public function getNotes(): Collection
+    public function isReinscrire(): ?bool
     {
-        return $this->notes;
+        return $this->reinscrire;
     }
 
-    public function addNote(Notes $note): self
+    public function setReinscrire(?bool $reinscrire): self
     {
-        if (!$this->notes->contains($note)) {
-            $this->notes->add($note);
-            $note->setEtudiants($this);
-        }
+        $this->reinscrire = $reinscrire;
 
         return $this;
     }
 
-    public function removeNote(Notes $note): self
-    {
-        if ($this->notes->removeElement($note)) {
-            // set the owning side to null (unless already changed)
-            if ($note->getEtudiants() === $this) {
-                $note->setEtudiants(null);
-            }
-        }
-
-        return $this;
-    }
 
     
   

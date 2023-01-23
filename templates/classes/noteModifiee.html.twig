@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fr">
+{% include 'home/head.html.twig' %}
+
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
+
+  {% include 'home/navbar.html.twig' %}
+
+   <div class="container">
+
+       {% include 'configuration/messageFlash.html.twig' %}
+
+
+   <div class="card border-info" style="max-width: 80rem;">
+        <div class="card-header">
+            <div class="row">
+
+                  <div class="col-md-2">
+                      <a href="{{path('consulter_note', {'id': classe.id, 'idMat': matiere.id, 'matricule': mat.etudiants})}}" class="h2">
+                          <i class="fa fa-arrow-circle-left" aria-hidden="true"></i>
+                      </a>
+                  </div>
+                  <div class="col-md-10">
+                      <h3 class="h3">
+                          <span>MODIFICATION DE LA NOTE</span>
+                      </h3>
+                  </div> 
+    
+            </div> 
+           
+            
+        </div>
+        <div class="card-body">
+            
+                    <div class="container mb-3">
+                        <div class="jumbotron">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    
+                                </div>
+                                <div class="col-md-4">
+                                    {{ form_start(form) }}
+                                            <h4>{{ evaluation }}</h4>
+                                            <div class="form-group">
+                                                {{form_widget(form.note, {'value': note.noteEtudiant})}}
+                                            </div>
+                                            <div class="form-group">
+                                                <button type="submit" class="btn btn-primary">Valider</button> 
+                                            </div>
+                                    {{ form_end(form) }}
+                                </div>
+                                <div class="col-md-4">
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+        </div>
+    </div>
+
+
+   
+  </div>
+
+  
+
+  </div>
+</body>
+</html>
+
+{% include 'home/footer.html.twig' %}
+
+
+
+
+

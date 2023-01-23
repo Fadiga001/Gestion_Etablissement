@@ -37,12 +37,21 @@ class MatieresController extends AbstractController
         if($form->isSubmitted() && $form->isValid())
         {
             $matiere = $form->getData();
-            $entityManager->persist($matiere);
-            $entityManager->flush();
+            if($matiere->getCoefficient() < 0 || $matiere->getCoefficient() > 10)
+            {
+                $this->addFlash('danger', 'le coefficient doit être compris entre 0-10');
+           
+                return $this->redirectToRoute('creer_matieres');
+            }else{
 
-            $this->addFlash('success', 'Matiére créée avec succès.');
-
-            return $this->redirectToRoute("liste_matieres");
+                $entityManager->persist($matiere);
+                $entityManager->flush();
+    
+                $this->addFlash('success', 'Matière créée avec succès.');
+    
+                return $this->redirectToRoute("liste_matieres");
+            }
+            
         }
      
         return $this->render('matieres/creerMatiere.html.twig', [
@@ -61,12 +70,20 @@ class MatieresController extends AbstractController
         if($form->isSubmitted() && $form->isValid())
         {
             $matiere = $form->getData();
-            $entityManager->persist($matiere);
-            $entityManager->flush();
-
-            $this->addFlash('success', 'Matiére a été modifiée avec succès.');
-
-            return $this->redirectToRoute("liste_matieres");
+            if($matiere->getCoefficient() < 0 || $matiere->getCoefficient() > 10)
+            {
+                $this->addFlash('danger', 'le coefficient doit être compris entre 0-10');
+           
+                return $this->redirectToRoute('editer_matieres');
+            }else{
+                
+                $entityManager->persist($matiere);
+                $entityManager->flush();
+    
+                $this->addFlash('success', 'Matière modifiée avec succès.');
+    
+                return $this->redirectToRoute("liste_matieres");
+            }
         }
      
         return $this->render('matieres/editMatiere.html.twig', [

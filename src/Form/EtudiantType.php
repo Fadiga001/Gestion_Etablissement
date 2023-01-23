@@ -60,17 +60,7 @@ class EtudiantType extends AbstractType
             ->add('personneAContacter', TextType::class, $this->configForm("Personne à contacter(En cas d'urgence)", "group-form", "Personne à contacter"))
             ->add('adresseDePersonneAContacter', TextType::class, $this->configForm("Adresse de personne à contacter(En cas d'urgence)", "group-form", "Adresse de personne à contacter"))
             ->add('telephoneDePersonneAContacter', TextType::class, $this->configForm("Téléphone de personne à contacter(En cas d'urgence)", "group-form", "Téléphone de personne à contacter"))
-            ->add('examenPrepare', ChoiceType::class, [
-                'label'=> 'Examen Preparé',
-                'attr'=> [
-                    'class'=> 'form-select'
-                ],
-                'choices'=> [
-                    'BTS' => 'BTS',
-                    'DTS'=> 'DTS'
-                ], 
-                
-            ])
+            
             ->add('status', ChoiceType::class, [
                 'label'=> 'Status',
                 'attr'=> [
@@ -100,25 +90,6 @@ class EtudiantType extends AbstractType
                     'class'=>'form-select'
                 ]
             ])
-            ->add('filieres', ChoiceType::class, [
-                'label'=> 'Filière',
-                'attr'=> [
-                    'class'=> 'form-select'
-                ],
-                'choices'=> [
-                    'INFORMATIQUE' => 'INFORMATIQUE ET DEVELOPPEUR D\'APPLICATION',
-                    'FINANCE COMPTABILITE'=> 'FINANCE COMPTABILITE',
-                    'COMMUNICATION VISUELLE'=>'COMMUNICATION VISUELLE',
-                    'GESTION COMMERCIALE' => 'GESTION COMMERCIALE',
-                    'RESSOURCES HUMAINES ET COMMUNICATION'=> 'RESSOURCES HUMAINES ET COMMUNICATION',
-                    'PUBLICITE' => 'PUBLICITE',
-                    'LOGISTIQUE'=> 'LOGISTIQUE',
-                    
-                ], 
-                
-            ])
-            
-
             ->add('imageFile', VichImageType::class, $this->configForm("Photo", "group-form", "Ajoutez une photo"))
         ;
     }
