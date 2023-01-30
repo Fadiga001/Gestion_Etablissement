@@ -40,10 +40,14 @@ class Matieres
     #[ORM\Column(nullable: true)]
     private ?int $coefficient = null;
 
+    #[ORM\OneToMany(mappedBy: 'matiere', targetEntity: Noter::class)]
+    private Collection $noters;
+
 
     public function __construct()
     {
         $this->classe = new ArrayCollection();
+        $this->noters = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -137,6 +141,36 @@ class Matieres
     public function setCoefficient(?int $coefficient): self
     {
         $this->coefficient = $coefficient;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Noter>
+     */
+    public function getNoters(): Collection
+    {
+        return $this->noters;
+    }
+
+    public function addNoter(Noter $noter): self
+    {
+        if (!$this->noters->contains($noter)) {
+            $this->noters->add($noter);
+            $noter->setMatiere($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNoter(Noter $noter): self
+    {
+        if ($this->noters->removeElement($noter)) {
+            // set the owning side to null (unless already changed)
+            if ($noter->getMatiere() === $this) {
+                $noter->setMatiere(null);
+            }
+        }
 
         return $this;
     }

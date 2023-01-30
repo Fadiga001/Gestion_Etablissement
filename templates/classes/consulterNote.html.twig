@@ -97,8 +97,8 @@
                                     <td>
                                         {% set note = 0 %}
                                         {% for listenote in listenote %}
-                                            {% if etudiant.matricule == listenote.etudiants and matiere == listenote.matieres and listenote.typeEvaluation == 'Note de classe' and etudiant.classe == listenote.classes and etudiant.anneeScolaire == listenote.annee %}
-                                                {% set note =  listenote.noteEtudiant %}
+                                            {% if etudiant.matricule == listenote.etudiants and matiere == listenote.matiere and etudiant.classe == listenote.classes and etudiant.anneeScolaire == listenote.annee %}
+                                                {% set note =  listenote.noteClasse %}
                                             {% endif %}
                                         {% endfor %}
 
@@ -114,8 +114,8 @@
                                     <td>
                                         {% set note = 0 %}
                                         {% for listenote in listenote %}
-                                            {% if etudiant.matricule == listenote.etudiants and matiere == listenote.matieres and listenote.typeEvaluation == 'Partiel(Premier Semestre)' and etudiant.classe == listenote.classes and etudiant.anneeScolaire == listenote.annee %}
-                                                {% set note =  listenote.noteEtudiant %}
+                                            {% if etudiant.matricule == listenote.etudiants and matiere == listenote.matiere and etudiant.classe == listenote.classes and etudiant.anneeScolaire == listenote.annee %}
+                                                {% set note =  listenote.notePartiel %}
                                             {% endif %}
                                         {% endfor %}
 
@@ -128,27 +128,27 @@
                                     </td>
 
                                     <td> 
-                                        {% set som = 0 %}
+                                        {% set moy = 0 %}
                                         {% for listenote in listenote %}
-                                            {% if etudiant.matricule == listenote.etudiants and matiere == listenote.matieres and etudiant.classe == listenote.classes and etudiant.anneeScolaire == listenote.annee  %}
-                                                {% set som = som + listenote.noteEtudiant %}
+                                            {% if etudiant.matricule == listenote.etudiants and matiere == listenote.matiere and etudiant.classe == listenote.classes and etudiant.anneeScolaire == listenote.annee  %}
+                                                {% set moy = listenote.moyenne %}
                                             {% endif %}
                                         {% endfor %}
-                                         {% if som == 0 %}
+                                         {% if moy == 0 %}
                                             ...
                                         {% else %}
-                                            {{ som / 2 }}
+                                            {{ moy }}
                                         {% endif %}
                                     </td>
 
                                     <td>
-                                        {% set som = 0 %}
+                                        {% set moy = 0 %}
                                         {% for listenote in listenote %}
-                                            {% if etudiant.matricule == listenote.etudiants and matiere == listenote.matieres and etudiant.classe == listenote.classes and etudiant.anneeScolaire == listenote.annee %}
-                                                {% set som = som + listenote.noteEtudiant %}
+                                            {% if etudiant.matricule == listenote.etudiants and matiere == listenote.matiere and etudiant.classe == listenote.classes and etudiant.anneeScolaire == listenote.annee %}
+                                                {% set moy = listenote.moyenne %}
                                             {% endif %}
                                         {% endfor %}
-                                         {% if som == 0 %}
+                                         {% if moy == 0 %}
                                             ...
                                         {% else %}
                                             <a class="btn btn-primary" href="{{ path('edit_note',{'id': classe.id, 'idMat': matiere.id, 'matricule': etudiant.matricule})}}">

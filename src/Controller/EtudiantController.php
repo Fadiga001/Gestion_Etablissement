@@ -74,8 +74,6 @@ class EtudiantController extends AbstractController
         $classe = [];
         $listeMat =[];
 
-        $moy1=[];
-        $moy2 = [];
 
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -85,38 +83,6 @@ class EtudiantController extends AbstractController
             $listeEtudiant = $etudiantRepository->classeAReinscrire($classe->getCodeClasse());
 
             $listeMat = $matieresRepo->MatieresParClasse($classe->getCodeClasse());
-
-            $moy1 = [];
-            $moy2 = [];
-
-            for($i=0; $i<sizeof($listeEtudiant); $i++)
-            {
-                $moy1 = [];
-                $moy2 = [];
-                $somme = 0;
-                for($j=0; $j<sizeof($listeNote); $j++)
-                {
-                    if($listeEtudiant[$i]->getMatricule() == $listeNote[$j]->getEtudiants() && $listeEtudiant[$i]->getClasse() == $listeNote[$j]->getClasses() && $listeEtudiant[$i]->getAnneeScolaire() == $listeNote[$j]->getAnnee() && $listeNote[$j]->getSemestre() == 'PREMIER SEMESTRE' )
-                    {
-                        $somme = $somme + $listeNote[$j]->getNoteEtudiant();
-                    }
-                } 
-
-                $moy1 = $somme / sizeof($listeMat);
-
-                $somme2 = 0;
-                for($j=0; $j<sizeof($listeNote); $j++)
-                {
-                    if($listeEtudiant[$i]->getMatricule() == $listeNote[$j]->getEtudiants() && $listeEtudiant[$i]->getClasse() == $listeNote[$j]->getClasses() && $listeEtudiant[$i]->getAnneeScolaire() == $listeNote[$j]->getAnnee() && $listeNote[$j]->getSemestre() == 'DEUXIEME SEMESTRE' )
-                    {
-                        $somme2 = $somme2 + $listeNote[$j]->getNoteEtudiant();
-                    }
-                }
-
-                $moy2 = $somme2 / sizeof($listeMat);
-
-                
-            }
 
 
         }
@@ -130,9 +96,9 @@ class EtudiantController extends AbstractController
             'classe' =>$classe,
             'anneeActive' => $anneeActive,
             'listeNote' => $listeNote,
-            'listeMat'=> $listeMat,
-            'moy1'=>$moy1,
-            'moy2'=>$moy2,
+            'listeMat'=>$listeMat,
+            'totalMat'=> sizeof($listeMat),
+
         ]);
     }
 

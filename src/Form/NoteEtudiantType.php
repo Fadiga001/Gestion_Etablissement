@@ -12,7 +12,8 @@ class NoteEtudiantType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('note', NumberType::class)
+            ->add('noteClasse', NumberType::class)
+            ->add('notePartiel', NumberType::class)
         ;
     }
 

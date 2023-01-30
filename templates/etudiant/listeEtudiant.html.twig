@@ -48,13 +48,12 @@
                                 <th>{{ etudiant.nom | upper}}</th>
                                 <td>{{ etudiant.prenoms | upper}}</td>
                                 <td>{{ etudiant.matricule | upper}}</td>
-                                <td>{{ etudiant.classe | upper}}  {{ etudiant.filieres | upper}}</td>
+                                <td>{{ etudiant.classe | upper}}</td>
                             
                                 <td class="ms-4">
                                     <a class="btn btn-primary" href="{{ path('details_etudiant', {'id': etudiant.id}) }}">
                                         Détails
                                     </a>
-
                                 </td>
                             </tr>
                     

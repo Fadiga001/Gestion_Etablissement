@@ -10,6 +10,7 @@ use App\Form\ClasseType;
 use App\Form\semestreType;
 use App\Form\NoteEtudiantType;
 use App\Entity\AnneeAcademique;
+use App\Entity\Moyenne;
 use App\Repository\NoterRepository;
 use App\Repository\ClasseRepository;
 use App\Repository\EtudiantRepository;
@@ -100,14 +101,48 @@ class ClassesController extends AbstractController
         ]);
     }
 
+   
+   
     #[Route('/classes/voir-les-differentes-classes/details-classe/{id}', name: 'details_classes')]
-    public function detailsClasse(EtudiantRepository $etudiantRepo, MatieresRepository $matRepo, Classe $classe, $id, ClasseRepository $classeRepo): Response
+    public function detailsClasse(EtudiantRepository $etudiantRepo, MatieresRepository $matRepo, Classe $classe, $id, ClasseRepository $classeRepo, NoterRepository $noteRepo, EntityManagerInterface $manager): Response
     {
 
         $etudiant = $etudiantRepo->listeEtudiantDuneClasseEtAnnee($id);
         $classe = $classeRepo->findOneById($id);
         $matiere = $matRepo->listeMatieresParClasse($id);
+        $listeNote = $noteRepo->findAll();
+
        
+        for($i=0; $i<sizeof($etudiant); $i++)
+        {
+            $somme = 0;
+            $mat = '';
+            $classes = '';
+            $semestre = '';
+            $matricule ='';
+            for($j=0; $j<sizeof($listeNote); $j++)
+            {
+                for($k=0; $k<sizeof($matiere); $k++)
+                {
+                    if($etudiant[$i]->getMatricule() == $listeNote[$j]->getEtudiants() && $etudiant[$i]->getClasse() == $listeNote[$j]->getClasses() && $etudiant[$i]->getAnneeScolaire() == $listeNote[$j]->getAnnee() && $listeNote[$j]->getSemestre() == 'PREMIER SEMESTRE' && $listeNote[$j]->getMatieres()== $matiere[$k]->getDenomination())
+                    {
+                        $somme = $somme + $listeNote[$j]->getNoteEtudiant();
+                        $mat = $matiere[$k]->getDenomination();
+                        $matricule = $etudiant[$i]->getMatricule();
+                        $semestre = $listeNote[$j]->getSemestre();
+                        $classes = $etudiant[$i]->getClasse();
+                    }
+                }
+                
+            }
+
+
+            $moyenne = ( $somme / 2 );
+            
+            
+            
+        }
+
        
 
         return $this->render('classes/detailsClasse.html.twig', [
@@ -116,6 +151,9 @@ class ClassesController extends AbstractController
             'matiere'=> $matiere,
         ]);
     }
+
+
+
 
     #[Route('/classes/voir-les-differentes-classes/details-classe/{id}/{idMat}', name: 'consulter_note')]
     public function Consulter(EtudiantRepository $etudiantRepo, MatieresRepository $matRepo, NoterRepository $noteRepo, Classe $classe, $id, $idMat, ClasseRepository $classeRepo, Request $request): Response
@@ -153,7 +191,7 @@ class ClassesController extends AbstractController
 
     #[Route('/classes/voir-les-differentes-classes/details-classe/{id}/{idMat}/{matricule}/edit', name: 'edit_note')]
     #[ParamConverter('noter', options: ['mapping' => ['matricule' => 'etudiants']])]
-    public function edit(EtudiantRepository $etudiantRepo, MatieresRepository $matRepo, NoterRepository $noteRepo, Classe $classe, $id, $idMat, $matricule, ClasseRepository $classeRepo, Request $request): Response
+    public function edit(EtudiantRepository $etudiantRepo, MatieresRepository $matRepo, NoterRepository $noteRepo, Classe $classe, $id, $idMat, $matricule, ClasseRepository $classeRepo, Request $request, EntityManagerInterface $manager): Response
     {
 
         $etudiant = $etudiantRepo->findOneByMatricule($matricule);
@@ -162,44 +200,45 @@ class ClassesController extends AbstractController
         $listeNote = $noteRepo->listeNoteParEtudiant($matricule,$matiere->getDenomination());
         $mat = $noteRepo->findOneByEtudiants($matricule);
 
-        $typeEvaluation = [];
+        for($i=0; $i<sizeof($listeNote); $i++){
 
-        $note1 = [];
+            if($listeNote[$i]->getEtudiants() == $matricule && $listeNote[$i]->getMatieres() == $matiere  && $listeNote[$i]->getClasses() == $classe->getDenomination()){
+                
+                $note= $noteRepo->editNote($matricule, $matiere->getDenomination());
+                
+            }
 
-        if($request->isMethod('post')){
-            
-           $typeEvaluation = $request->get('typeEvaluation');
+       }
 
-           $note1 = [];
 
-           for($i=0; $i<sizeof($listeNote); $i++){
+       $form = $this->createForm(NoteEtudiantType::class);
+       $form->handleRequest($request);
 
-                if($listeNote[$i]->getEtudiants() == $matricule && $listeNote[$i]->getMatieres() == $matiere && $listeNote[$i]->getTypeEvaluation() == $typeEvaluation && $listeNote[$i]->getClasses() == $classe->getDenomination()){
-                    
-                    $note1 = $noteRepo->editNote($matricule, $matiere->getDenomination(), $typeEvaluation);
-                    
-                }
+       if($form->isSubmitted() && $form->isValid()){
+           $noteClasses = $form->get('noteClasse')->getData();
+           $notePartiels = $form->get('notePartiel')->getData();
+           $note->setNoteClasse($noteClasses)
+                ->setNotePartiel($notePartiels)
+                ->setMoyenne( ($noteClasses+$notePartiels) / 2);
 
-           }
+                $manager->persist($note);
+                $manager->flush();
+           
+           $this->addFlash('success', "Note modifiée avec succès");
 
-           if(!$note1){
-                $this ->addFlash('danger', "Aucune note n'existe pour ce type d'évaluation($typeEvaluation)");
+           return $this->redirectToRoute('consulter_note', ['id'=>$id, 'idMat'=>$idMat ]);
+       }
 
-                return $this->redirectToRoute('edit_note', ['id'=>$id, 'idMat'=>$idMat, 'matricule'=>$matricule]);
-           }
-         
-              
-        }
 
 
         return $this->render('classes/editNote.html.twig', [
+            'form'=> $form->createView(),
             'etudiant' => $etudiant,
             'classe' => $classe,
             'matiere'=> $matiere,
             'id'=>$id,
-            'note'=>$note1,
+            'note'=>$note,
             'idMat'=>$idMat,
-            'typeEvaluation' =>$typeEvaluation,
             'matricule'=>$matricule,
             'mat'=>$mat
 
@@ -211,47 +250,6 @@ class ClassesController extends AbstractController
 
 
 
-    #[Route('/classes/voir-les-differentes-classes/details-classe/{id}/{idMat}/{matricule}/{evaluation}/noter', name: 'modifier_note')]
-    public function modifierNote(NoterRepository $noteRepo, MatieresRepository $matRepo, Classe $classe, $id, $idMat, ClasseRepository $classeRepo, AnneeAcademiqueRepository $anneeRepo,$matricule, $evaluation, Request $request, EntityManagerInterface $manager): Response
-    {
-
-        $classe = $classeRepo->findOneById($id);
-        $matiere = $matRepo->findOneById($idMat);
-        $note = $noteRepo->editNote($matricule,$matiere->getDenomination(),$evaluation);
-        $mat = $noteRepo->findOneByEtudiants($matricule);
-
-        $form = $this->createForm(NoteEtudiantType::class);
-        $form->handleRequest($request);
-
-        if($form->isSubmitted() && $form->isValid()){
-            $noteEtudiant = $form->get('note')->getData();
-            $note->setNoteEtudiant($noteEtudiant);
-            $manager->persist($note);
-            $manager->flush();
-            
-            $this->addFlash('success', "Note modifiée avec succès");
-
-            return $this->redirectToRoute('consulter_note', ['id'=>$id, 'idMat'=>$idMat ]);
-        }
-
-
-       
-        return $this->render('classes/noteModifiee.html.twig', [
-            'form'=>$form->createView(),
-            'classe' => $classe,
-            'matiere'=> $matiere,
-            'id'=>$id,
-            'note'=>$note,
-            'idMat'=>$idMat,
-            'evaluation' =>$evaluation,
-            'matricule'=>$matricule,
-            'mat'=>$mat
-        ]);
-    }
-
-
-
-
     #[Route('/classes/voir-les-differentes-classes/details-classe/{id}/{idMat}/noter', name: 'donner_note')]
     public function donnerNote(EtudiantRepository $etudiantRepo, MatieresRepository $matRepo, Classe $classe, $id, $idMat, ClasseRepository $classeRepo, AnneeAcademiqueRepository $anneeRepo, Request $request, NoterRepository $noteRepo, EntityManagerInterface $manager): Response
     {
@@ -260,16 +258,18 @@ class ClassesController extends AbstractController
         $classe = $classeRepo->findOneById($id);
         $matiere = $matRepo->findOneById($idMat);
         $anneeActive = $anneeRepo->findOneByActive(true);
+        $listeNote = $noteRepo->findAll();
         
 
         $an = new DateTime();
-     
-        $evaluation = [];
+
 
         if($request->isMethod('post'))
         {
-            $notes = $request->get('note');
-            $evaluation = $request->get('typeEvaluation');
+            $noteClasse = $request->get('noteClasse');
+            $notePartiel = $request->get('notePartiel');
+
+            $note = [];
 
             if($anneeActive->getDebut() <= $an && $anneeActive->getFinPremierSemestre() >= $an)
             {
@@ -279,9 +279,12 @@ class ClassesController extends AbstractController
                     $note = new Noter;
 
                     $mat = $etudiant[$i]->getMatricule();
-                    $noteEtud = $notes[$i];
+                    $noteClasses = $noteClasse[$i];
+                    $notePartiels = $notePartiel[$i];
 
-                    if($noteEtud > 20 || $noteEtud < 0)
+                    $moy = ($noteClasses+$notePartiels)/2 ;
+
+                    if($noteClasses > 20 || $noteClasses < 0 || $notePartiels > 20 || $notePartiels < 0)
                     {
                         $this ->addFlash('danger', 'Les notes doivent être comprises entre 0-20');
 
@@ -290,24 +293,19 @@ class ClassesController extends AbstractController
                     }else{
                         $note->setEtudiants($mat)
                         ->setClasses($classe)
-                        ->setMatieres($matiere)
+                        ->setMatiere($matiere)
                         ->setSemestre('PREMIER SEMESTRE')
                         ->setAnnee($anneeActive->getAnneeScolaire())
                         ->setProf($matiere->getProf())
-                        ->setNoteEtudiant($noteEtud);
+                        ->setNoteClasse($noteClasses)
+                        ->setNotePartiel($notePartiels)
+                        ->setMoyenne($moy);
 
-                        if($evaluation == 'Note de classe')
-                        {
-                            $note->setTypeEvaluation($evaluation);
-                        }else{
-                            $note->setTypeEvaluation($evaluation.'(Premier Semestre)');
-                        }
 
                         $manager->persist($note);
                     }
 
                 }
-
 
                 $manager->flush();
 
@@ -325,9 +323,11 @@ class ClassesController extends AbstractController
                     $note = new Noter;
 
                     $mat = $etudiant[$i]->getMatricule();
-                    $noteEtud = $notes[$i];
+                    $noteClasses = $noteClasse[$i];
+                    $notePartiels = $notePartiel[$i];
+                    $moy = ($noteClasses+$notePartiels)/2 ;
 
-                    if($noteEtud > 20 || $noteEtud < 0)
+                    if($noteClasses > 20 || $noteClasses < 0 || $notePartiels > 20 || $notePartiels < 0)
                     {
                         $this ->addFlash('danger', 'Les notes doivent être comprises entre 0-20');
 
@@ -340,14 +340,9 @@ class ClassesController extends AbstractController
                         ->setSemestre('DEUXIEME SEMESTRE')
                         ->setAnnee($anneeActive->getAnneeScolaire())
                         ->setProf($matiere->getProf())
-                        ->setNoteEtudiant($noteEtud);
-
-                        if($evaluation == 'Note de classe')
-                        {
-                            $note->setTypeEvaluation($evaluation);
-                        }else{
-                            $note->setTypeEvaluation($evaluation.'(Deuxième Semestre)');
-                        }
+                        ->setNoteClasse($noteClasses)
+                        ->setNotePartiel($notePartiels)
+                        ->setMoyenne($moy);
 
                         $manager->persist($note);
                     }

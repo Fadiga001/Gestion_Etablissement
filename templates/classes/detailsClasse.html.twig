@@ -143,14 +143,14 @@
                           {% for matiere in matiere %}
 
                               <tr>
-                                  <th>{{ matiere.mat.denomination | upper}}</th>
-                                  <td>{{ matiere.mat.prof | upper}}</td>
-                                  <td>{{ matiere.mat.TypeMatiere | upper}}</td>
+                                  <th>{{ matiere.denomination | upper}}</th>
+                                  <td>{{ matiere.prof | upper}}</td>
+                                  <td>{{ matiere.TypeMatiere | upper}}</td>
                                   <td>
-                                    <a href="{{ path('donner_note', {'id': classe.id, 'idMat': matiere.mat.id})}}" class="btn btn-warning">
+                                    <a href="{{ path('donner_note', {'id': classe.id, 'idMat': matiere.id})}}" class="btn btn-warning">
                                       Evaluer
                                     </a>
-                                    <a href="{{ path('consulter_note', {'id': classe.id, 'idMat': matiere.mat.id})}}" class="btn btn-primary">
+                                    <a href="{{ path('consulter_note', {'id': classe.id, 'idMat': matiere.id})}}" class="btn btn-primary">
                                       Consulter
                                     </a>
                                   </td>

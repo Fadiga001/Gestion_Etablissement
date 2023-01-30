@@ -74,10 +74,31 @@
                                         <td>{{etudiant.prenoms}}</td>
                                         <td>{{etudiant.matricule}}</td>
                                         <td>
-                                            {{ (moy1 + moy2)/2 }}
+                                            {% set somMoyS1  = 0 %}
+                                            {% set somMoyS2  = 0 %}
+                                          
+                                            {% for listeNote in listeNote %}
+
+                                                    {% if etudiant.matricule == listeNote.etudiants and etudiant.classe == listeNote.classes and etudiant.anneeScolaire == listeNote.annee and listeNote.semestre == 'PREMIER SEMESTRE'%}
+                                                        {% set somMoyS1 = somMoyS1 + listeNote.moyenne %}
+                                                    {% endif %}
+                                                    
+                                                    {% if etudiant.matricule == listeNote.etudiants and etudiant.classe == listeNote.classes and etudiant.anneeScolaire == listeNote.annee and listeNote.semestre == 'DEUXIEME SEMESTRE'%}
+                                                        {% set somMoyS2 = somMoyS2 + listeNote.moyenne %}
+                                                    {% endif %}
+
+                                            {% endfor %}
+
+                                            {% set moyS1 = somMoyS1 / totalMat %}    
+                                            {% set moyS2 = somMoyS2 / totalMat %}
+
+                                            {% set moy = (moyS1 + moyS2) / 2 %}
+
+                                            {{ moy }}
+
                                         </td>
                                         <td>
-                                            {% if ((moy1 + moy2)/2) >= 10 and ((moy1 + moy2)/2) <= 20 %}
+                                            {% if moy >= 10 and moy <= 20 %}
 
                                                 {% if etudiant.reinscrire %}
                                                     <h5 class="text-success"> Valider <h5>

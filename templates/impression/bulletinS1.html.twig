@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>Titre de la page</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+
+    .table1{
+        margin: auto;
+        width: 80%;
+    }
+    .table{
+        width: 100%;
+    }
+
+    caption{
+        margin-left: 25%; 
+        margin-right: 25%; 
+        margin-bottom: 5%;
+        border: 2px solid skyblue;
+        border-collapse: collapse;
+        padding: 8px;
+    }
+
+.note{
+    border-collapse: collapse;
+}
+
+ .entete, .titre, .contenu, .fin  {
+        border: 1px solid black;
+      }
+
+
+    
+
+  </style>
+</head>
+<body>
+
+    <table class="table1">
+  
+        <caption>PREMIER SEMESTRE</caption>
+
+        <tr> 
+            <td class="left"> <span>Annéee Scolaire : {{ anneeActive }} </span></td>  
+            <td class="right"> <span>Matricule : {{ etudiant.matricule }} </span></td> 
+        </tr>
+
+    </table>
+
+    <table class="table1">
+
+        <tr> 
+            <td>Classe : {{ classe.codeClasse}}</td> 
+        </tr>
+        <tr> 
+            <td>Nom & Prénoms : {{ etudiant.nom|upper}} {{ etudiant.prenoms|upper}}</td> 
+        </tr>
+
+    </table>
+
+    <table class="table1">
+  
+        <tr> 
+            <td class="left"> <span>Date de naissance : {{ etudiant.dateNaissance|date('d/m/Y') }} </span></td>  
+            <td class="right"> <span>Lieu de naissance : {{ etudiant.lieuNaissance }} </span></td> 
+        </tr>
+
+    </table>
+
+    <table class="note">
+  
+        <tr> 
+            <th class="entete"> MATIERES </th>  
+            <th class="entete"> MOY, <br>/20 </th> 
+            <th class="entete"> COEFF</th> 
+            <th class="entete"> MOY AVEC <br>COEFF </th> 
+            <th class="entete"> NOM DU PROFESSEUR </th> 
+            <th class="entete"> APPRECIATIONS DES PROFESSEURS </th> 
+        </tr>
+        <tr> 
+            <th class="titre"> MATIERES GENERALES </th>  
+            <th class="titre"> </th> 
+            <th class="titre"> </th> 
+            <th class="titre">  </th> 
+            <th class="titre">  </th> 
+            <th class="titre">  </th> 
+        </tr>
+        <tr> 
+            
+                <td class="contenu"> 
+                    {% for matGen in matGen %}
+                        {{ matGen.matiere }}
+                     {% endfor %}
+                </td>  
+                <td class="contenu">
+                    {% for matGen in matGen %}
+                        {{ matGen.moyenne}}
+                    {% endfor %}
+                </td> 
+                <td class="contenu"> 
+                    {% for matGen in matGen %}
+                        {{ matGen.matiere.coefficient}}
+                    {% endfor %} 
+                </td> 
+                <td class="contenu">
+                    {% for matGen in matGen %} 
+                        {{ matGen.moyenne}} * {{ matGen.matiere.coefficient}}
+                    {% endfor %} 
+                </td> 
+                <td class="contenu">
+                    {% for matGen in matGen %} 
+                        {{ matGen.matiere.prof}}
+                    {% endfor %} 
+                </td> 
+                <td class="contenu">
+                    {% for matGen in matGen %} 
+                        {{ matGen.moyenne}}
+                    {% endfor %} 
+                </td> 
+           
+        </tr>
+        <tr> 
+            <th class="fin"> MOYENNE DES MATIERES GENERALES </th>  
+            <th class="fin"> </th> 
+            <th class="fin"> </th> 
+            <th class="fin">  </th> 
+            <th class="fin">  </th> 
+            <th class="fin">  </th> 
+        </tr>
+        <tr> 
+            <th class="titre"> MATIERES PROFESSIONNELLES </th>  
+            <th class="titre"> </th> 
+            <th class="titre"> </th> 
+            <th class="titre">  </th> 
+            <th class="titre">  </th> 
+            <th class="titre">  </th> 
+        </tr>
+        <tr> 
+            
+                <td class="contenu">
+                    {% for matProfs in matProfs %}
+                         {{ matProfs.matiere }} <br>
+                    {% endfor %}
+                </td>  
+                <td class="contenu">
+                    {% for matProfs in matProfs %}
+                        {{ matProfs.moyenne}}
+                    {% endfor %}
+                  
+                 </td> 
+                <td class="contenu">
+                    {% for matProfs in matProfs %}
+                        {{ matProfs.matiere.coefficient}}
+                    {% endfor %}
+                  
+                 </td> 
+                <td class="contenu">
+                    {% for matProfs in matProfs %}
+                        {{ matProfs.moyenne * matProfs.matiere.coefficient}} 
+                    {% endfor %}
+                 
+                 </td> 
+                <td class="contenu">
+                    {% for matProfs in matProfs %}
+                        {{ matProfs.matiere.prof}}
+                    {% endfor %}
+                  
+                 </td> 
+                <td class="contenu">
+                    {% for matProfs in matProfs %}
+                        {{ matProfs.moyenne}} 
+                    {% endfor %}
+                 
+                 </td> 
+            
+        </tr>
+        <tr> 
+            <th class="fin"> MOYENNE DES MATIERES PROFESSIONNELLES </th>  
+            <th class="fin"> </th> 
+            <th class="fin"> </th> 
+            <th class="fin">  </th> 
+            <th class="fin">  </th> 
+            <th class="fin">  </th> 
+        </tr>
+
+    </table>
+
+</body>
+</html>

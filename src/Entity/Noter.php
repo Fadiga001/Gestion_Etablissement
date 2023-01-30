@@ -45,6 +45,15 @@ class Noter
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $Annee = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?float $noteClasse = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?float $notePartiel = null;
+
+    #[ORM\ManyToOne(inversedBy: 'noters')]
+    private ?Matieres $matiere = null;
+
 
 
     #[ORM\PrePersist]
@@ -173,6 +182,42 @@ class Noter
     public function setAnnee(string $Annee): self
     {
         $this->Annee = $Annee;
+
+        return $this;
+    }
+
+    public function getNoteClasse(): ?float
+    {
+        return $this->noteClasse;
+    }
+
+    public function setNoteClasse(?float $noteClasse): self
+    {
+        $this->noteClasse = $noteClasse;
+
+        return $this;
+    }
+
+    public function getNotePartiel(): ?float
+    {
+        return $this->notePartiel;
+    }
+
+    public function setNotePartiel(?float $notePartiel): self
+    {
+        $this->notePartiel = $notePartiel;
+
+        return $this;
+    }
+
+    public function getMatiere(): ?Matieres
+    {
+        return $this->matiere;
+    }
+
+    public function setMatiere(?Matieres $matiere): self
+    {
+        $this->matiere = $matiere;
 
         return $this;
     }

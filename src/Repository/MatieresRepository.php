@@ -66,7 +66,6 @@ class MatieresRepository extends ServiceEntityRepository
 
         public function listeMatieresParClasse($id){
             return $this->createQueryBuilder('m')
-                ->select('c.id as id, m as mat')
                 ->join('m.classe', 'c')
                 ->Where('c.id = :id')
                 ->setParameter('id', $id)
@@ -76,7 +75,6 @@ class MatieresRepository extends ServiceEntityRepository
 
         public function MatieresParClasse($classe){
             return $this->createQueryBuilder('m')
-                ->select('m as mat')
                 ->join('m.classe', 'c')
                 ->Where('c.codeClasse = :codeClasse')
                 ->setParameter('codeClasse', $classe)

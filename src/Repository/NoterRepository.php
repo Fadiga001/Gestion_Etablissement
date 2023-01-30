@@ -66,16 +66,27 @@ class NoterRepository extends ServiceEntityRepository
         ;
     }
 
+    public function NoteParEtudiant($matricule,$semestre): array
+    {
+        return $this->createQueryBuilder('n')
+            ->select('n')
+            ->andWhere('n.etudiants = :etudiants')
+            ->setParameter('etudiants', $matricule)
+            ->andWhere('n.semestre = :semestre')
+            ->setParameter('semestre', $semestre)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 
-    public function editNote($matricule, $matiere, $typeEvaluation): ?Noter
+
+    public function editNote($matricule, $matiere): ?Noter
     {
         return $this->createQueryBuilder('n')
             ->andWhere('n.etudiants = :etudiants')
             ->setParameter('etudiants', $matricule)
             ->andWhere('n.matieres = :matieres')
             ->setParameter('matieres', $matiere)
-            ->andWhere('n.typeEvaluation = :typeEvaluation')
-            ->setParameter('typeEvaluation', $typeEvaluation)
             ->getQuery()
             ->getOneOrNullResult()
         ;
@@ -88,6 +99,19 @@ class NoterRepository extends ServiceEntityRepository
             ->setParameter('etudiants', $matricule)
             ->andWhere('n.matieres = :matieres')
             ->setParameter('matieres', $matiere)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    public function typeMatiere($denomination)
+    {
+        return $this->createQueryBuilder('n')
+            ->select('n')
+            ->join('n.matiere', 'm')
+            ->join('m.TypeMatiere', 't')
+            ->andWhere('t.denomination = :denomination')
+            ->setParameter('denomination', $denomination)
             ->getQuery()
             ->getResult()
         ;

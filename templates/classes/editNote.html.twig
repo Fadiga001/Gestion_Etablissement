@@ -32,28 +32,6 @@
             
         </div>
         <div class="card-body">
-            <div class="row mb-3">
-                    <div class="col-md-6">
-                        <h4 class="text-success">Veuillez selectionner le Type d'évaluation d'abord !</h4>
-                    </div>
-
-                     <div class="col-md-6">
-                        <form method='post'>
-                            <div class="form-row">
-                                <div class="form-group mr-4">  
-                                    <select id="inputState" class="form-control" name="typeEvaluation">
-                                        <option>Partiel(Premier Semestre)</option>
-                                        <option>Partiel(Deuxième Semestre)</option>
-                                        <option>Note de classe</option>
-                                    </select>
-                                </div>
-                                <button type="submit" class="btn btn-primary">valider</button>
-                            </div>
-                        </form>
-                    </div>
-            </div>
-
-            {% if app.request.method =="POST" %}
                 <div class="container mb-3">
                         <div class="jumbotron">
                             <div class="row">
@@ -65,27 +43,32 @@
                                     <h4> Matricule : {{etudiant.matricule}}</h4>
                                 </div>
                                 <div class="col-md-6">
-                                    <h3> CLASSE : {{classe}}<h3>
+                                    <h3>{{classe}}<h3>
                                     <h4> 
-                                        Semestre : {{ note.semestre }} 
+                                        Semestre : {{ note.Semestre }}
                                     <h4>
                                     <h4> Matière : {{matiere}}</h4>
                                 </div>
                             </div>
-                                <div class="row mt-5 d-flex justify-content-center">
-                                    <div class="col-md-6 text-center ">
-                                        <h4 class=" btn btn-warning"> Type d'évaluation : {{ typeEvaluation }}</h4>
+                            <div class="row mt-5 d-flex justify-content-center">
+                                {{ form_start(form) }}
+                                    <div class="form-row">
+                                        <div class="form-group mr-4">
+                                            {{form_widget(form.noteClasse, {'value': note.noteClasse})}}
+                                        </div>
+                                        <div class="form-group mr-4">
+                                            {{form_widget(form.notePartiel, {'value': note.notePartiel})}}
+                                        </div>
+                                        <div class="form-group">
+                                            <button type="submit" class="btn btn-primary">Modifier</button> 
+                                        </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <a href="{{ path('modifier_note', {'id': classe.id, 'idMat': matiere.id, 'matricule': note.etudiants, 'evaluation': note.typeEvaluation }) }}" class="btn btn-primary">Cliquez ici pour modifier la note</a>
-                                    </div>
-                                    
-                                </div>
+                                {{ form_end(form) }}
+
+                            </div>
                         </div>
                     </div>
-                    
-                    
-            {% endif %}    
+                       
         </div>
     </div>
 
