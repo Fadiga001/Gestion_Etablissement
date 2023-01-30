@@ -49,8 +49,8 @@ class ImpressionController extends AbstractController
     {
         $anneeActive = $anneeRepo->findOneByActive(true);
         $matProfs = $noteRepo->NoteParEtudiant($matricule, 'PREMIER SEMESTRE','MATIERES PROFESSIONNELLES');
-        $matGen = $noteRepo->typeMatiere('MATIERES GENERALES');
-        $matArt = $noteRepo->typeMatiere('MATIERES ARTISTIQUES');
+        $matGen = $noteRepo->NoteParEtudiant($matricule, 'PREMIER SEMESTRE','MATIERES GENERALES');
+        $matArt = $noteRepo->NoteParEtudiant($matricule, 'PREMIER SEMESTRE','MATIERES ARTISTIQUES');
 
         $etudiant = $etudiantRepo->findOneByMatricule($matricule);
         $classes = $classeRepo->findOneByCodeClasse($classe);
