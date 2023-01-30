@@ -48,13 +48,13 @@ class ImpressionController extends AbstractController
     public function bulletinSemestre1(AnneeAcademiqueRepository $anneeRepo, EtudiantRepository $etudiantRepo, NoterRepository $noteRepo, ClasseRepository $classeRepo, $matricule, $classe ): Response
     {
         $anneeActive = $anneeRepo->findOneByActive(true);
-        $note = $noteRepo->NoteParEtudiant($matricule, 'PREMIER SEMESTRE');
-        $matProfs = $noteRepo->typeMatiere('MATIERES PROFESSIONNELLES');
+        $matProfs = $noteRepo->NoteParEtudiant($matricule, 'PREMIER SEMESTRE','MATIERES PROFESSIONNELLES');
         $matGen = $noteRepo->typeMatiere('MATIERES GENERALES');
         $matArt = $noteRepo->typeMatiere('MATIERES ARTISTIQUES');
 
         $etudiant = $etudiantRepo->findOneByMatricule($matricule);
         $classes = $classeRepo->findOneByCodeClasse($classe);
+
 
 
         //On definie les options du PDF
@@ -87,7 +87,7 @@ class ImpressionController extends AbstractController
         ]);
 
         $dompdf->loadHtml($html);
-        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->setPaper('A4', 'landscape');
         $dompdf->render();
 
         //On génère un nom de fichier

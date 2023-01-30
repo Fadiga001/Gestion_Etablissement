@@ -66,10 +66,14 @@ class NoterRepository extends ServiceEntityRepository
         ;
     }
 
-    public function NoteParEtudiant($matricule,$semestre): array
+    public function NoteParEtudiant($matricule,$semestre,$denomination): array
     {
         return $this->createQueryBuilder('n')
             ->select('n')
+            ->join('n.matiere', 'm')
+            ->join('m.TypeMatiere', 't')
+            ->andWhere('t.denomination = :denomination')
+            ->setParameter('denomination', $denomination)
             ->andWhere('n.etudiants = :etudiants')
             ->setParameter('etudiants', $matricule)
             ->andWhere('n.semestre = :semestre')

@@ -8,11 +8,9 @@
 
     .table1{
         margin: auto;
-        width: 80%;
+        width: 70%;
     }
-    .table{
-        width: 100%;
-    }
+
 
     caption{
         margin-left: 25%; 
@@ -79,56 +77,7 @@
             <th class="entete"> NOM DU PROFESSEUR </th> 
             <th class="entete"> APPRECIATIONS DES PROFESSEURS </th> 
         </tr>
-        <tr> 
-            <th class="titre"> MATIERES GENERALES </th>  
-            <th class="titre"> </th> 
-            <th class="titre"> </th> 
-            <th class="titre">  </th> 
-            <th class="titre">  </th> 
-            <th class="titre">  </th> 
-        </tr>
-        <tr> 
-            
-                <td class="contenu"> 
-                    {% for matGen in matGen %}
-                        {{ matGen.matiere }}
-                     {% endfor %}
-                </td>  
-                <td class="contenu">
-                    {% for matGen in matGen %}
-                        {{ matGen.moyenne}}
-                    {% endfor %}
-                </td> 
-                <td class="contenu"> 
-                    {% for matGen in matGen %}
-                        {{ matGen.matiere.coefficient}}
-                    {% endfor %} 
-                </td> 
-                <td class="contenu">
-                    {% for matGen in matGen %} 
-                        {{ matGen.moyenne}} * {{ matGen.matiere.coefficient}}
-                    {% endfor %} 
-                </td> 
-                <td class="contenu">
-                    {% for matGen in matGen %} 
-                        {{ matGen.matiere.prof}}
-                    {% endfor %} 
-                </td> 
-                <td class="contenu">
-                    {% for matGen in matGen %} 
-                        {{ matGen.moyenne}}
-                    {% endfor %} 
-                </td> 
-           
-        </tr>
-        <tr> 
-            <th class="fin"> MOYENNE DES MATIERES GENERALES </th>  
-            <th class="fin"> </th> 
-            <th class="fin"> </th> 
-            <th class="fin">  </th> 
-            <th class="fin">  </th> 
-            <th class="fin">  </th> 
-        </tr>
+        
         <tr> 
             <th class="titre"> MATIERES PROFESSIONNELLES </th>  
             <th class="titre"> </th> 
@@ -139,41 +88,40 @@
         </tr>
         <tr> 
             
-                <td class="contenu">
-                    {% for matProfs in matProfs %}
-                         {{ matProfs.matiere }} <br>
-                    {% endfor %}
+            {% for matProfs in matProfs %}
+                <td class="contenu"> 
+                   <p>{{ matProfs.matiere.denomination }} </p></br>
                 </td>  
                 <td class="contenu">
-                    {% for matProfs in matProfs %}
-                        {{ matProfs.moyenne}}
-                    {% endfor %}
-                  
-                 </td> 
+                   {{ matProfs.moyenne }}
+                </td> 
+                <td class="contenu"> 
+                    {{ matProfs.matiere.coefficient }}
+                </td> 
                 <td class="contenu">
-                    {% for matProfs in matProfs %}
-                        {{ matProfs.matiere.coefficient}}
-                    {% endfor %}
-                  
-                 </td> 
+                    {{ matProfs.moyenne * matProfs.matiere.coefficient }}
+                </td> 
                 <td class="contenu">
-                    {% for matProfs in matProfs %}
-                        {{ matProfs.moyenne * matProfs.matiere.coefficient}} 
-                    {% endfor %}
-                 
-                 </td> 
+                    {{ matProfs.matiere.prof }}
+                </td> 
                 <td class="contenu">
-                    {% for matProfs in matProfs %}
-                        {{ matProfs.matiere.prof}}
-                    {% endfor %}
-                  
-                 </td> 
-                <td class="contenu">
-                    {% for matProfs in matProfs %}
-                        {{ matProfs.moyenne}} 
-                    {% endfor %}
-                 
-                 </td> 
+                   {% if matProfs.moyenne >=0 and matProfs.moyenne <= 7 %}
+                        <p>BLAME</p>
+                   {% elseif matProfs.moyenne > 7 and matProfs.moyenne < 10 %}
+                        <p>INSUFFISANT</p>
+                   {% elseif matProfs.moyenne >= 10 and matProfs.moyenne < 12 %}
+                        <p>PASSABLE</p>
+                   {% elseif matProfs.moyenne >= 12 and matProfs.moyenne < 14 %}
+                        <p>ASSEZ-BIEN</p>
+                   {% elseif matProfs.moyenne >= 14 and matProfs.moyenne < 16 %}
+                        <p>BIEN</p>
+                   {% elseif matProfs.moyenne >= 16 and matProfs.moyenne < 18 %}
+                        <p>TRES-BIEN</p>
+                   {% elseif matProfs.moyenne >= 18 and matProfs.moyenne < 20 %}
+                        <p>EXCELLENT</p>
+                   {% endif %}
+                </td> 
+            {% endfor %}
             
         </tr>
         <tr> 
