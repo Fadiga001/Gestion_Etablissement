@@ -55,6 +55,22 @@ class ImpressionController extends AbstractController
         $etudiant = $etudiantRepo->findOneByMatricule($matricule);
         $classes = $classeRepo->findOneByCodeClasse($classe);
 
+        $somCoeffMatGen = 0;
+        $somMoyMatGen = 0;
+        for($i=0; $i<sizeof($matGen); $i++)
+        {
+            $somCoeffMatGen = $somCoeffMatGen + $matGen[$i]->getMatiere()->getCoefficient();
+            $somMoyMatGen = $somMoyMatGen + ($matGen[$i]->getMatiere()->getCoefficient() * $matGen[$i]->getMoyenne());
+        }
+
+        $somCoeffmatProfs = 0;
+        $somMoymatProfs = 0;
+        for($i=0; $i<sizeof($matGen); $i++)
+        {
+            $somCoeffmatProfs = $somCoeffmatProfs + $matProfs[$i]->getMatiere()->getCoefficient();
+            $somMoymatProfs = $somMoymatProfs + ($matProfs[$i]->getMatiere()->getCoefficient() * $matProfs[$i]->getMoyenne());
+        }
+
 
 
         //On definie les options du PDF
@@ -84,6 +100,10 @@ class ImpressionController extends AbstractController
             'matProfs'=>$matProfs,
             'matGen'=>$matGen,
             'matArt'=>$matArt,
+            'somCoeffMatGen'=>$somCoeffMatGen,
+            'somMoyMatGen'=>$somMoyMatGen,
+            'somCoeffmatProfs'=>$somCoeffmatProfs,
+            'somMoymatProfs'=>$somMoymatProfs,
         ]);
 
         $dompdf->loadHtml($html);

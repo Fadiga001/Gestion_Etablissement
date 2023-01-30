@@ -23,15 +23,24 @@
 
 .note{
     border-collapse: collapse;
+    width: 100%;
 }
 
  .entete, .titre, .contenu, .fin  {
         border: 1px solid black;
 }
 
-.entete{
-    font-size: 15px;
+.entete, .titre, .fin{
+    font-size: 13px;
 }
+
+
+
+.contenu{
+    font-size: 13px;
+}
+
+
 
 
     
@@ -83,6 +92,84 @@
         </tr>
         
         <tr> 
+            <th class="titre"> MATIERES GENERALES </th>  
+            <th class="titre"> </th> 
+            <th class="titre"> </th> 
+            <th class="titre">  </th> 
+            <th class="titre">  </th> 
+            <th class="titre">  </th> 
+        </tr>
+        <tr> 
+            
+            
+                <td class="contenu"> 
+                    {% for matGen in matGen %}
+                        {{ matGen.matiere.denomination | upper}} </br>
+                    {% endfor %}
+                </td>  
+                <td class="contenu">
+                    {% for matGen in matGen %}
+                        {{ matGen.moyenne }} <br>
+                    {% endfor %}
+                </td> 
+                <td class="contenu">
+                    {% for matGen in matGen %} 
+                        {{ matGen.matiere.coefficient }} <br>
+                    {% endfor %}
+                </td> 
+                <td class="contenu">
+                    {% for matGen in matGen %}
+                        {{ matGen.moyenne * matGen.matiere.coefficient }} <br>
+                    {% endfor %}
+                </td> 
+                <td class="contenu">
+                    {% for matGen in matGen %}
+                        {{ matGen.matiere.prof }} <br>
+                    {% endfor %}
+                </td> 
+                <td class="contenu">
+                    {% for matGen in matGen %}
+                        {% if matGen.moyenne >=0 and matGen.moyenne <= 7 %}
+                                BLAME <br>
+                        {% elseif matGen.moyenne > 7 and matGen.moyenne < 10 %}
+                                INSUFFISANT <br>
+                        {% elseif matGen.moyenne >= 10 and matGen.moyenne < 12 %}
+                                PASSABLE <br>
+                        {% elseif matGen.moyenne >= 12 and matGen.moyenne < 14 %}
+                                ASSEZ-BIEN <br>
+                        {% elseif matGen.moyenne >= 14 and matGen.moyenne < 16 %}
+                                BIEN <br>
+                        {% elseif matGen.moyenne >= 16 and matGen.moyenne < 18 %}
+                                TRES-BIEN <br>
+                        {% elseif matGen.moyenne >= 18 and matGen.moyenne < 20 %}
+                                EXCELLENT <br>
+                        {% endif %}
+                    {% endfor %}
+                </td> 
+          
+            
+        </tr>
+        <tr> 
+            
+            <th class="fin"> MOYENNE DES MATIERES GENERALES </th>  
+            <th class="fin"> </th> 
+
+            <th class="fin"> 
+                {{ somCoeffMatGen }}
+            </th> 
+
+
+            <th class="fin">  
+                {{ somMoyMatGen }}
+            </th> 
+            <th class="fin">  
+                 Moyenne : {{ somMoyMatGen / somCoeffMatGen }}
+            </th> 
+            <th class="fin">  </th> 
+        </tr>
+
+
+        <tr> 
             <th class="titre"> MATIERES PROFESSIONNELLES </th>  
             <th class="titre"> </th> 
             <th class="titre"> </th> 
@@ -92,48 +179,71 @@
         </tr>
         <tr> 
             
-            {% for matProfs in matProfs %}
+            
                 <td class="contenu"> 
-                   <p>{{ matProfs.matiere.denomination }} </p></br>
+                    {% for matProfs in matProfs %}
+                        {{ matProfs.matiere.denomination }} </br>
+                    {% endfor %}
                 </td>  
                 <td class="contenu">
-                   {{ matProfs.moyenne }}
-                </td> 
-                <td class="contenu"> 
-                    {{ matProfs.matiere.coefficient }}
-                </td> 
-                <td class="contenu">
-                    {{ matProfs.moyenne * matProfs.matiere.coefficient }}
+                    {% for matProfs in matProfs %}
+                        {{ matProfs.moyenne }} <br>
+                    {% endfor %}
                 </td> 
                 <td class="contenu">
-                    {{ matProfs.matiere.prof }}
+                    {% for matProfs in matProfs %} 
+                        {{ matProfs.matiere.coefficient }} <br>
+                    {% endfor %}
                 </td> 
                 <td class="contenu">
-                   {% if matProfs.moyenne >=0 and matProfs.moyenne <= 7 %}
-                        <p>BLAME</p>
-                   {% elseif matProfs.moyenne > 7 and matProfs.moyenne < 10 %}
-                        <p>INSUFFISANT</p>
-                   {% elseif matProfs.moyenne >= 10 and matProfs.moyenne < 12 %}
-                        <p>PASSABLE</p>
-                   {% elseif matProfs.moyenne >= 12 and matProfs.moyenne < 14 %}
-                        <p>ASSEZ-BIEN</p>
-                   {% elseif matProfs.moyenne >= 14 and matProfs.moyenne < 16 %}
-                        <p>BIEN</p>
-                   {% elseif matProfs.moyenne >= 16 and matProfs.moyenne < 18 %}
-                        <p>TRES-BIEN</p>
-                   {% elseif matProfs.moyenne >= 18 and matProfs.moyenne < 20 %}
-                        <p>EXCELLENT</p>
-                   {% endif %}
+                    {% for matProfs in matProfs %}
+                        {{ matProfs.moyenne * matProfs.matiere.coefficient }} <br>
+                    {% endfor %}
                 </td> 
-            {% endfor %}
+                <td class="contenu">
+                    {% for matProfs in matProfs %}
+                        {{ matProfs.matiere.prof }} <br>
+                    {% endfor %}
+                </td> 
+                <td class="contenu">
+                    {% for matProfs in matProfs %}
+                        {% if matProfs.moyenne >=0 and matProfs.moyenne <= 7 %}
+                                BLAME <br>
+                        {% elseif matProfs.moyenne > 7 and matProfs.moyenne < 10 %}
+                                INSUFFISANT <br>
+                        {% elseif matProfs.moyenne >= 10 and matProfs.moyenne < 12 %}
+                                PASSABLE <br>
+                        {% elseif matProfs.moyenne >= 12 and matProfs.moyenne < 14 %}
+                                ASSEZ-BIEN <br>
+                        {% elseif matProfs.moyenne >= 14 and matProfs.moyenne < 16 %}
+                                BIEN <br>
+                        {% elseif matProfs.moyenne >= 16 and matProfs.moyenne < 18 %}
+                                TRES-BIEN <br>
+                        {% elseif matProfs.moyenne >= 18 and matProfs.moyenne < 20 %}
+                                EXCELLENT <br>
+                        {% endif %}
+                    {% endfor %}
+                </td> 
+          
             
         </tr>
         <tr> 
-            <th class="fin"> MOYENNE DES MATIERES PROFESSIONNELLES </th>  
+            <th class="fin"> MOYENNE DES MATIERES PROFESSIONNELLES </th> 
             <th class="fin"> </th> 
-            <th class="fin"> </th> 
-            <th class="fin">  </th> 
-            <th class="fin">  </th> 
+
+            <th class="fin"> 
+               
+                {{ somCoeffmatProfs }}
+            </th> 
+            <th class="fin">  
+               
+                {{ somMoymatProfs }}
+            </th> 
+            <th class="fin">  
+
+                 Moyenne : {{ somMoymatProfs / somCoeffmatProfs }}
+
+            </th>  
             <th class="fin">  </th> 
         </tr>
 
