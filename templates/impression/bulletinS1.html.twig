@@ -40,6 +40,10 @@
     font-size: 13px;
 }
 
+.coeff{
+    text-align: center;
+}
+
 
 
 
@@ -107,19 +111,19 @@
                         {{ matGen.matiere.denomination | upper}} </br>
                     {% endfor %}
                 </td>  
-                <td class="contenu">
+                <td class="contenu coeff">
                     {% for matGen in matGen %}
-                        {{ matGen.moyenne }} <br>
+                        {{ matGen.moyenne | number_format(2) }} <br>
                     {% endfor %}
                 </td> 
-                <td class="contenu">
+                <td class="contenu coeff">
                     {% for matGen in matGen %} 
-                        {{ matGen.matiere.coefficient }} <br>
+                        {{ matGen.matiere.coefficient | number_format(2) }} <br>
                     {% endfor %}
                 </td> 
-                <td class="contenu">
+                <td class="contenu coeff">
                     {% for matGen in matGen %}
-                        {{ matGen.moyenne * matGen.matiere.coefficient }} <br>
+                        {{ (matGen.moyenne * matGen.matiere.coefficient) | number_format(2) }} <br>
                     {% endfor %}
                 </td> 
                 <td class="contenu">
@@ -155,15 +159,15 @@
             <th class="fin"> </th> 
 
             <th class="fin"> 
-                {{ somCoeffMatGen }}
+                {{ somCoeffMatGen | number_format(2) }}
             </th> 
 
 
             <th class="fin">  
-                {{ somMoyMatGen }}
+                {{ somMoyMatGen | number_format(2) }}
             </th> 
             <th class="fin">  
-                 Moyenne : {{ somMoyMatGen / somCoeffMatGen }}
+                 Moyenne : {{ (somMoyMatGen / somCoeffMatGen) | number_format(3)}}
             </th> 
             <th class="fin">  </th> 
         </tr>
@@ -185,19 +189,19 @@
                         {{ matProfs.matiere.denomination }} </br>
                     {% endfor %}
                 </td>  
-                <td class="contenu">
+                <td class="contenu coeff">
                     {% for matProfs in matProfs %}
-                        {{ matProfs.moyenne }} <br>
+                        {{ matProfs.moyenne | number_format(2) }} <br>
                     {% endfor %}
                 </td> 
-                <td class="contenu">
+                <td class="contenu coeff">
                     {% for matProfs in matProfs %} 
-                        {{ matProfs.matiere.coefficient }} <br>
+                        {{ matProfs.matiere.coefficient | number_format(2)}} <br>
                     {% endfor %}
                 </td> 
-                <td class="contenu">
+                <td class="contenu coeff">
                     {% for matProfs in matProfs %}
-                        {{ matProfs.moyenne * matProfs.matiere.coefficient }} <br>
+                        {{ (matProfs.moyenne * matProfs.matiere.coefficient) | number_format(2)}} <br>
                     {% endfor %}
                 </td> 
                 <td class="contenu">
@@ -233,17 +237,46 @@
 
             <th class="fin"> 
                
-                {{ somCoeffmatProfs }}
+                {{ somCoeffmatProfs | number_format(2) }}
             </th> 
             <th class="fin">  
                
-                {{ somMoymatProfs }}
+                {{ somMoymatProfs | number_format(2) }}
             </th> 
             <th class="fin">  
 
-                 Moyenne : {{ somMoymatProfs / somCoeffmatProfs }}
+                 Moyenne : {{ (somMoymatProfs / somCoeffmatProfs) | number_format(3)}}
 
             </th>  
+            <th class="fin">  </th> 
+        </tr>
+
+        <tr> 
+            <th class="fin">TOTAUX </th> 
+            <th class="fin"> </th> 
+
+            <th class="fin"> 
+               
+                {{ (somCoeffmatProfs + somCoeffMatGen) | number_format(2) }}
+            </th> 
+            <th class="fin">  
+               
+                {{ (somMoymatProfs + somMoyMatGen) | number_format(2) }}
+            </th> 
+            <th class="fin">  </th>  
+            <th class="fin">  </th> 
+        </tr>
+
+        <tr> 
+            <th class="fin">MOYENNE PREMIER SEMESTRE </th> 
+            <th class="fin"> 
+
+                {{ ( ((somMoymatProfs / somCoeffmatProfs) + (somMoyMatGen / somCoeffMatGen)) / 2 )  | number_format(3) }} 
+            </th> 
+
+            <th class="fin">CLASSEMENT </th> 
+            <th class="fin"> </th> 
+            <th class="fin">  </th>  
             <th class="fin">  </th> 
         </tr>
 

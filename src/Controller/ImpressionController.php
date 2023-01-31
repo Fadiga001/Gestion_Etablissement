@@ -60,6 +60,7 @@ class ImpressionController extends AbstractController
         for($i=0; $i<sizeof($matGen); $i++)
         {
             $somCoeffMatGen = $somCoeffMatGen + $matGen[$i]->getMatiere()->getCoefficient();
+
             $somMoyMatGen = $somMoyMatGen + ($matGen[$i]->getMatiere()->getCoefficient() * $matGen[$i]->getMoyenne());
         }
 
@@ -68,6 +69,7 @@ class ImpressionController extends AbstractController
         for($i=0; $i<sizeof($matGen); $i++)
         {
             $somCoeffmatProfs = $somCoeffmatProfs + $matProfs[$i]->getMatiere()->getCoefficient();
+            
             $somMoymatProfs = $somMoymatProfs + ($matProfs[$i]->getMatiere()->getCoefficient() * $matProfs[$i]->getMoyenne());
         }
 
