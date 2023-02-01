@@ -53,7 +53,12 @@ class ImpressionController extends AbstractController
         $matArt = $noteRepo->NoteParEtudiant($matricule, 'PREMIER SEMESTRE','MATIERES ARTISTIQUES');
 
         $etudiant = $etudiantRepo->findOneByMatricule($matricule);
+        $etudiant = $etudiantRepo->findOneByMatricule($matricule);
         $classes = $classeRepo->findOneByCodeClasse($classe);
+
+        $etudiantClasse = $etudiantRepo->classeAReinscrire($classe);
+
+        
 
         $somCoeffMatGen = 0;
         $somMoyMatGen = 0;
@@ -69,9 +74,13 @@ class ImpressionController extends AbstractController
         for($i=0; $i<sizeof($matGen); $i++)
         {
             $somCoeffmatProfs = $somCoeffmatProfs + $matProfs[$i]->getMatiere()->getCoefficient();
-            
             $somMoymatProfs = $somMoymatProfs + ($matProfs[$i]->getMatiere()->getCoefficient() * $matProfs[$i]->getMoyenne());
         }
+
+
+        //Etabllissement des rangs des étudiants
+       
+     
 
 
 
