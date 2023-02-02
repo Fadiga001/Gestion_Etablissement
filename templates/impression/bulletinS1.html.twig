@@ -276,6 +276,9 @@
 
             <th class="fin">CLASSEMENT </th> 
             <th class="fin">
+
+                
+
                 {% for etudiantClasse in etudiantClasse %}
 
                     {% set somCoeffMatGen = 0 %}
@@ -316,8 +319,12 @@
 
                     {% set moyProfs = (somMoyMatProfs / somCoeffMatProfs) %}
 
-                    {% set MoyS1 = ((moyGen + moyProfs) / 2) %}
+                    {% set MoyS1  = [((moyGen + moyProfs) / 2)] %}
 
+
+                    {% for MoyS1 in MoyS1 | sort((b, a) => a.MoyS1 <=> b.MoyS1) %}
+                        {{MoyS1}}
+                    {% endfor %}
 
                 {% endfor %}
 
