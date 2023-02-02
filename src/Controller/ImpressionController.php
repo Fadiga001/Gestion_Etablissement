@@ -57,6 +57,8 @@ class ImpressionController extends AbstractController
         $classes = $classeRepo->findOneByCodeClasse($classe);
 
         $etudiantClasse = $etudiantRepo->classeAReinscrire($classe);
+        $listeNotes = $noteRepo->listeNote('PREMIER SEMESTRE');
+ 
 
         
 
@@ -79,6 +81,15 @@ class ImpressionController extends AbstractController
 
 
         //Etabllissement des rangs des étudiants
+
+        
+
+      
+
+      
+
+       
+
        
      
 
@@ -115,6 +126,7 @@ class ImpressionController extends AbstractController
             'somMoyMatGen'=>$somMoyMatGen,
             'somCoeffmatProfs'=>$somCoeffmatProfs,
             'somMoymatProfs'=>$somMoymatProfs,
+
         ]);
 
         $dompdf->loadHtml($html);
