@@ -83,6 +83,21 @@ class NoterRepository extends ServiceEntityRepository
         ;
     }
 
+    public function NoteParTypeMatiere($semestre,$denomination): array
+    {
+        return $this->createQueryBuilder('n')
+            ->select('n')
+            ->join('n.matiere', 'm')
+            ->join('m.TypeMatiere', 't')
+            ->andWhere('t.denomination = :denomination')
+            ->setParameter('denomination', $denomination)
+            ->andWhere('n.semestre = :semestre')
+            ->setParameter('semestre', $semestre)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
 
     public function editNote($matricule, $matiere): ?Noter
     {

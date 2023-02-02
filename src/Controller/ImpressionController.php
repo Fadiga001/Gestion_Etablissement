@@ -6,6 +6,7 @@ use App\Form\searchFormType;
 use App\Repository\EtudiantRepository;
 use App\Repository\AnneeAcademiqueRepository;
 use App\Repository\ClasseRepository;
+use App\Repository\MatieresRepository;
 use App\Repository\NoterRepository;
 use Dompdf\Dompdf;
 use Dompdf\Options;
@@ -44,54 +45,100 @@ class ImpressionController extends AbstractController
     }
 
 
-    #[Route('/impression/{matricule}/{classe}', name: 'bulletin_impression')]
-    public function bulletinSemestre1(AnneeAcademiqueRepository $anneeRepo, EtudiantRepository $etudiantRepo, NoterRepository $noteRepo, ClasseRepository $classeRepo, $matricule, $classe ): Response
+    #[Route('/impression/{matricule}/{classe}/{anneeActive}', name: 'bulletin_impression')]
+    public function bulletinSemestre1(AnneeAcademiqueRepository $anneeRepo, EtudiantRepository $etudiantRepo, NoterRepository $noteRepo, ClasseRepository $classeRepo, MatieresRepository $matieresRepo, $matricule, $classe, $anneeActive ): Response
     {
         $anneeActive = $anneeRepo->findOneByActive(true);
         $matProfs = $noteRepo->NoteParEtudiant($matricule, 'PREMIER SEMESTRE','MATIERES PROFESSIONNELLES');
         $matGen = $noteRepo->NoteParEtudiant($matricule, 'PREMIER SEMESTRE','MATIERES GENERALES');
         $matArt = $noteRepo->NoteParEtudiant($matricule, 'PREMIER SEMESTRE','MATIERES ARTISTIQUES');
 
-        $etudiant = $etudiantRepo->findOneByMatricule($matricule);
+
+        $NoteMatGen = $noteRepo->NoteParTypeMatiere('PREMIER SEMESTRE','MATIERES GENERALES');
+        $NoteMatProfs = $noteRepo->NoteParTypeMatiere('PREMIER SEMESTRE','MATIERES PROFESSIONNELLES');
+
+
         $etudiant = $etudiantRepo->findOneByMatricule($matricule);
         $classes = $classeRepo->findOneByCodeClasse($classe);
 
         $etudiantClasse = $etudiantRepo->classeAReinscrire($classe);
         $listeNotes = $noteRepo->listeNote('PREMIER SEMESTRE');
- 
+        $listeMat = $matieresRepo->MatieresParClasse($classe);
+        $classes = $classeRepo->findOneByCodeClasse($classe);
 
         
 
+        //Calcul des moyennes par etudiants, par trimestre et le rang de l'étudiant
+        $notes = [];
+        for($i=0; $i<sizeof($etudiantClasse); $i++)
+        {
+            $somCoeffMatGenEtud[$i] = 0;
+            $somMoyMatGenEtud[$i] = 0;
+
+            for($j=0; $j<sizeof($NoteMatGen); $j++)
+            {
+
+                if($etudiantClasse[$i]->getMatricule() == $NoteMatGen[$j]->getEtudiants() && $etudiantClasse[$i]->getClasse() == $NoteMatGen[$j]->getClasses() &&  $NoteMatGen[$j]->getAnnee() == $anneeActive)
+                { 
+                    $somCoeffMatGenEtud[$i] = $somCoeffMatGenEtud[$i] + $NoteMatGen[$j]->getMatiere()->getCoefficient();
+                    $somMoyMatGenEtud[$i] = $somMoyMatGenEtud[$i] + ($NoteMatGen[$j]->getMatiere()->getCoefficient() * $NoteMatGen[$j]->getMoyenne());
+                }
+            }
+
+            $moyMatGen[$i] = ($somMoyMatGenEtud[$i] / $somCoeffMatGenEtud[$i]);
+
+
+            $somCoeffMatProfsEtud[$i] = 0;
+            $somMoyMatProfsEtud[$i] = 0;
+
+            for($j=0; $j<sizeof($NoteMatProfs); $j++)
+            {
+
+                if($etudiantClasse[$i]->getMatricule() == $NoteMatProfs[$j]->getEtudiants() && $etudiantClasse[$i]->getClasse() == $NoteMatProfs[$j]->getClasses() &&  $NoteMatProfs[$j]->getAnnee() == $anneeActive)
+                { 
+                    $somCoeffMatProfsEtud[$i] = $somCoeffMatProfsEtud[$i] + $NoteMatProfs[$j]->getMatiere()->getCoefficient();
+                    $somMoyMatProfsEtud[$i] = $somMoyMatProfsEtud[$i] + ($NoteMatProfs[$j]->getMatiere()->getCoefficient() * $NoteMatProfs[$j]->getMoyenne());
+                }
+            }
+
+            $moyMatProf[$i] = ($somMoyMatProfsEtud[$i] / $somCoeffMatProfsEtud[$i]);
+
+            $notes = ($moyMatGen[$i] + $moyMatProf[$i]) / 2 ;
+           
+        }
+
+
+       
+        
+
+
+
+        // Calcul des moyennes par type de matiere 
         $somCoeffMatGen = 0;
         $somMoyMatGen = 0;
         for($i=0; $i<sizeof($matGen); $i++)
         {
-            $somCoeffMatGen = $somCoeffMatGen + $matGen[$i]->getMatiere()->getCoefficient();
+            if($matGen[$i]->getClasses() == $classes->getDenomination() && $matGen[$i]->getAnnee() == $anneeActive)
+            {
+                $somCoeffMatGen = $somCoeffMatGen + $matGen[$i]->getMatiere()->getCoefficient();
 
-            $somMoyMatGen = $somMoyMatGen + ($matGen[$i]->getMatiere()->getCoefficient() * $matGen[$i]->getMoyenne());
+                $somMoyMatGen = $somMoyMatGen + ($matGen[$i]->getMatiere()->getCoefficient() * $matGen[$i]->getMoyenne());
+            }
+            
         }
+
 
         $somCoeffmatProfs = 0;
         $somMoymatProfs = 0;
-        for($i=0; $i<sizeof($matGen); $i++)
+        for($i=0; $i<sizeof($matProfs); $i++)
         {
-            $somCoeffmatProfs = $somCoeffmatProfs + $matProfs[$i]->getMatiere()->getCoefficient();
-            $somMoymatProfs = $somMoymatProfs + ($matProfs[$i]->getMatiere()->getCoefficient() * $matProfs[$i]->getMoyenne());
+            if($matProfs[$i]->getClasses() == $classes->getDenomination() && $matProfs[$i]->getAnnee() == $anneeActive)
+            {
+                $somCoeffmatProfs = $somCoeffmatProfs + $matProfs[$i]->getMatiere()->getCoefficient();
+                $somMoymatProfs = $somMoymatProfs + ($matProfs[$i]->getMatiere()->getCoefficient() * $matProfs[$i]->getMoyenne());
+            }
+           
         }
-
-
-        //Etabllissement des rangs des étudiants
-
-        
-
-      
-
-      
-
-       
-
-       
-     
 
 
 
@@ -126,6 +173,13 @@ class ImpressionController extends AbstractController
             'somMoyMatGen'=>$somMoyMatGen,
             'somCoeffmatProfs'=>$somCoeffmatProfs,
             'somMoymatProfs'=>$somMoymatProfs,
+            'etudiantClasse' =>$etudiantClasse,
+            'listeNote' => $listeNotes,
+            'totalMat' =>sizeof($listeMat),
+            'NoteMatGen'=>$NoteMatGen,
+            'NoteMatProfs'=>$NoteMatProfs,
+            'notes'=>$notes,
+            'anneeActive' => $anneeActive,
 
         ]);
 

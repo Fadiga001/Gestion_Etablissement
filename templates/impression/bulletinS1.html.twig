@@ -275,7 +275,53 @@
             </th> 
 
             <th class="fin">CLASSEMENT </th> 
-            <th class="fin"></th> 
+            <th class="fin">
+                {% for etudiantClasse in etudiantClasse %}
+
+                    {% set somCoeffMatGen = 0 %}
+                    {% set somMoyMatGen = 0 %}
+
+                    {% for NoteMatGen in NoteMatGen %}
+
+                        {% if etudiantClasse.matricule == NoteMatGen.etudiants and etudiantClasse.classe == NoteMatGen.classes and NoteMatGen.annee == anneeActive %}
+                            
+                            {% set somCoeffMatGen = somCoeffMatGen + NoteMatGen.matiere.coefficient %}
+
+                            {% set somMoyMatGen = somMoyMatGen + (NoteMatGen.matiere.coefficient * NoteMatGen.moyenne) %}
+
+                        {% endif %}
+                  
+                    {% endfor %}
+
+                    {% set moyGen = (somMoyMatGen / somCoeffMatGen) %}
+
+
+
+
+                    
+                    {% set somCoeffMatProfs = 0 %}
+                    {% set somMoyMatProfs = 0 %}
+
+                    {% for NoteMatProfs in NoteMatProfs %}
+
+                        {% if etudiantClasse.matricule == NoteMatProfs.etudiants and etudiantClasse.classe == NoteMatProfs.classes and NoteMatProfs.annee == anneeActive %}
+                            
+                            {% set somCoeffMatProfs = somCoeffMatProfs + NoteMatProfs.matiere.coefficient %}
+
+                            {% set somMoyMatProfs = somMoyMatProfs + (NoteMatProfs.matiere.coefficient * NoteMatProfs.moyenne) %}
+
+                        {% endif %}
+                  
+                    {% endfor %}
+
+                    {% set moyProfs = (somMoyMatProfs / somCoeffMatProfs) %}
+
+                    {% set MoyS1 = ((moyGen + moyProfs) / 2) %}
+
+
+                {% endfor %}
+
+            </th> 
             <th class="fin">  </th>  
             <th class="fin">  </th> 
         </tr>
