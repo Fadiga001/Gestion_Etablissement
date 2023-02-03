@@ -200,15 +200,20 @@ class ClassesController extends AbstractController
         $listeNote = $noteRepo->listeNoteParEtudiant($matricule,$matiere->getDenomination());
         $mat = $noteRepo->findOneByEtudiants($matricule);
 
+     
         for($i=0; $i<sizeof($listeNote); $i++){
-
+            $note = [];
             if($listeNote[$i]->getEtudiants() == $matricule && $listeNote[$i]->getMatieres() == $matiere  && $listeNote[$i]->getClasses() == $classe->getDenomination()){
                 
                 $note= $noteRepo->editNote($matricule, $matiere->getDenomination());
                 
             }
 
+            dd($note);
+
        }
+
+
 
 
        $form = $this->createForm(NoteEtudiantType::class);
@@ -237,10 +242,10 @@ class ClassesController extends AbstractController
             'classe' => $classe,
             'matiere'=> $matiere,
             'id'=>$id,
-            'note'=>$note,
             'idMat'=>$idMat,
             'matricule'=>$matricule,
-            'mat'=>$mat
+            'mat'=>$mat,
+            'listeNote'=>$listeNote,
 
         ]);
     }
