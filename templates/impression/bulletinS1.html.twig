@@ -278,19 +278,7 @@
             <th class="fin">
 
                 
-
-                {% for etudiantClasse in etudiantClasse %}
-
-                    {% if etudiantClasse.matricule == etudiant.matricule and etudiantClasse.classe == etudiant.classe and etudiant.anneeScolaire == anneeActive %}
-                    
-                            {% for notes in notes %}
-                                {{notes}}
-                            {% endfor %}
-                          
-                    {% endif %}
-
-                {% endfor %}
-
+               
             </th> 
             <th class="fin">  </th>  
             <th class="fin">  </th> 
