@@ -111,17 +111,21 @@ class NoterRepository extends ServiceEntityRepository
         ;
     }
 
+
     public function listeNoteParEtudiant($matricule, $matiere)
     {
         return $this->createQueryBuilder('n')
+            ->join('n.matiere', 'm')
             ->andWhere('n.etudiants = :etudiants')
             ->setParameter('etudiants', $matricule)
-            ->andWhere('n.matieres = :matieres')
-            ->setParameter('matieres', $matiere)
+            ->andWhere('m.denomination = :denomination')
+            ->setParameter('denomination', $matiere)
             ->getQuery()
-            ->getResult()
+            ->getSingleResult()
         ;
     }
+
+
 
     public function typeMatiere($denomination)
     {

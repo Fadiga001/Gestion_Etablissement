@@ -197,22 +197,10 @@ class ClassesController extends AbstractController
         $etudiant = $etudiantRepo->findOneByMatricule($matricule);
         $classe = $classeRepo->findOneById($id);
         $matiere = $matRepo->findOneById($idMat);
-        $listeNote = $noteRepo->listeNoteParEtudiant($matricule,$matiere->getDenomination());
+        $note = $noteRepo->listeNoteParEtudiant($matricule,$matiere->getDenomination());
         $mat = $noteRepo->findOneByEtudiants($matricule);
 
      
-        for($i=0; $i<sizeof($listeNote); $i++){
-            $note = [];
-            if($listeNote[$i]->getEtudiants() == $matricule && $listeNote[$i]->getMatieres() == $matiere  && $listeNote[$i]->getClasses() == $classe->getDenomination()){
-                
-                $note= $noteRepo->editNote($matricule, $matiere->getDenomination());
-                
-            }
-
-            dd($note);
-
-       }
-
 
 
 
@@ -245,7 +233,7 @@ class ClassesController extends AbstractController
             'idMat'=>$idMat,
             'matricule'=>$matricule,
             'mat'=>$mat,
-            'listeNote'=>$listeNote,
+            'note'=>$note,
 
         ]);
     }

@@ -103,10 +103,12 @@ class ImpressionController extends AbstractController
 
             $moyMatProf[$i] = ($somMoyMatProfsEtud[$i] / $somCoeffMatProfsEtud[$i]);
 
-            $notes = ($moyMatGen[$i] + $moyMatProf[$i]) / 2 ;
+            $notes[$i] = ($moyMatGen[$i] + $moyMatProf[$i]) / 2 ;
            
         }
 
+        
+         arsort($notes, SORT_NUMERIC);
 
        
         
