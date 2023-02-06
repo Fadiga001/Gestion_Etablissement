@@ -109,6 +109,9 @@ class Etudiant
      #[ORM\Column(nullable: true)]
      private ?bool $reinscrire = null;
 
+     #[ORM\Column(nullable: true)]
+     private ?float $moyenne = null;
+
 
 
     public function getId(): ?int
@@ -381,6 +384,18 @@ class Etudiant
     public function setReinscrire(?bool $reinscrire): self
     {
         $this->reinscrire = $reinscrire;
+
+        return $this;
+    }
+
+    public function getMoyenne(): ?float
+    {
+        return $this->moyenne;
+    }
+
+    public function setMoyenne(?float $moyenne): self
+    {
+        $this->moyenne = $moyenne;
 
         return $this;
     }

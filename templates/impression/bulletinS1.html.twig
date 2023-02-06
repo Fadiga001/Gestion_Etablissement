@@ -274,12 +274,24 @@
                 {{ ( ((somMoymatProfs / somCoeffmatProfs) + (somMoyMatGen / somCoeffMatGen)) / 2 )  | number_format(3) }} 
             </th> 
 
-            <th class="fin">CLASSEMENT </th> 
-            <th class="fin">
+            <th class="fin" colspan="2">
+                CLASSEMENT : 
+                {% for cle, notes in notes %}
 
-                 
-               
+                    {% if notes.matricule == etudiant.matricule and notes.classe == etudiant.classe and notes.anneeScolaire == anneeActive %}
+
+                        {% if cle == 1 and etudiant.sexe == "Femme" %}
+                            {{cle}} ère 
+                        {% elseif cle == 1 and etudiant.sexe == "Homme" %}
+                            {{cle}} er 
+                        {% else %}
+                            {{cle}} ième
+                        {% endif %}
+                    {% endif %}
+
+                {% endfor %}
             </th> 
+            
             <th class="fin">  </th>  
             <th class="fin">  </th> 
         </tr>

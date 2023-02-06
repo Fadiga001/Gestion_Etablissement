@@ -93,7 +93,6 @@ class NoterRepository extends ServiceEntityRepository
             ->setParameter('denomination', $denomination)
             ->andWhere('n.semestre = :semestre')
             ->setParameter('semestre', $semestre)
-            ->groupBy('n.etudiants')
             ->getQuery()
             ->getResult()
         ;
