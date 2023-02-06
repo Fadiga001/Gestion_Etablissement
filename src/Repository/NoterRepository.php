@@ -93,6 +93,7 @@ class NoterRepository extends ServiceEntityRepository
             ->setParameter('denomination', $denomination)
             ->andWhere('n.semestre = :semestre')
             ->setParameter('semestre', $semestre)
+            ->groupBy('n.etudiants')
             ->getQuery()
             ->getResult()
         ;
@@ -135,6 +136,17 @@ class NoterRepository extends ServiceEntityRepository
             ->join('m.TypeMatiere', 't')
             ->andWhere('t.denomination = :denomination')
             ->setParameter('denomination', $denomination)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+
+    public function rangParEtudiant()
+    {
+        return $this->createQueryBuilder('n')
+            ->select('AVG(n.moyenne) as moy')
+            ->groupBy('n.etudiants')
             ->getQuery()
             ->getResult()
         ;

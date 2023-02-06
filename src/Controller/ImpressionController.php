@@ -56,6 +56,7 @@ class ImpressionController extends AbstractController
 
         $NoteMatGen = $noteRepo->NoteParTypeMatiere('PREMIER SEMESTRE','MATIERES GENERALES');
         $NoteMatProfs = $noteRepo->NoteParTypeMatiere('PREMIER SEMESTRE','MATIERES PROFESSIONNELLES');
+        $rang = $noteRepo->rangParEtudiant();
 
 
         $etudiant = $etudiantRepo->findOneByMatricule($matricule);
@@ -69,50 +70,19 @@ class ImpressionController extends AbstractController
         
 
         //Calcul des moyennes par etudiants, par trimestre et le rang de l'étudiant
-        $notes = [];
-        for($i=0; $i<sizeof($etudiantClasse); $i++)
-        {
-            $somCoeffMatGenEtud[$i] = 0;
-            $somMoyMatGenEtud[$i] = 0;
 
-            for($j=0; $j<sizeof($NoteMatGen); $j++)
+        dd($rang);
+
+       for($i=0; $i<sizeof($rang); $i++)
+       {
+            for($j=0; $j<sizeof($rang); $j++)
             {
-
-                if($etudiantClasse[$i]->getMatricule() == $NoteMatGen[$j]->getEtudiants() && $etudiantClasse[$i]->getClasse() == $NoteMatGen[$j]->getClasses() &&  $NoteMatGen[$j]->getAnnee() == $anneeActive)
-                { 
-                    $somCoeffMatGenEtud[$i] = $somCoeffMatGenEtud[$i] + $NoteMatGen[$j]->getMatiere()->getCoefficient();
-                    $somMoyMatGenEtud[$i] = $somMoyMatGenEtud[$i] + ($NoteMatGen[$j]->getMatiere()->getCoefficient() * $NoteMatGen[$j]->getMoyenne());
+                if($rang[$i]->getEtudiants() == $etudiant->getMatricule())
+                {
+                    dd('ok');
                 }
             }
-
-            $moyMatGen[$i] = ($somMoyMatGenEtud[$i] / $somCoeffMatGenEtud[$i]);
-
-
-            $somCoeffMatProfsEtud[$i] = 0;
-            $somMoyMatProfsEtud[$i] = 0;
-
-            for($j=0; $j<sizeof($NoteMatProfs); $j++)
-            {
-
-                if($etudiantClasse[$i]->getMatricule() == $NoteMatProfs[$j]->getEtudiants() && $etudiantClasse[$i]->getClasse() == $NoteMatProfs[$j]->getClasses() &&  $NoteMatProfs[$j]->getAnnee() == $anneeActive)
-                { 
-                    $somCoeffMatProfsEtud[$i] = $somCoeffMatProfsEtud[$i] + $NoteMatProfs[$j]->getMatiere()->getCoefficient();
-                    $somMoyMatProfsEtud[$i] = $somMoyMatProfsEtud[$i] + ($NoteMatProfs[$j]->getMatiere()->getCoefficient() * $NoteMatProfs[$j]->getMoyenne());
-                }
-            }
-
-            $moyMatProf[$i] = ($somMoyMatProfsEtud[$i] / $somCoeffMatProfsEtud[$i]);
-
-            $notes[$i] = [
-                $etudiantClasse[$i],
-                ($moyMatGen[$i] + $moyMatProf[$i]) / 2 ,
-            ];
-           
-        }
-
-
-
-        
+       }
 
         
 
@@ -190,7 +160,6 @@ class ImpressionController extends AbstractController
             'totalMat' =>sizeof($listeMat),
             'NoteMatGen'=>$NoteMatGen,
             'NoteMatProfs'=>$NoteMatProfs,
-            'notes'=>$notes,
             'anneeActive' => $anneeActive,
 
         ]);
