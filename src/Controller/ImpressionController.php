@@ -65,6 +65,7 @@ class ImpressionController extends AbstractController
         $listeNotes = $noteRepo->listeNote('PREMIER SEMESTRE');
         $listeMat = $matieresRepo->MatieresParClasse($classe);
         $classes = $classeRepo->findOneByCodeClasse($classe);
+        $directeur = $classeRepo->DirecteurDeFiliere($classe);
 
         
 
@@ -125,22 +126,6 @@ class ImpressionController extends AbstractController
 
 
         
-
-       
-
-
-
-        
-
-        
-
-        
-
-         
-
-       
-        
-
 
 
         // Calcul des moyennes par type de matiere 
@@ -210,6 +195,7 @@ class ImpressionController extends AbstractController
             'NoteMatProfs'=>$NoteMatProfs,
             'notes'=>$values_new,
             'anneeActive' => $anneeActive,
+            'directeur'=>$directeur
 
         ]);
 

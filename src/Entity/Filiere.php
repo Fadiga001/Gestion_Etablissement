@@ -29,6 +29,9 @@ class Filiere
     #[ORM\OneToMany(mappedBy: 'filiere', targetEntity: Classe::class)]
     private Collection $classes;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $directeur = null;
+
     public function __construct()
     {
         $this->classes = new ArrayCollection();
@@ -98,6 +101,18 @@ class Filiere
                 $class->setFiliere(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDirecteur(): ?string
+    {
+        return $this->directeur;
+    }
+
+    public function setDirecteur(?string $directeur): self
+    {
+        $this->directeur = $directeur;
 
         return $this;
     }

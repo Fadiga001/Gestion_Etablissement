@@ -70,6 +70,7 @@ class FiliereController extends AbstractController
      
         return $this->render('filiere/editerFiliere.html.twig', [
             'form'=> $form->createView(),
+            'filiere'=>$filiere,
         ]);
     }
 

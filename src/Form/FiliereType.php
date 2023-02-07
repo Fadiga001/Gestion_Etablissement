@@ -27,6 +27,7 @@ class FiliereType extends AbstractType
         $builder
             ->add('denomination', TextType::class, $this->configForm("Dénomination", "form-group", "Dénomination"))
             ->add('codeFiliere', TextType::class, $this->configForm("Code de la Filière", "form-group", "Code de la Filière"))
+            ->add('directeur', TextType::class, $this->configForm("Directeur de filière", "form-group", "Directeur de filière"))
         ;
     }
 

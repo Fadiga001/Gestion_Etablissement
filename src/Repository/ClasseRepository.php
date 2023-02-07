@@ -55,6 +55,18 @@ class ClasseRepository extends ServiceEntityRepository
         ;
   }
 
+
+    public function DirecteurDeFiliere($codeClasse)
+    {
+        return $this->createQueryBuilder('c')
+                    ->join('c.filiere', 'f')
+                    ->where('c.codeClasse = :codeClasse')
+                    ->setParameter('codeClasse', $codeClasse)
+                    ->getQuery()
+                    ->getOneOrNullResult()
+        ;
+  }
+
 //    public function findOneBySomeField($value): ?Classe
 //    {
 //        return $this->createQueryBuilder('c')

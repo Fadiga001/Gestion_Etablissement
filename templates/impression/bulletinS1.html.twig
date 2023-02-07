@@ -13,12 +13,11 @@
 
 
     caption{
-        margin-left: 25%; 
-        margin-right: 25%; 
-        margin-bottom: 5%;
+        margin-left: 35%; 
+        margin-right: 35%; 
         border: 2px solid skyblue;
         border-collapse: collapse;
-        padding: 8px;
+        padding: 2px;
     }
 
 .note{
@@ -44,6 +43,17 @@
     text-align: center;
 }
 
+.observation{
+    margin: auto;
+    width: 100%;
+    text-align : center;
+    padding : 20px;
+}
+
+
+.obs-td{
+    text-decoration: underline;
+}
 
 
 
@@ -186,7 +196,7 @@
             
                 <td class="contenu"> 
                     {% for matProfs in matProfs %}
-                        {{ matProfs.matiere.denomination }} </br>
+                        {{ matProfs.matiere.denomination | upper }} </br>
                     {% endfor %}
                 </td>  
                 <td class="contenu coeff">
@@ -223,7 +233,7 @@
                                 BIEN <br>
                         {% elseif matProfs.moyenne >= 16 and matProfs.moyenne < 18 %}
                                 TRES-BIEN <br>
-                        {% elseif matProfs.moyenne >= 18 and matProfs.moyenne < 20 %}
+                        {% elseif matProfs.moyenne >= 18 and matProfs.moyenne <= 20 %}
                                 EXCELLENT <br>
                         {% endif %}
                     {% endfor %}
@@ -294,6 +304,47 @@
             
             <th class="fin">  </th>  
             <th class="fin">  </th> 
+        </tr>
+
+        <tr> 
+            <th class="fin" colspan="6">
+
+                <table class="observation" cellpadding="15">
+                    <tr>
+                        <td class="obs-td">OBSERVATIONS EVENTUELLES</td>
+                        <td class="obs-td">AVIS DU CONSEIL DE CLASSE</td>
+                        <td class="obs-td">DIRECTEUR D'INSTITUT {{ directeur.filiere.codeFiliere }}</td>
+                    </tr>
+
+                    <tr>
+                        <th>
+                            {% set moy = ( ((somMoymatProfs / somCoeffmatProfs) + (somMoyMatGen / somCoeffMatGen)) / 2 )  | number_format(3) %}
+
+                            {% if moy >=0 and moy <= 7 %}
+                                BLAME <br>
+                            {% elseif moy > 7 and moy < 10 %}
+                                INSUFFISANT <br>
+                            {% elseif moy >= 10 and moy < 12 %}
+                                PASSABLE <br>
+                            {% elseif moy >= 12 and moy < 14 %}
+                                ASSEZ-BIEN <br>
+                            {% elseif moy >= 14 and moy < 16 %}
+                                BIEN <br>
+                            {% elseif moy >= 16 and moy < 18 %}
+                                TRES-BIEN <br>
+                            {% elseif moy >= 18 and moy <= 20 %}
+                                EXCELLENT 
+                            {% endif %}
+                        </th>
+                        <th></th>
+                        <th>
+                            {{directeur.filiere.directeur}}
+                        </th>
+                    </tr>
+                </table>
+                 
+            </th> 
+            
         </tr>
 
     </table>

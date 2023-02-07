@@ -21,7 +21,7 @@
    <div class="card border-info mb-5" style="max-width: 40rem; margin: auto;">
         <div class="card-header">
              {% include 'configuration/btnRetour.html.twig' with {
-                    'path': 'liste_classes', 
+                    'path': 'liste_filiere', 
                     'text_header': 'MODIFICATION D\'UNE FILIERE '
                     
             
@@ -29,7 +29,7 @@
              
         </div>
             <div class="card-body">
-                 {% include 'classes/_formClasse.html.twig' with {
+                 {% include 'filiere/_formFiliere.html.twig' with {
                 
                     'btn_submit': 'Modifier', 
                     'Text_Modifier': 'Modification d\'une filière',

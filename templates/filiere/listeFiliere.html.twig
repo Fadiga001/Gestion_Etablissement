@@ -34,6 +34,7 @@
                     <tr>
                         <th scope="col">Code de la Filière</th>
                         <th scope="col">Dénomination</th>
+                        <th scope="col">Directeur de filière</th>
                         <th scope="col">Actions</th>
     
                     </tr>
@@ -45,6 +46,7 @@
                         <tr>
                             <th>{{ filiere.codeFiliere}}</th>
                             <td>{{ filiere.denomination }}</td>
+                            <td>{{ filiere.directeur }}</td>
                             <td>
                                  <a class="btn btn-primary" href="{{ path('editerFiliere', {'denomination' : filiere.denomination}) }}">
                                     <i class="fa fa-pencil-square" aria-hidden="true"></i>
