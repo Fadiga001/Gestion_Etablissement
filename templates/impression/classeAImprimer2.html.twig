@@ -48,7 +48,7 @@
                         <div class="jumbotron">
                             <h3> FILIERE : {{ classe.filiere.denomination }}<h3>
                             <h4> Classe : {{ classe.denomination }}<h4>
-                            <h4> Semestre : Premier Semestre<h4>
+                            <h4> Semestre : Deuxième Semestre<h4>
                             <p> Année active : {{ anneeActive }}</p>
                         </div>
                     </div>
@@ -72,7 +72,7 @@
                                     <td>{{etudiant.prenoms}}</td>
                                     <td>{{etudiant.dateNaissance|date('d-m-Y')}}</td>
                                     <td>
-                                        <a href="{{ path('bulletin_impression', {'matricule': etudiant.matricule, 'classe':classe.codeClasse, 'anneeActive': anneeActive})}}" class="btn btn-primary">Imprimer le Bulletin</a>
+                                        <a href="{{ path('bulletin_impressionS2', {'matricule': etudiant.matricule, 'classe':classe.codeClasse, 'anneeActive': anneeActive})}}" class="btn btn-primary">Imprimer le Bulletin</a>
                                     </td>
                                 </tr>
                             {% endfor %}

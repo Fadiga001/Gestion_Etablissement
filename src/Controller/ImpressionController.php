@@ -45,6 +45,36 @@ class ImpressionController extends AbstractController
     }
 
 
+    #[Route('/impression/semestre2', name: 'impression_semestre2')]
+    public function semestre2(AnneeAcademiqueRepository $anneeRepo, EtudiantRepository $etudiantRepo, Request $request ): Response
+    {
+        $anneeActive = $anneeRepo->findOneByActive(true);
+        $form = $this->createForm(searchFormType::class);
+        $form->handleRequest($request);
+
+        $listeEtudiant= [];
+        $classe = [];
+
+        if($form->isSubmitted() && $form->isValid())
+        {
+
+            $classe = $form->get('codeClasse')->getData();
+
+            $listeEtudiant = $etudiantRepo->classeAReinscrire($classe->getCodeClasse());
+        }
+
+        return $this->render('impression/classeAImprimer2.html.twig', [
+            'form'=>$form->createView(),
+            'etudiant'=>$listeEtudiant,
+            'classe'=>$classe,
+            'anneeActive'=>$anneeActive,
+        ]);
+    }
+
+
+
+
+
     #[Route('/impression/{matricule}/{classe}/{anneeActive}', name: 'bulletin_impression')]
     public function bulletinSemestre1(AnneeAcademiqueRepository $anneeRepo, EtudiantRepository $etudiantRepo, NoterRepository $noteRepo, ClasseRepository $classeRepo, MatieresRepository $matieresRepo, $matricule, $classe, $anneeActive ): Response
     {
@@ -86,7 +116,16 @@ class ImpressionController extends AbstractController
                 }
             }
 
-            $moyMatGen[$i] = ($somMoyMatGenEtud[$i] / $somCoeffMatGenEtud[$i]);
+            $moyMatGen[$i] = 0;
+
+            if($somCoeffMatGenEtud[$i] == 0)
+            {
+                $somCoeffMatGenEtud[$i] = 0;
+            }else{
+                $moyMatGen[$i] = ($somMoyMatGenEtud[$i] / $somCoeffMatGenEtud[$i]);
+            }
+
+            
 
 
             $somCoeffMatProfsEtud[$i] = 0;
@@ -102,12 +141,28 @@ class ImpressionController extends AbstractController
                 }
             }
 
-            $moyMatProf[$i] = ($somMoyMatProfsEtud[$i] / $somCoeffMatProfsEtud[$i]);
+            $moyMatProf[$i] = 0;
 
+            if($somCoeffMatProfsEtud[$i] == 0)
+            {
+                $moyMatProf[$i] = 0;
+            }else{
+                $moyMatProf[$i] = ($somMoyMatProfsEtud[$i] / $somCoeffMatProfsEtud[$i]);
+            }
             
-            $notesEtud[$i] = ($moyMatGen[$i] + $moyMatProf[$i]) / 2 ;
-            $etudiantClasse[$i]->setMoyenne($notesEtud[$i]);
-            $notes[$i] = $etudiantClasse[$i] ;
+
+            if( $moyMatProf[$i] == 0 || $moyMatGen[$i] == 0)
+            {
+                $notesEtud[$i] = ($moyMatGen[$i] + $moyMatProf[$i]) / 2 ;
+                $etudiantClasse[$i]->setMoyenne(0);
+                $notes[$i] = $etudiantClasse[$i] ;
+            }else{
+
+                $notesEtud[$i] = ($moyMatGen[$i] + $moyMatProf[$i]) / 2 ;
+                $etudiantClasse[$i]->setMoyenne($notesEtud[$i]);
+                $notes[$i] = $etudiantClasse[$i] ;
+
+            }
             
 
            
@@ -205,6 +260,210 @@ class ImpressionController extends AbstractController
 
         //On génère un nom de fichier
         $fichier = 'bulletin-premier-semestre'. $etudiant->getMatricule() . $etudiant->getNom(). $etudiant->getPrenoms(). '.pdf';
+
+        //On envoie le pdf au navigateur
+        $dompdf->stream($fichier, [
+            'Attachment' =>true
+        ]);
+
+        
+        return new Response();
+    }
+
+
+
+
+
+
+
+
+    #[Route('/impression/semestre2/{matricule}/{classe}/{anneeActive}', name: 'bulletin_impressionS2')]
+    public function bulletinSemestre2(AnneeAcademiqueRepository $anneeRepo, EtudiantRepository $etudiantRepo, NoterRepository $noteRepo, ClasseRepository $classeRepo, MatieresRepository $matieresRepo, $matricule, $classe, $anneeActive ): Response
+    {
+        $anneeActive = $anneeRepo->findOneByActive(true);
+        $matProfs = $noteRepo->NoteParEtudiant($matricule, 'DEUXIEME SEMESTRE','MATIERES PROFESSIONNELLES');
+        $matGen = $noteRepo->NoteParEtudiant($matricule, 'DEUXIEME SEMESTRE','MATIERES GENERALES');
+        $matArt = $noteRepo->NoteParEtudiant($matricule, 'DEUXIEME SEMESTRE','MATIERES ARTISTIQUES');
+
+
+        $NoteMatGen = $noteRepo->NoteParTypeMatiere('DEUXIEME SEMESTRE','MATIERES GENERALES');
+        $NoteMatProfs = $noteRepo->NoteParTypeMatiere('DEUXIEME SEMESTRE','MATIERES PROFESSIONNELLES');
+
+
+        $etudiant = $etudiantRepo->findOneByMatricule($matricule);
+        $classes = $classeRepo->findOneByCodeClasse($classe);
+
+        $etudiantClasse = $etudiantRepo->classeAReinscrire($classe);
+        $listeNotes = $noteRepo->listeNote('DEUXIEME SEMESTRE');
+        $listeMat = $matieresRepo->MatieresParClasse($classe);
+        $classes = $classeRepo->findOneByCodeClasse($classe);
+        $directeur = $classeRepo->DirecteurDeFiliere($classe);
+
+        
+
+        //Calcul des moyennes par etudiants, par trimestre et le rang de l'étudiant
+        $notes = [];
+        for($i=0; $i<sizeof($etudiantClasse); $i++)
+        {
+            $somCoeffMatGenEtud[$i] = 0;
+            $somMoyMatGenEtud[$i] = 0;
+
+            for($j=0; $j<sizeof($NoteMatGen); $j++)
+            {
+
+                if($etudiantClasse[$i]->getMatricule() == $NoteMatGen[$j]->getEtudiants() && $etudiantClasse[$i]->getClasse() == $NoteMatGen[$j]->getClasses() &&  $NoteMatGen[$j]->getAnnee() == $anneeActive)
+                { 
+                    $somCoeffMatGenEtud[$i] = $somCoeffMatGenEtud[$i] + $NoteMatGen[$j]->getMatiere()->getCoefficient();
+                    $somMoyMatGenEtud[$i] = $somMoyMatGenEtud[$i] + ($NoteMatGen[$j]->getMatiere()->getCoefficient() * $NoteMatGen[$j]->getMoyenne());
+                }
+            }
+
+            $moyMatGen[$i] = 0;
+
+            if($somCoeffMatGenEtud[$i] == 0)
+            {
+                $somCoeffMatGenEtud[$i] = 0;
+            }else{
+                $moyMatGen[$i] = ($somMoyMatGenEtud[$i] / $somCoeffMatGenEtud[$i]);
+            }
+
+            
+
+
+            $somCoeffMatProfsEtud[$i] = 0;
+            $somMoyMatProfsEtud[$i] = 0;
+
+            for($j=0; $j<sizeof($NoteMatProfs); $j++)
+            {
+
+                if($etudiantClasse[$i]->getMatricule() == $NoteMatProfs[$j]->getEtudiants() && $etudiantClasse[$i]->getClasse() == $NoteMatProfs[$j]->getClasses() &&  $NoteMatProfs[$j]->getAnnee() == $anneeActive)
+                { 
+                    $somCoeffMatProfsEtud[$i] = $somCoeffMatProfsEtud[$i] + $NoteMatProfs[$j]->getMatiere()->getCoefficient();
+                    $somMoyMatProfsEtud[$i] = $somMoyMatProfsEtud[$i] + ($NoteMatProfs[$j]->getMatiere()->getCoefficient() * $NoteMatProfs[$j]->getMoyenne());
+                }
+            }
+
+            $moyMatProf[$i] = 0;
+
+            if($somCoeffMatProfsEtud[$i] == 0)
+            {
+                $moyMatProf[$i] = 0;
+            }else{
+                $moyMatProf[$i] = ($somMoyMatProfsEtud[$i] / $somCoeffMatProfsEtud[$i]);
+            }
+            
+
+            if( $moyMatProf[$i] == 0 || $moyMatGen[$i] == 0)
+            {
+                $notesEtud[$i] = ($moyMatGen[$i] + $moyMatProf[$i]) / 2 ;
+                $etudiantClasse[$i]->setMoyenne(0);
+                $notes[$i] = $etudiantClasse[$i] ;
+            }else{
+
+                $notesEtud[$i] = ($moyMatGen[$i] + $moyMatProf[$i]) / 2 ;
+                $etudiantClasse[$i]->setMoyenne($notesEtud[$i]);
+                $notes[$i] = $etudiantClasse[$i] ;
+
+            }
+
+           
+        }
+
+        arsort($notes);
+        
+
+        $values_new = array();
+        $index_new_values = 1;
+        foreach($notes as $cle => $valeur) {
+	        $values_new[$index_new_values] = $notes[$cle];
+	        $index_new_values++;
+        }
+
+
+
+        
+
+
+        
+
+
+        // Calcul des moyennes par type de matiere 
+        $somCoeffMatGen = 0;
+        $somMoyMatGen = 0;
+        for($i=0; $i<sizeof($matGen); $i++)
+        {
+            if($matGen[$i]->getClasses() == $classes->getDenomination() && $matGen[$i]->getAnnee() == $anneeActive)
+            {
+                $somCoeffMatGen = $somCoeffMatGen + $matGen[$i]->getMatiere()->getCoefficient();
+
+                $somMoyMatGen = $somMoyMatGen + ($matGen[$i]->getMatiere()->getCoefficient() * $matGen[$i]->getMoyenne());
+            }
+            
+        }
+
+
+        $somCoeffmatProfs = 0;
+        $somMoymatProfs = 0;
+        for($i=0; $i<sizeof($matProfs); $i++)
+        {
+            if($matProfs[$i]->getClasses() == $classes->getDenomination() && $matProfs[$i]->getAnnee() == $anneeActive)
+            {
+                $somCoeffmatProfs = $somCoeffmatProfs + $matProfs[$i]->getMatiere()->getCoefficient();
+                $somMoymatProfs = $somMoymatProfs + ($matProfs[$i]->getMatiere()->getCoefficient() * $matProfs[$i]->getMoyenne());
+            }
+           
+        }
+
+
+
+        //On definie les options du PDF
+        $pdfOptions = new Options();
+
+        //On definie la police par defaut
+        $pdfOptions->set('defaultFont', 'Arial');
+        $pdfOptions->setIsRemoteEnabled(true);
+
+        //On instancie le DOMPDF
+        $dompdf = new Dompdf();
+        $context = stream_context_create([
+            'ssl'=> [
+                'verify_peer'=>FALSE,
+                'verify_peer_name'=>FALSE,
+                'allow_self_signed'=>True
+            ]
+        ]);
+
+        $dompdf->setHttpContext($context);
+
+        //On génère le html
+        $html = $this->renderView('impression/bulletinS2.html.twig', [
+            'anneeActive'=>$anneeActive,
+            'etudiant'=>$etudiant,
+            'classe'=>$classes,
+            'matProfs'=>$matProfs,
+            'matGen'=>$matGen,
+            'matArt'=>$matArt,
+            'somCoeffMatGen'=>$somCoeffMatGen,
+            'somMoyMatGen'=>$somMoyMatGen,
+            'somCoeffmatProfs'=>$somCoeffmatProfs,
+            'somMoymatProfs'=>$somMoymatProfs,
+            'etudiantClasse' =>$etudiantClasse,
+            'listeNote' => $listeNotes,
+            'totalMat' =>sizeof($listeMat),
+            'NoteMatGen'=>$NoteMatGen,
+            'NoteMatProfs'=>$NoteMatProfs,
+            'notes'=>$values_new,
+            'anneeActive' => $anneeActive,
+            'directeur'=>$directeur
+
+        ]);
+
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'landscape');
+        $dompdf->render();
+
+        //On génère un nom de fichier
+        $fichier = 'bulletin-deuxième-semestre'. $etudiant->getMatricule() . $etudiant->getNom(). $etudiant->getPrenoms(). '.pdf';
 
         //On envoie le pdf au navigateur
         $dompdf->stream($fichier, [
