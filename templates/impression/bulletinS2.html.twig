@@ -117,29 +117,86 @@
             
             
                 <td class="contenu"> 
-                    {% for matGen in matGen %}
-                        {{ matGen.matiere.denomination | upper}} </br>
+
+                    {% for listeMat in listeMat %}
+
+                        {% if listeMat.TypeMatiere == "MATIERES GENERALES" %}
+
+                            {{listeMat.denomination | upper }}<br>
+
+                        {% endif %}
+
                     {% endfor %}
+
                 </td>  
                 <td class="contenu coeff">
-                    {% for matGen in matGen %}
-                        {{ matGen.moyenne | number_format(2) }} <br>
+
+                    {% for listeMat in listeMat %}
+
+                        {% for matGen in matGen %}
+
+                            {% if listeMat.denomination == matGen.matiere.denomination %}
+
+                                {% set coef = matGen.moyenne %} 
+
+                            {% endif %}
+    
+                        {% endfor %}
+
                     {% endfor %}
+                    
                 </td> 
                 <td class="contenu coeff">
-                    {% for matGen in matGen %} 
-                        {{ matGen.matiere.coefficient | number_format(2) }} <br>
+
+                    {% for listeMat in listeMat %}
+
+                        {% for matGen in matGen %}
+
+                            {% if listeMat.denomination == matGen.matiere.denomination %}
+
+                                {{ matGen.matiere.coefficient | number_format(2) }} <br>
+
+
+                            {% endif %}
+    
+                        {% endfor %}
+
                     {% endfor %}
+
                 </td> 
                 <td class="contenu coeff">
-                    {% for matGen in matGen %}
-                        {{ (matGen.moyenne * matGen.matiere.coefficient) | number_format(2) }} <br>
+
+                    {% for listeMat in listeMat %}
+
+                        {% for matGen in matGen %}
+
+                            {% if listeMat.denomination == matGen.matiere.denomination %}
+
+                                {{ (matGen.moyenne * matGen.matiere.coefficient) | number_format(2) }} <br>
+
+                            {% endif %}
+    
+                        {% endfor %}
+
                     {% endfor %}
+                
                 </td> 
                 <td class="contenu">
-                    {% for matGen in matGen %}
-                        {{ matGen.matiere.prof }} <br>
+
+                    {% for listeMat in listeMat %}
+
+                        {% for matGen in matGen %}
+
+                            {% if listeMat.denomination == matGen.matiere.denomination %}
+
+                               {{ matGen.matiere.prof }} <br>
+
+                            {% endif %}
+    
+                        {% endfor %}
+
                     {% endfor %}
+
                 </td> 
                 <td class="contenu">
                     {% for matGen in matGen %}
@@ -202,29 +259,85 @@
             
             
                 <td class="contenu"> 
-                    {% for matProfs in matProfs %}
-                        {{ matProfs.matiere.denomination | upper }} </br>
+
+                    {% for listeMat in listeMat %}
+
+                        {% if listeMat.TypeMatiere == "MATIERES PROFESSIONNELLES" %}
+
+                            {{listeMat.denomination | upper }}<br>
+
+                        {% endif %}
+
                     {% endfor %}
+
                 </td>  
                 <td class="contenu coeff">
-                    {% for matProfs in matProfs %}
-                        {{ matProfs.moyenne | number_format(2) }} <br>
+
+                    {% for listeMat in listeMat %}
+
+                        {% for matProfs in matProfs %}
+
+                            {% if listeMat.denomination == matProfs.matiere.denomination %}
+
+                                 {{ matProfs.moyenne | number_format(2) }} <br>
+
+                            {% endif %}
+    
+                        {% endfor %}
+
                     {% endfor %}
+
                 </td> 
                 <td class="contenu coeff">
-                    {% for matProfs in matProfs %} 
-                        {{ matProfs.matiere.coefficient | number_format(2)}} <br>
+
+                    {% for listeMat in listeMat %}
+
+                        {% for matProfs in matProfs %}
+
+                            {% if listeMat.denomination == matProfs.matiere.denomination %}
+
+                                 {{ matProfs.matiere.coefficient | number_format(2)}} <br>
+
+                            {% endif %}
+    
+                        {% endfor %}
+
                     {% endfor %}
+
                 </td> 
                 <td class="contenu coeff">
-                    {% for matProfs in matProfs %}
-                        {{ (matProfs.moyenne * matProfs.matiere.coefficient) | number_format(2)}} <br>
+
+                    {% for listeMat in listeMat %}
+
+                        {% for matProfs in matProfs %}
+
+                            {% if listeMat.denomination == matProfs.matiere.denomination %}
+
+                                 {{ (matProfs.moyenne * matProfs.matiere.coefficient) | number_format(2)}} <br>
+
+                            {% endif %}
+    
+                        {% endfor %}
+
                     {% endfor %}
+
                 </td> 
                 <td class="contenu">
-                    {% for matProfs in matProfs %}
-                        {{ matProfs.matiere.prof }} <br>
+
+                    {% for listeMat in listeMat %}
+
+                        {% for matProfs in matProfs %}
+
+                            {% if listeMat.denomination == matProfs.matiere.denomination %}
+
+                                 {{ matProfs.matiere.prof }} <br>
+
+                            {% endif %}
+    
+                        {% endfor %}
+
                     {% endfor %}
+
                 </td> 
                 <td class="contenu">
                     {% for matProfs in matProfs %}
@@ -293,7 +406,7 @@
         </tr>
 
         <tr> 
-            <th class="fin">MOYENNE PREMIER SEMESTRE </th> 
+            <th class="fin">MOYENNE DEUXIEME SEMESTRE </th> 
             <th class="fin"> 
                 {% if somCoeffmatProfs == 0 %}
                     0

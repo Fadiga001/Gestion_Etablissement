@@ -101,6 +101,7 @@ class ImpressionController extends AbstractController
 
         //Calcul des moyennes par etudiants, par trimestre et le rang de l'étudiant
         $notes = [];
+        $moyenne = [];
         for($i=0; $i<sizeof($etudiantClasse); $i++)
         {
             $somCoeffMatGenEtud[$i] = 0;
@@ -156,11 +157,13 @@ class ImpressionController extends AbstractController
                 $notesEtud[$i] = ($moyMatGen[$i] + $moyMatProf[$i]) / 2 ;
                 $etudiantClasse[$i]->setMoyenne(0);
                 $notes[$i] = $etudiantClasse[$i] ;
+                $moyenne[$i] = 0;
             }else{
 
                 $notesEtud[$i] = ($moyMatGen[$i] + $moyMatProf[$i]) / 2 ;
                 $etudiantClasse[$i]->setMoyenne($notesEtud[$i]);
-                $notes[$i] = $etudiantClasse[$i] ;
+                $notes[$i] = $etudiantClasse[$i];
+                $moyenne[$i] = $notesEtud[$i];
 
             }
             
@@ -168,19 +171,18 @@ class ImpressionController extends AbstractController
            
         }
 
-        arsort($notes);
+        arsort($moyenne);
+        
+
 
         $values_new = array();
         $index_new_values = 1;
-        foreach($notes as $cle => $valeur) {
+        foreach($moyenne as $cle => $valeur) {
 	        $values_new[$index_new_values] = $notes[$cle];
 	        $index_new_values++;
         }
 
-        
-
-
-        
+  
 
 
         // Calcul des moyennes par type de matiere 
@@ -250,7 +252,8 @@ class ImpressionController extends AbstractController
             'NoteMatProfs'=>$NoteMatProfs,
             'notes'=>$values_new,
             'anneeActive' => $anneeActive,
-            'directeur'=>$directeur
+            'directeur'=>$directeur,
+            'listeMat'=>$listeMat,
 
         ]);
 
@@ -379,6 +382,7 @@ class ImpressionController extends AbstractController
 	        $index_new_values++;
         }
 
+       
 
 
         
@@ -454,7 +458,8 @@ class ImpressionController extends AbstractController
             'NoteMatProfs'=>$NoteMatProfs,
             'notes'=>$values_new,
             'anneeActive' => $anneeActive,
-            'directeur'=>$directeur
+            'directeur'=>$directeur,
+            'listeMat'=>$listeMat,
 
         ]);
 
