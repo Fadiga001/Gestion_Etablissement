@@ -98,12 +98,6 @@ class Etudiant
     #[ORM\JoinColumn(nullable: false)]
     private ?Classe $classe = null;
 
-     // NOTE: This is not a mapped field of entity metadata, just a simple property.
-     #[Vich\UploadableField(mapping: 'userImage', fileNameProperty: 'imageName')]
-     private ?File $imageFile = null;
- 
-     #[ORM\Column(type: 'string', nullable: true)]
-     private ?string $imageName = null;
 
 
      #[ORM\Column(nullable: true)]
@@ -111,6 +105,9 @@ class Etudiant
 
      #[ORM\Column(nullable: true)]
      private ?float $moyenne = null;
+
+     #[ORM\Column(length: 255, nullable: true)]
+     private ?string $imageFile = null;
 
 
 
@@ -336,34 +333,7 @@ class Etudiant
         return $this;
     }
 
-    /**
-     * If manually uploading a file (i.e. not using Symfony Form) ensure an instance
-     * of 'UploadedFile' is injected into this setter to trigger the update. If this
-     * bundle's configuration parameter 'inject_on_load' is set to 'true' this setter
-     * must be able to accept an instance of 'File' as the bundle will inject one here
-     * during Doctrine hydration.
-     *
-     * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile|null $imageFile
-     */
-    public function setImageFile(?File $imageFile = null): void
-    {
-        $this->imageFile = $imageFile;
-    }
-
-    public function getImageFile(): ?File
-    {
-        return $this->imageFile;
-    }
-
-    public function setImageName(?string $imageName): void
-    {
-        $this->imageName = $imageName;
-    }
-
-    public function getImageName(): ?string
-    {
-        return $this->imageName;
-    }
+    
 
     
     #[ORM\PrePersist]
@@ -396,6 +366,18 @@ class Etudiant
     public function setMoyenne(?float $moyenne): self
     {
         $this->moyenne = $moyenne;
+
+        return $this;
+    }
+
+    public function getImageFile(): ?string
+    {
+        return $this->imageFile;
+    }
+
+    public function setImageFile(?string $imageFile): self
+    {
+        $this->imageFile = $imageFile;
 
         return $this;
     }

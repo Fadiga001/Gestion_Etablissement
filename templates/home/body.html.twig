@@ -152,7 +152,7 @@
                                 <td>{{ etudiant.etud.prenoms | upper}}</td>
                                 <td>{{ etudiant.etud.matricule | upper}}</td>
                                 <td>{{ etudiant.etud.classe | upper}}</td>
-                                <td><img src="{{ vich_uploader_asset(etudiant.etud, 'imageFile') }}" class="image-circle" height="35" width="35"></td>
+                                <td><img src="{{ asset('/uploads/'~ etudiant.etud.imageFile) }}" class="image-circle" height="35" width="35"></td>
                             </tr>
                     
                         {% endfor %}

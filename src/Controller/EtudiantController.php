@@ -7,17 +7,19 @@ use App\Form\EtudiantType;
 use App\Form\searchFormType;
 use App\Form\ReinscriptionType;
 use App\Repository\NoterRepository;
+use App\Repository\ClasseRepository;
 use App\Services\paginationServices;
 use App\Repository\EtudiantRepository;
+use App\Repository\MatieresRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\AnneeAcademiqueRepository;
-use App\Repository\ClasseRepository;
-use App\Repository\MatieresRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class EtudiantController extends AbstractController
@@ -39,13 +41,39 @@ class EtudiantController extends AbstractController
 
 
     #[Route('/inscrire/etudiants', name: 'inscrire_etudiants', methods: ['GET', 'POST'])]
-    public function new(Request $request, EtudiantRepository $etudiantRepository): Response
+    public function new(Request $request, EtudiantRepository $etudiantRepository, SluggerInterface $slugger): Response
     {
         $etudiant = new Etudiant();
         $form = $this->createForm(EtudiantType::class, $etudiant);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $photo = $form->get('photo')->getData();
+
+            // this condition is needed because the 'brochure' field is not required
+            // so the PDF file must be processed only when a file is uploaded
+            if ($photo) {
+                $originalFilename = pathinfo($photo->getClientOriginalName(), PATHINFO_FILENAME);
+                // this is needed to safely include the file name as part of the URL
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$photo->guessExtension();
+
+                // Move the file to the directory where brochures are stored
+                try {
+                    $photo->move(
+                        $this->getParameter('personne_directory'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    // ... handle exception if something happens during file upload
+                }
+
+                // updates the 'brochureFilename' property to store the PDF file name
+                // instead of its contents
+                $etudiant->setImageFile($newFilename);
+            }
+
             $etudiantRepository->add($etudiant, true);
 
             $this->addFlash('success', 'Etudiant inscrit avec succès.');
@@ -138,7 +166,7 @@ class EtudiantController extends AbstractController
             $newEtudiant->setAdresseDePersonneAContacter($etudiants->getAdresseDePersonneAContacter());
             $newEtudiant->setTelephoneDePersonneAContacter($etudiants->getTelephoneDePersonneAContacter());
             $newEtudiant->setStatus($etudiants->getStatus());
-            $newEtudiant->setImageName($etudiants->getImageName());
+            $newEtudiant->setImageFile($etudiants->getImageFile());
             $newEtudiant->setAnneeScolaire($an);
             $newEtudiant->setClasse($clas);
             $etudiants->setReinscrire(true);
@@ -177,12 +205,38 @@ class EtudiantController extends AbstractController
 
 
     #[Route('/etudiant/liste-des/differents-etudiants/details-etudiants/{id}/edit', name: 'edit_etudiant', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Etudiant $etudiant, EtudiantRepository $etudiantRepository): Response
+    public function edit(Request $request, Etudiant $etudiant, EtudiantRepository $etudiantRepository, SluggerInterface $slugger): Response
     {
         $form = $this->createForm(EtudiantType::class, $etudiant);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $photo = $form->get('photo')->getData();
+
+            // this condition is needed because the 'brochure' field is not required
+            // so the PDF file must be processed only when a file is uploaded
+            if ($photo) {
+                $originalFilename = pathinfo($photo->getClientOriginalName(), PATHINFO_FILENAME);
+                // this is needed to safely include the file name as part of the URL
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$photo->guessExtension();
+
+                // Move the file to the directory where brochures are stored
+                try {
+                    $photo->move(
+                        $this->getParameter('personne_directory'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    // ... handle exception if something happens during file upload
+                }
+
+                // updates the 'brochureFilename' property to store the PDF file name
+                // instead of its contents
+                $etudiant->setImageFile($newFilename);
+            }
+
             $etudiantRepository->add($etudiant, true);
 
             $this->addFlash('warning', 'les informations de l\'étudiant ont été modifiées avec succès.');
