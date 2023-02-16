@@ -109,6 +109,14 @@ class Etudiant
      #[ORM\Column(length: 255, nullable: true)]
      private ?string $imageFile = null;
 
+     #[ORM\OneToMany(mappedBy: 'matricules', targetEntity: Noter::class)]
+     private Collection $noters;
+
+     public function __construct()
+     {
+         $this->noters = new ArrayCollection();
+     }
+
 
 
     public function getId(): ?int
@@ -378,6 +386,36 @@ class Etudiant
     public function setImageFile(?string $imageFile): self
     {
         $this->imageFile = $imageFile;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Noter>
+     */
+    public function getNoters(): Collection
+    {
+        return $this->noters;
+    }
+
+    public function addNoter(Noter $noter): self
+    {
+        if (!$this->noters->contains($noter)) {
+            $this->noters->add($noter);
+            $noter->setMatricules($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNoter(Noter $noter): self
+    {
+        if ($this->noters->removeElement($noter)) {
+            // set the owning side to null (unless already changed)
+            if ($noter->getMatricules() === $this) {
+                $noter->setMatricules(null);
+            }
+        }
 
         return $this;
     }

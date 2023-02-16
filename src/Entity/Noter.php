@@ -54,6 +54,9 @@ class Noter
     #[ORM\ManyToOne(inversedBy: 'noters')]
     private ?Matieres $matiere = null;
 
+    #[ORM\ManyToOne(inversedBy: 'noters')]
+    private ?Etudiant $matricules = null;
+
 
 
     #[ORM\PrePersist]
@@ -218,6 +221,18 @@ class Noter
     public function setMatiere(?Matieres $matiere): self
     {
         $this->matiere = $matiere;
+
+        return $this;
+    }
+
+    public function getMatricules(): ?Etudiant
+    {
+        return $this->matricules;
+    }
+
+    public function setMatricules(?Etudiant $matricules): self
+    {
+        $this->matricules = $matricules;
 
         return $this;
     }

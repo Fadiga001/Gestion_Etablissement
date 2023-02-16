@@ -37,6 +37,9 @@ class Professeurs
      #[ORM\OneToMany(mappedBy: 'prof', targetEntity: Matieres::class)]
      private Collection $matieres;
 
+     #[ORM\Column(length: 255, nullable: true)]
+     private ?string $imageFile = null;
+
    
 
      public function __construct()
@@ -122,6 +125,18 @@ class Professeurs
     public function __toString()
     {
         return $this->nom;
+    }
+
+    public function getImageFile(): ?string
+    {
+        return $this->imageFile;
+    }
+
+    public function setImageFile(?string $imageFile): self
+    {
+        $this->imageFile = $imageFile;
+
+        return $this;
     }
 
    

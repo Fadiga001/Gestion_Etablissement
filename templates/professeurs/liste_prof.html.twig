@@ -47,7 +47,7 @@
                         <tr>
                             <th>{{ profs.nom}}</th>
                             <td>{{ profs.matricule }}</td>
-                            <td><img src="{{ vich_uploader_asset(profs, 'imageFile') }}" height="35" width="35"></td>
+                             <td><img src="{{ asset('/uploads/'~ profs.imageFile) }}" class="image-circle" height="35" width="35"></td>
                             <td>{{ profs.statut }}</td>
           
                             <td>

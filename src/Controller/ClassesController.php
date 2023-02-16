@@ -189,6 +189,8 @@ class ClassesController extends AbstractController
         ]);
     }
 
+
+
     #[Route('/classes/voir-les-differentes-classes/details-classe/{id}/{idMat}/{matricule}/edit', name: 'edit_note')]
     #[ParamConverter('noter', options: ['mapping' => ['matricule' => 'etudiants']])]
     public function edit(EtudiantRepository $etudiantRepo, MatieresRepository $matRepo, NoterRepository $noteRepo, Classe $classe, $id, $idMat, $matricule, ClasseRepository $classeRepo, Request $request, EntityManagerInterface $manager): Response
@@ -256,11 +258,12 @@ class ClassesController extends AbstractController
 
         $an = new DateTime();
 
-
         if($request->isMethod('post'))
         {
             $noteClasse = $request->get('noteClasse');
+
             $notePartiel = $request->get('notePartiel');
+
 
             $note = [];
 
@@ -272,10 +275,11 @@ class ClassesController extends AbstractController
                     $note = new Noter;
 
                     $mat = $etudiant[$i]->getMatricule();
-                    $noteClasses = $noteClasse[$i];
-                    $notePartiels = $notePartiel[$i];
+                    $noteClasses =(float) $noteClasse[$i];
+                    $notePartiels = (float) $notePartiel[$i];
 
-                    $moy = ($noteClasses+$notePartiels)/2 ;
+                    $moy = (float) ($noteClasses+$notePartiels)/2 ;
+                 
 
                     if($noteClasses > 20 || $noteClasses < 0 || $notePartiels > 20 || $notePartiels < 0)
                     {
@@ -284,7 +288,8 @@ class ClassesController extends AbstractController
                         return $this->redirectToRoute('donner_note', ['id'=>$id, 'idMat'=>$idMat]);
 
                     }else{
-                        $note->setEtudiants($mat)
+
+                        $note->setMatricules($etudiant[$i])
                         ->setClasses($classe)
                         ->setMatiere($matiere)
                         ->setSemestre('PREMIER SEMESTRE')
@@ -293,7 +298,6 @@ class ClassesController extends AbstractController
                         ->setNoteClasse($noteClasses)
                         ->setNotePartiel($notePartiels)
                         ->setMoyenne($moy);
-
 
                         $manager->persist($note);
                     }
@@ -316,9 +320,10 @@ class ClassesController extends AbstractController
                     $note = new Noter;
 
                     $mat = $etudiant[$i]->getMatricule();
-                    $noteClasses = $noteClasse[$i];
-                    $notePartiels = $notePartiel[$i];
-                    $moy = ($noteClasses+$notePartiels)/2 ;
+                    $noteClasses =(float) $noteClasse[$i];
+                    $notePartiels = (float) $notePartiel[$i];
+
+                    $moy = (float) ($noteClasses+$notePartiels)/2 ;
 
                     if($noteClasses > 20 || $noteClasses < 0 || $notePartiels > 20 || $notePartiels < 0)
                     {
@@ -327,7 +332,7 @@ class ClassesController extends AbstractController
                         return $this->redirectToRoute('donner_note', ['id'=>$id, 'idMat'=>$idMat]);
 
                     }else{
-                        $note->setEtudiants($mat)
+                        $note->setMatricules($etudiant[$i])
                         ->setClasses($classe)
                         ->setMatieres($matiere)
                         ->setSemestre('DEUXIEME SEMESTRE')
