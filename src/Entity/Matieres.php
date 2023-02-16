@@ -43,6 +43,9 @@ class Matieres
     #[ORM\OneToMany(mappedBy: 'matiere', targetEntity: Noter::class)]
     private Collection $noters;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $imageFile = null;
+
 
     public function __construct()
     {
@@ -171,6 +174,18 @@ class Matieres
                 $noter->setMatiere(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getImageFile(): ?string
+    {
+        return $this->imageFile;
+    }
+
+    public function setImageFile(?string $imageFile): self
+    {
+        $this->imageFile = $imageFile;
 
         return $this;
     }

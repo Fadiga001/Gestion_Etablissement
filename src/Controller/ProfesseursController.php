@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 class ProfesseursController extends AbstractController
 {
@@ -29,7 +31,7 @@ class ProfesseursController extends AbstractController
 
     #[Route('/professeurs/creer_professeurs', name: 'creer_prof')]
 
-    public function creer_prof( Request $request, EntityManagerInterface $entityManager): Response
+    public function creer_prof( Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
 
         $profs = new Professeurs();
@@ -39,6 +41,30 @@ class ProfesseursController extends AbstractController
        if($form->isSubmitted() && $form->isValid())
        {
            $profs = $form->getData();
+           $photo = $form->get('photo')->getData();
+
+            // this condition is needed because the 'brochure' field is not required
+            // so the PDF file must be processed only when a file is uploaded
+            if ($photo) {
+                $originalFilename = pathinfo($photo->getClientOriginalName(), PATHINFO_FILENAME);
+                // this is needed to safely include the file name as part of the URL
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$photo->guessExtension();
+
+                // Move the file to the directory where brochures are stored
+                try {
+                    $photo->move(
+                        $this->getParameter('personne_directory'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    // ... handle exception if something happens during file upload
+                }
+
+                // updates the 'brochureFilename' property to store the PDF file name
+                // instead of its contents
+                $profs->setImageFile($newFilename);
+            }
            $entityManager->persist($profs);
            $entityManager->flush();
 
@@ -55,7 +81,7 @@ class ProfesseursController extends AbstractController
 
     #[Route('/professeurs/modifier_professeurs/{nom}', name: 'edit_prof')]
 
-    public function edit_prof(Professeurs $profs, Request $request, EntityManagerInterface $entityManager): Response
+    public function edit_prof(Professeurs $profs, Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
 
        $form = $this->createForm(ProfesseursType::class, $profs);
@@ -64,6 +90,30 @@ class ProfesseursController extends AbstractController
        if($form->isSubmitted() && $form->isValid())
        {
            $profs = $form->getData();
+           $photo = $form->get('photo')->getData();
+
+            // this condition is needed because the 'brochure' field is not required
+            // so the PDF file must be processed only when a file is uploaded
+            if ($photo) {
+                $originalFilename = pathinfo($photo->getClientOriginalName(), PATHINFO_FILENAME);
+                // this is needed to safely include the file name as part of the URL
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$photo->guessExtension();
+
+                // Move the file to the directory where brochures are stored
+                try {
+                    $photo->move(
+                        $this->getParameter('personne_directory'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    // ... handle exception if something happens during file upload
+                }
+
+                // updates the 'brochureFilename' property to store the PDF file name
+                // instead of its contents
+                $profs->setImageFile($newFilename);
+            }
            $entityManager->persist($profs);
            $entityManager->flush();
 

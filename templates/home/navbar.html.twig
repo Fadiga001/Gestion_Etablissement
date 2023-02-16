@@ -130,7 +130,7 @@
       <li class="nav-item dropdown">
          {% if app.user %}
             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" id="compteDropdownLink">
-              <img src="{{ vich_uploader_asset(app.user, 'imageFile') }}" height="25" width="25" class="img-circle mr-1">
+              <td><img src="{{ asset('/uploads/'~ app.user.imageFile) }}" class="image-circle mr-1" height="25" width="25"></td>
               <span class="brand-text text-black"> {{ app.user.username }} </span>
             </a>
             <div class="dropdown-menu  dropdown-menu-right">

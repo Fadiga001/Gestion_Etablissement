@@ -49,7 +49,7 @@ class paginationServices
 
     public function setPage($page)
     {
-        $this->CurrentPage = $page;
+        $this->currentPage = $page;
 
         return $this;
     }
