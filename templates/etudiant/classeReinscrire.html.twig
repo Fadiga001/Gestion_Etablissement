@@ -79,11 +79,11 @@
                                           
                                             {% for listeNote in listeNote %}
 
-                                                    {% if etudiant.matricule == listeNote.etudiants and etudiant.classe == listeNote.classes and etudiant.anneeScolaire == listeNote.annee and listeNote.semestre == 'PREMIER SEMESTRE'%}
+                                                    {% if etudiant.matricule == listeNote.matricules and etudiant.classe == listeNote.classes and etudiant.anneeScolaire == listeNote.annee and listeNote.semestre == 'PREMIER SEMESTRE'%}
                                                         {% set somMoyS1 = somMoyS1 + listeNote.moyenne %}
                                                     {% endif %}
                                                     
-                                                    {% if etudiant.matricule == listeNote.etudiants and etudiant.classe == listeNote.classes and etudiant.anneeScolaire == listeNote.annee and listeNote.semestre == 'DEUXIEME SEMESTRE'%}
+                                                    {% if etudiant.matricule == listeNote.matricules and etudiant.classe == listeNote.classes and etudiant.anneeScolaire == listeNote.annee and listeNote.semestre == 'DEUXIEME SEMESTRE'%}
                                                         {% set somMoyS2 = somMoyS2 + listeNote.moyenne %}
                                                     {% endif %}
 

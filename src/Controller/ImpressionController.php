@@ -110,7 +110,7 @@ class ImpressionController extends AbstractController
             for($j=0; $j<sizeof($NoteMatGen); $j++)
             {
 
-                if($etudiantClasse[$i]->getMatricule() == $NoteMatGen[$j]->getEtudiants() && $etudiantClasse[$i]->getClasse() == $NoteMatGen[$j]->getClasses() &&  $NoteMatGen[$j]->getAnnee() == $anneeActive)
+                if($etudiantClasse[$i]->getMatricule() == $NoteMatGen[$j]->getMatricules() && $etudiantClasse[$i]->getClasse() == $NoteMatGen[$j]->getClasses() &&  $NoteMatGen[$j]->getAnnee() == $anneeActive)
                 { 
                     $somCoeffMatGenEtud[$i] = $somCoeffMatGenEtud[$i] + $NoteMatGen[$j]->getMatiere()->getCoefficient();
                     $somMoyMatGenEtud[$i] = $somMoyMatGenEtud[$i] + ($NoteMatGen[$j]->getMatiere()->getCoefficient() * $NoteMatGen[$j]->getMoyenne());
@@ -135,7 +135,7 @@ class ImpressionController extends AbstractController
             for($j=0; $j<sizeof($NoteMatProfs); $j++)
             {
 
-                if($etudiantClasse[$i]->getMatricule() == $NoteMatProfs[$j]->getEtudiants() && $etudiantClasse[$i]->getClasse() == $NoteMatProfs[$j]->getClasses() &&  $NoteMatProfs[$j]->getAnnee() == $anneeActive)
+                if($etudiantClasse[$i]->getMatricule() == $NoteMatProfs[$j]->getMatricules() && $etudiantClasse[$i]->getClasse() == $NoteMatProfs[$j]->getClasses() &&  $NoteMatProfs[$j]->getAnnee() == $anneeActive)
                 { 
                     $somCoeffMatProfsEtud[$i] = $somCoeffMatProfsEtud[$i] + $NoteMatProfs[$j]->getMatiere()->getCoefficient();
                     $somMoyMatProfsEtud[$i] = $somMoyMatProfsEtud[$i] + ($NoteMatProfs[$j]->getMatiere()->getCoefficient() * $NoteMatProfs[$j]->getMoyenne());
@@ -314,7 +314,7 @@ class ImpressionController extends AbstractController
             for($j=0; $j<sizeof($NoteMatGen); $j++)
             {
 
-                if($etudiantClasse[$i]->getMatricule() == $NoteMatGen[$j]->getEtudiants() && $etudiantClasse[$i]->getClasse() == $NoteMatGen[$j]->getClasses() &&  $NoteMatGen[$j]->getAnnee() == $anneeActive)
+                if($etudiantClasse[$i]->getMatricule() == $NoteMatGen[$j]->getMatricules() && $etudiantClasse[$i]->getClasse() == $NoteMatGen[$j]->getClasses() &&  $NoteMatGen[$j]->getAnnee() == $anneeActive)
                 { 
                     $somCoeffMatGenEtud[$i] = $somCoeffMatGenEtud[$i] + $NoteMatGen[$j]->getMatiere()->getCoefficient();
                     $somMoyMatGenEtud[$i] = $somMoyMatGenEtud[$i] + ($NoteMatGen[$j]->getMatiere()->getCoefficient() * $NoteMatGen[$j]->getMoyenne());
@@ -339,7 +339,7 @@ class ImpressionController extends AbstractController
             for($j=0; $j<sizeof($NoteMatProfs); $j++)
             {
 
-                if($etudiantClasse[$i]->getMatricule() == $NoteMatProfs[$j]->getEtudiants() && $etudiantClasse[$i]->getClasse() == $NoteMatProfs[$j]->getClasses() &&  $NoteMatProfs[$j]->getAnnee() == $anneeActive)
+                if($etudiantClasse[$i]->getMatricule() == $NoteMatProfs[$j]->getMatricules() && $etudiantClasse[$i]->getClasse() == $NoteMatProfs[$j]->getClasses() &&  $NoteMatProfs[$j]->getAnnee() == $anneeActive)
                 { 
                     $somCoeffMatProfsEtud[$i] = $somCoeffMatProfsEtud[$i] + $NoteMatProfs[$j]->getMatiere()->getCoefficient();
                     $somMoyMatProfsEtud[$i] = $somMoyMatProfsEtud[$i] + ($NoteMatProfs[$j]->getMatiere()->getCoefficient() * $NoteMatProfs[$j]->getMoyenne());
