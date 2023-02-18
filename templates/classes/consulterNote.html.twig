@@ -97,7 +97,7 @@
                                     <td>
                                         {% set note = 0 %}
                                         {% for listenote in listenote %}
-                                            {% if etudiant.matricule == listenote.etudiants and matiere == listenote.matiere and etudiant.classe == listenote.classes and etudiant.anneeScolaire == listenote.annee %}
+                                            {% if etudiant.matricule == listenote.matricules and matiere == listenote.matiere and etudiant.classe == listenote.classes and etudiant.anneeScolaire == listenote.annee %}
                                                 {% set note =  listenote.noteClasse %}
                                             {% endif %}
                                         {% endfor %}
@@ -114,7 +114,7 @@
                                     <td>
                                         {% set note = 0 %}
                                         {% for listenote in listenote %}
-                                            {% if etudiant.matricule == listenote.etudiants and matiere == listenote.matiere and etudiant.classe == listenote.classes and etudiant.anneeScolaire == listenote.annee %}
+                                            {% if etudiant.matricule == listenote.matricules and matiere == listenote.matiere and etudiant.classe == listenote.classes and etudiant.anneeScolaire == listenote.annee %}
                                                 {% set note =  listenote.notePartiel %}
                                             {% endif %}
                                         {% endfor %}
@@ -130,7 +130,7 @@
                                     <td> 
                                         {% set moy = 0 %}
                                         {% for listenote in listenote %}
-                                            {% if etudiant.matricule == listenote.etudiants and matiere == listenote.matiere and etudiant.classe == listenote.classes and etudiant.anneeScolaire == listenote.annee  %}
+                                            {% if etudiant.matricule == listenote.matricules and matiere == listenote.matiere and etudiant.classe == listenote.classes and etudiant.anneeScolaire == listenote.annee  %}
                                                 {% set moy = listenote.moyenne %}
                                             {% endif %}
                                         {% endfor %}
@@ -144,7 +144,7 @@
                                     <td>
                                         {% set moy = 0 %}
                                         {% for listenote in listenote %}
-                                            {% if etudiant.matricule == listenote.etudiants and matiere == listenote.matiere and etudiant.classe == listenote.classes and etudiant.anneeScolaire == listenote.annee %}
+                                            {% if etudiant.matricule == listenote.matricules and matiere == listenote.matiere and etudiant.classe == listenote.classes and etudiant.anneeScolaire == listenote.annee %}
                                                 {% set moy = listenote.moyenne %}
                                             {% endif %}
                                         {% endfor %}

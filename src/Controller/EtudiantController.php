@@ -131,6 +131,9 @@ class EtudiantController extends AbstractController
     }
 
 
+    
+
+
     #[Route('/inscrire/etudiants/classeReinscrite/{classe}/{matricule}/valider', name: 'etudiant_reinscrit')]
     #[ParamConverter('etudiant', options: ['mapping' => ['matricule' => 'matricule']])]
     public function Reinscription( Request $request, EtudiantRepository $etudiantRepository, AnneeAcademiqueRepository $anneeRepo, NoterRepository $noteRepo, ClasseRepository $classeRepo, $matricule,$classe, EntityManagerInterface $manager): Response

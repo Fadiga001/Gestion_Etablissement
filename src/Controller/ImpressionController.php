@@ -84,6 +84,7 @@ class ImpressionController extends AbstractController
         $matArt = $noteRepo->NoteParEtudiant($matricule, 'PREMIER SEMESTRE','MATIERES ARTISTIQUES');
 
 
+
         $NoteMatGen = $noteRepo->NoteParTypeMatiere('PREMIER SEMESTRE','MATIERES GENERALES');
         $NoteMatProfs = $noteRepo->NoteParTypeMatiere('PREMIER SEMESTRE','MATIERES PROFESSIONNELLES');
 
@@ -97,7 +98,6 @@ class ImpressionController extends AbstractController
         $classes = $classeRepo->findOneByCodeClasse($classe);
         $directeur = $classeRepo->DirecteurDeFiliere($classe);
 
-        
 
         //Calcul des moyennes par etudiants, par trimestre et le rang de l'étudiant
         $notes = [];
@@ -147,9 +147,12 @@ class ImpressionController extends AbstractController
             if($somCoeffMatProfsEtud[$i] == 0)
             {
                 $moyMatProf[$i] = 0;
+
             }else{
                 $moyMatProf[$i] = ($somMoyMatProfsEtud[$i] / $somCoeffMatProfsEtud[$i]);
             }
+
+
             
 
             if( $moyMatProf[$i] == 0 || $moyMatGen[$i] == 0)
@@ -173,7 +176,6 @@ class ImpressionController extends AbstractController
 
         arsort($moyenne);
         
-
 
         $values_new = array();
         $index_new_values = 1;
@@ -200,16 +202,16 @@ class ImpressionController extends AbstractController
         }
 
 
-        $somCoeffmatProfs = 0;
-        $somMoymatProfs = 0;
+        $somCoeffMatProfs = 0;
+        $somMoyMatProfs = 0;
         for($i=0; $i<sizeof($matProfs); $i++)
         {
             if($matProfs[$i]->getClasses() == $classes->getDenomination() && $matProfs[$i]->getAnnee() == $anneeActive)
             {
-                $somCoeffmatProfs = $somCoeffmatProfs + $matProfs[$i]->getMatiere()->getCoefficient();
-                $somMoymatProfs = $somMoymatProfs + ($matProfs[$i]->getMatiere()->getCoefficient() * $matProfs[$i]->getMoyenne());
+                $somCoeffMatProfs = $somCoeffMatProfs + $matProfs[$i]->getMatiere()->getCoefficient();
+                $somMoyMatProfs = $somMoyMatProfs + ($matProfs[$i]->getMatiere()->getCoefficient() * $matProfs[$i]->getMoyenne());
             }
-           
+        
         }
 
 
@@ -243,8 +245,8 @@ class ImpressionController extends AbstractController
             'matArt'=>$matArt,
             'somCoeffMatGen'=>$somCoeffMatGen,
             'somMoyMatGen'=>$somMoyMatGen,
-            'somCoeffmatProfs'=>$somCoeffmatProfs,
-            'somMoymatProfs'=>$somMoymatProfs,
+            'somCoeffmatProfs'=>$somCoeffMatProfs,
+            'somMoymatProfs'=>$somMoyMatProfs,
             'etudiantClasse' =>$etudiantClasse,
             'listeNote' => $listeNotes,
             'totalMat' =>sizeof($listeMat),
@@ -306,6 +308,7 @@ class ImpressionController extends AbstractController
 
         //Calcul des moyennes par etudiants, par trimestre et le rang de l'étudiant
         $notes = [];
+        $moyenne = [];
         for($i=0; $i<sizeof($etudiantClasse); $i++)
         {
             $somCoeffMatGenEtud[$i] = 0;
@@ -356,36 +359,124 @@ class ImpressionController extends AbstractController
             }
             
 
-            if( $moyMatProf[$i] == 0 || $moyMatGen[$i] == 0)
+            if( $moyMatProf[$i] == 0 && $moyMatGen[$i] == 0)
             {
                 $notesEtud[$i] = ($moyMatGen[$i] + $moyMatProf[$i]) / 2 ;
                 $etudiantClasse[$i]->setMoyenne(0);
                 $notes[$i] = $etudiantClasse[$i] ;
+                $moyenne[$i]= $notesEtud[$i];
             }else{
 
                 $notesEtud[$i] = ($moyMatGen[$i] + $moyMatProf[$i]) / 2 ;
                 $etudiantClasse[$i]->setMoyenne($notesEtud[$i]);
                 $notes[$i] = $etudiantClasse[$i] ;
+                $moyenne[$i]= $notesEtud[$i];
 
             }
 
            
         }
 
-        arsort($notes);
+        arsort($moyenne);
         
 
         $values_new = array();
         $index_new_values = 1;
-        foreach($notes as $cle => $valeur) {
+        foreach($moyenne as $cle => $valeur) {
 	        $values_new[$index_new_values] = $notes[$cle];
 	        $index_new_values++;
         }
 
-       
 
 
+        //Calcul des moyennes générales annuelles des étudiants et leurs rangs
+
+        $listeNotesGenerales = $noteRepo->findAll();
+        $moyenneAnnuelles = [];
         
+        for($i=0; $i<sizeof($etudiantClasse); $i++)
+        {
+
+
+            // Calcul des sommes de coefficients et de moyennes du premier semestre
+            $somCoeffSemestre1[$i] = 0;
+            $somMoySemestre1[$i] = 0;
+
+            for($j=0; $j<sizeof($listeNotesGenerales); $j++)
+            {
+
+                if($etudiantClasse[$i]->getMatricule() == $listeNotesGenerales[$j]->getMatricules() && $etudiantClasse[$i]->getClasse() == $listeNotesGenerales[$j]->getClasses() &&  $listeNotesGenerales[$j]->getAnnee() == $anneeActive && $listeNotesGenerales[$j]->getSemestre() == 'PREMIER SEMESTRE')
+                { 
+                    $somCoeffSemestre1[$i] = $somCoeffSemestre1[$i] + $listeNotesGenerales[$j]->getMatiere()->getCoefficient();
+                    $somMoySemestre1[$i] = $somMoySemestre1[$i] + ($listeNotesGenerales[$j]->getMatiere()->getCoefficient() * $listeNotesGenerales[$j]->getMoyenne());
+                }
+            }
+
+            $moySemestre1[$i] = 0;
+
+            if($somCoeffSemestre1[$i] == 0)
+            {
+                $somCoeffSemestre1[$i] = 0;
+            }else{
+                $moySemestre1[$i] = ($somMoySemestre1[$i] / $somCoeffSemestre1[$i]);
+            }
+
+
+
+            // Calcul des sommes de coefficients et de moyennes du deuxième semestre
+            $somCoeffSemestre2[$i] = 0;
+            $somMoySemestre2[$i] = 0;
+
+            for($j=0; $j<sizeof($listeNotesGenerales); $j++)
+            {
+
+                if($etudiantClasse[$i]->getMatricule() == $listeNotesGenerales[$j]->getMatricules() && $etudiantClasse[$i]->getClasse() == $listeNotesGenerales[$j]->getClasses() &&  $listeNotesGenerales[$j]->getAnnee() == $anneeActive && $listeNotesGenerales[$j]->getSemestre() == 'DEUXIEME SEMESTRE')
+                { 
+                    $somCoeffSemestre2[$i] = $somCoeffSemestre2[$i] + $listeNotesGenerales[$j]->getMatiere()->getCoefficient();
+                    $somMoySemestre2[$i] = $somMoySemestre2[$i] + ($listeNotesGenerales[$j]->getMatiere()->getCoefficient() * $listeNotesGenerales[$j]->getMoyenne());
+                }
+            }
+
+            $moySemestre2[$i] = 0;
+
+            if($somCoeffSemestre2[$i] == 0)
+            {
+                $somCoeffSemestre2[$i] = 0;
+            }else{
+                $moySemestre2[$i] = ($somMoySemestre2[$i] / $somCoeffSemestre2[$i]);
+            }
+
+
+            //Calcul des moyennes générales par étudiants
+            if( $moySemestre1[$i] == 0 && $moySemestre2[$i] == 0)
+            {
+                $notesEtud[$i] = ($moySemestre1[$i] + $moySemestre2[$i]) / 2 ;
+                $etudiantClasse[$i]->setMoyenne(0);
+                $moyenneAnnuelles[$i] = $notesEtud[$i] ;
+            }else{
+
+                $notesEtud[$i] = ($moySemestre1[$i] + $moySemestre2[$i]) / 2;
+                $etudiantClasse[$i]->setMoyenne($notesEtud[$i]);
+                $moyenneAnnuelles[$i] = $notesEtud[$i] ;
+
+            }
+
+
+
+        }
+
+
+        //tri des moyennes annuelles par valeurs
+        arsort($moyenneAnnuelles);
+        
+
+        //repositionnement des indices des moyennes triées
+        $values_new = array();
+        $index_new_values = 1;
+        foreach($moyenneAnnuelles as $cle => $valeur) {
+	        $values_new[$index_new_values] = $notes[$cle];
+	        $index_new_values++;
+        }  
 
 
         
