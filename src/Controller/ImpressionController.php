@@ -307,7 +307,7 @@ class ImpressionController extends AbstractController
         
 
         //Calcul des moyennes par etudiants, par trimestre et le rang de l'étudiant
-        $notes = [];
+        $notesClasse = [];
         $moyenne = [];
         for($i=0; $i<sizeof($etudiantClasse); $i++)
         {
@@ -363,13 +363,13 @@ class ImpressionController extends AbstractController
             {
                 $notesEtud[$i] = ($moyMatGen[$i] + $moyMatProf[$i]) / 2 ;
                 $etudiantClasse[$i]->setMoyenne(0);
-                $notes[$i] = $etudiantClasse[$i] ;
+                $notesClasse[$i] = $etudiantClasse[$i] ;
                 $moyenne[$i]= $notesEtud[$i];
             }else{
 
                 $notesEtud[$i] = ($moyMatGen[$i] + $moyMatProf[$i]) / 2 ;
                 $etudiantClasse[$i]->setMoyenne($notesEtud[$i]);
-                $notes[$i] = $etudiantClasse[$i] ;
+                $notesClasse[$i] = $etudiantClasse[$i] ;
                 $moyenne[$i]= $notesEtud[$i];
 
             }
@@ -380,12 +380,45 @@ class ImpressionController extends AbstractController
         arsort($moyenne);
         
 
-        $values_new = array();
-        $index_new_values = 1;
+        $tableNotes = [];
+        $indicesNotes = 1;
         foreach($moyenne as $cle => $valeur) {
-	        $values_new[$index_new_values] = $notes[$cle];
-	        $index_new_values++;
+	        $tableNotes[$indicesNotes] = $notesClasse[$cle];
+	        $indicesNotes++;
         }
+
+
+        
+
+
+
+        // Calcul des moyennes par type de matiere 
+        $somCoeffMatGen = 0;
+        $somMoyMatGen = 0;
+        for($i=0; $i<sizeof($matGen); $i++)
+        {
+            if($matGen[$i]->getClasses() == $classes->getDenomination() && $matGen[$i]->getAnnee() == $anneeActive)
+            {
+                $somCoeffMatGen = $somCoeffMatGen + $matGen[$i]->getMatiere()->getCoefficient();
+
+                $somMoyMatGen = $somMoyMatGen + ($matGen[$i]->getMatiere()->getCoefficient() * $matGen[$i]->getMoyenne());
+            }
+            
+        }
+
+
+        $somCoeffmatProfs = 0;
+        $somMoymatProfs = 0;
+        for($i=0; $i<sizeof($matProfs); $i++)
+        {
+            if($matProfs[$i]->getClasses() == $classes->getDenomination() && $matProfs[$i]->getAnnee() == $anneeActive)
+            {
+                $somCoeffmatProfs = $somCoeffmatProfs + $matProfs[$i]->getMatiere()->getCoefficient();
+                $somMoymatProfs = $somMoymatProfs + ($matProfs[$i]->getMatiere()->getCoefficient() * $matProfs[$i]->getMoyenne());
+            }
+           
+        }
+
 
 
 
@@ -393,6 +426,7 @@ class ImpressionController extends AbstractController
 
         $listeNotesGenerales = $noteRepo->findAll();
         $moyenneAnnuelles = [];
+        $notesAnnuelles = [];
         
         for($i=0; $i<sizeof($etudiantClasse); $i++)
         {
@@ -452,11 +486,13 @@ class ImpressionController extends AbstractController
             {
                 $notesEtud[$i] = ($moySemestre1[$i] + $moySemestre2[$i]) / 2 ;
                 $etudiantClasse[$i]->setMoyenne(0);
+                $notesAnnuelles[$i] = $etudiantClasse[$i];
                 $moyenneAnnuelles[$i] = $notesEtud[$i] ;
             }else{
 
                 $notesEtud[$i] = ($moySemestre1[$i] + $moySemestre2[$i]) / 2;
                 $etudiantClasse[$i]->setMoyenne($notesEtud[$i]);
+                $notesAnnuelles[$i] = $etudiantClasse[$i];
                 $moyenneAnnuelles[$i] = $notesEtud[$i] ;
 
             }
@@ -471,43 +507,12 @@ class ImpressionController extends AbstractController
         
 
         //repositionnement des indices des moyennes triées
-        $new_table = array();
-        $index_new_values = 1;
-        foreach($moyenneAnnuelles as $cle => $valeur) {
-	        $new_table[$index_new_values] = $notes[$cle];
-	        $index_new_values++;
+        $tableAnnuel = array();
+        $indice = 1;
+        foreach($moyenneAnnuelles as $key => $valeur) {
+	        $tableAnnuel[$indice] = $notesAnnuelles[$key];
+	        $indice++;
         }  
-
-
-        
-
-
-        // Calcul des moyennes par type de matiere 
-        $somCoeffMatGen = 0;
-        $somMoyMatGen = 0;
-        for($i=0; $i<sizeof($matGen); $i++)
-        {
-            if($matGen[$i]->getClasses() == $classes->getDenomination() && $matGen[$i]->getAnnee() == $anneeActive)
-            {
-                $somCoeffMatGen = $somCoeffMatGen + $matGen[$i]->getMatiere()->getCoefficient();
-
-                $somMoyMatGen = $somMoyMatGen + ($matGen[$i]->getMatiere()->getCoefficient() * $matGen[$i]->getMoyenne());
-            }
-            
-        }
-
-
-        $somCoeffmatProfs = 0;
-        $somMoymatProfs = 0;
-        for($i=0; $i<sizeof($matProfs); $i++)
-        {
-            if($matProfs[$i]->getClasses() == $classes->getDenomination() && $matProfs[$i]->getAnnee() == $anneeActive)
-            {
-                $somCoeffmatProfs = $somCoeffmatProfs + $matProfs[$i]->getMatiere()->getCoefficient();
-                $somMoymatProfs = $somMoymatProfs + ($matProfs[$i]->getMatiere()->getCoefficient() * $matProfs[$i]->getMoyenne());
-            }
-           
-        }
 
 
 
@@ -547,11 +552,11 @@ class ImpressionController extends AbstractController
             'totalMat' =>sizeof($listeMat),
             'NoteMatGen'=>$NoteMatGen,
             'NoteMatProfs'=>$NoteMatProfs,
-            'notes'=>$values_new,
+            'moyenneClasse'=>$tableNotes,
             'anneeActive' => $anneeActive,
             'directeur'=>$directeur,
             'listeMat'=>$listeMat,
-            'moyenneAnnuelle'=>$new_table,
+            'moyenneAnnuelle'=>$tableAnnuel,
 
         ]);
 

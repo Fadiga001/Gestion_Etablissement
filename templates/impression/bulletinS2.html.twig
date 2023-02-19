@@ -421,11 +421,36 @@
 
             <th class="fin" colspan="2">
                 CLASSEMENT : 
-                {% for cle, notes in notes %}
+                {% for cle, notes in moyenneClasse %}
 
                     {% if notes.matricule == etudiant.matricule and notes.classe == etudiant.classe and notes.anneeScolaire == anneeActive %}
 
-                        {% if notes.moyenne == 0 %}
+                        {{notes.moyenne}}
+
+                    {% endif %}
+
+                {% endfor %}
+            </th> 
+            
+            <th class="fin">  
+                 MOYENNE ANNUELLE : 
+                {% for cle, moyenneAnnuelle in moyenneAnnuelle %}
+
+                    {% if moyenneAnnuelle.matricule == etudiant.matricule and moyenneAnnuelle.classe == etudiant.classe and moyenneAnnuelle.anneeScolaire == anneeActive %}
+
+                        {{moyenneAnnuelle.moyenne | number_format(2)}}
+
+                    {% endif %}
+
+                {% endfor %}
+            </th>  
+            <th class="fin">  
+                RANG : 
+                {% for cle, moyenneAnnuelle in moyenneAnnuelle %}
+
+                    {% if moyenneAnnuelle.matricule == etudiant.matricule and moyenneAnnuelle.classe == etudiant.classe and moyenneAnnuelle.anneeScolaire == anneeActive %}
+
+                        {% if moyenneAnnuelle.moyenne == 0 %}
                             
                         {% else %}
                            
@@ -444,33 +469,6 @@
 
                 {% endfor %}
             </th> 
-            
-            <th class="fin">  
-                 MOYENNE ANNUELLE : 
-                {% for cle, notes in notes %}
-
-                    {% if notes.matricule == etudiant.matricule and notes.classe == etudiant.classe and notes.anneeScolaire == anneeActive %}
-
-                        {% if notes.moyenne == 0 %}
-                            
-                        {% else %}
-                           
-                           {% if cle == 1 and etudiant.sexe == "Femme" %}
-                                {{cle}} ère 
-                            {% elseif cle == 1 and etudiant.sexe == "Homme" %}
-                                {{cle}} er 
-                            {% else %}
-                                {{cle}} ième
-                            {% endif %}
-
-                        {% endif %}
-
-
-                    {% endif %}
-
-                {% endfor %}
-            </th>  
-            <th class="fin">  </th> 
         </tr>
 
         <tr> 
