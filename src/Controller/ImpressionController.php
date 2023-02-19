@@ -471,10 +471,10 @@ class ImpressionController extends AbstractController
         
 
         //repositionnement des indices des moyennes triées
-        $values_new = array();
+        $new_table = array();
         $index_new_values = 1;
         foreach($moyenneAnnuelles as $cle => $valeur) {
-	        $values_new[$index_new_values] = $notes[$cle];
+	        $new_table[$index_new_values] = $notes[$cle];
 	        $index_new_values++;
         }  
 
@@ -551,8 +551,11 @@ class ImpressionController extends AbstractController
             'anneeActive' => $anneeActive,
             'directeur'=>$directeur,
             'listeMat'=>$listeMat,
+            'moyenneAnnuelle'=>$new_table,
 
         ]);
+
+        
 
         $dompdf->loadHtml($html);
         $dompdf->setPaper('A4', 'landscape');
