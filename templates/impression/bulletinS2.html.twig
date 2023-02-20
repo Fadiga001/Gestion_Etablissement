@@ -425,7 +425,19 @@
 
                     {% if notes.matricule == etudiant.matricule and notes.classe == etudiant.classe and notes.anneeScolaire == anneeActive %}
 
-                        {{notes.moyenne}}
+                        {% if notes.moyenne == 0 %}
+                            
+                        {% else %}
+                           
+                           {% if cle == 1 and etudiant.sexe == "Femme" %}
+                                {{cle}} ère 
+                            {% elseif cle == 1 and etudiant.sexe == "Homme" %}
+                                {{cle}} er 
+                            {% else %}
+                                {{cle}} ième
+                            {% endif %}
+
+                        {% endif %}
 
                     {% endif %}
 
