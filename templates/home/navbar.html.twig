@@ -130,7 +130,7 @@
       <li class="nav-item dropdown">
          {% if app.user %}
             <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" id="compteDropdownLink">
-              <td><img src="{{ asset('/uploads/'~ app.user.imageFile) }}" class="image-circle mr-1" height="25" width="25"></td>
+              <img src="{{ asset('/uploads/'~ app.user.imageFile) }}" class="image-circle mr-1" height="25" width="25">
               <span class="brand-text text-black"> {{ app.user.username }} </span>
             </a>
             <div class="dropdown-menu  dropdown-menu-right">
@@ -160,6 +160,7 @@
   <!-- Main Sidebar Container -->
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
+
     <a href="index3.html" class="brand-link">
      <!-- <img src="dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8"> -->
       <span class="brand-text font-weight-light"> SCHOOL_SAVE </span>
@@ -178,7 +179,7 @@
             <a href="{{ path('app_home') }}" class="nav-link active">
               <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>
-                DASHBOARD
+                TABLEAU DE BORD
               </p>
             </a>
           </li>
@@ -338,12 +339,7 @@
                   <p>Utilisateurs</p>
                 </a>
               </li>
-              <li class="nav-item">
-                <a href="pages/tables/simple.html" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Monitoring</p>
-                </a>
-              </li>
+
             </ul>
           </li>
         {% endif %}

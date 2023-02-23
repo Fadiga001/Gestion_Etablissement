@@ -51,17 +51,16 @@
                             <td>{{ profs.statut }}</td>
           
                             <td>
-                                 <a class="btn btn-primary" href="{{ path('edit_prof', {'nom': profs.nom} )}}">
-                                    <i class="fa fa-pencil-square" aria-hidden="true"></i>
-                                </a>
-
+ 
                                {% include 'configuration/btnDelete.html.twig' with {
                                     'btnDelete': 'fa fa-trash' ,
                                     'Text_Delete': 'SUPPRESSION',
                                     'SBody': 'Voulez-vous supprimer ce professeur?',
                                     'path': "delete_prof",
                                     'param': {'nom': profs.nom },
-                                    'paths': 'liste_prof'
+                                    'paths': 'liste_prof',
+                                    'pathEdit': 'edit_prof',
+                                    'paramEdit': {'nom': profs.nom}
 
                                }%}
 

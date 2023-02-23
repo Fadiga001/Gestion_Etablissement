@@ -54,9 +54,7 @@
                             <td>{{ classe.denomination }}</td>
                             <td>{{ classe.filiere }}</td>
                             <td>
-                                 <a class="btn btn-primary" href="{{ path('editer_classes', {'denomination':  classe.denomination})}}">
-                                    <i class="fa fa-pencil-square" aria-hidden="true"></i>
-                                </a>
+                    
 
                                {% include 'configuration/btnDelete.html.twig' with {
                                     'btnDelete': 'fa fa-trash' ,
@@ -64,7 +62,9 @@
                                     'SBody': 'Voulez-vous supprimer cette classe?',
                                     'path': "delete_classe",
                                     'param': {'denomination': classe.denomination },
-                                    'paths': 'liste_classes'
+                                    'paths': 'liste_classes',
+                                    'pathEdit': 'editer_classes',
+                                    'paramEdit': {'denomination':  classe.denomination},
 
                                }%}
 

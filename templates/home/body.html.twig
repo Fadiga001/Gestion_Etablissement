@@ -91,6 +91,24 @@
               </div>
               <!-- /.card-header -->
               <div class="card-body">
+
+                <div class="row mt-3 mb-2 mr-2 ml-2 d-flex">
+
+                  <div class="col-md-10">
+                    {% if app.request.method == "POST" %}
+                      <p class="h4">Etudiants trouvés : {{ search | length }}</p>
+                    {% else %}
+                      <p class="h4">Etudiants inscrits : {{ lengthEtudiant | length }}</p>
+                    {% endif %}
+                  </div>
+
+                  <div class="col-md-2 ">
+
+                    {% include 'configuration/searchBar.html.twig' %}
+
+                  </div>
+
+                </div>
                 
 
                   <table class="table table-hover mb-5">
@@ -106,19 +124,37 @@
                         </tr>
                     </thead>
                     <tbody>
+                      {% if app.request.method =="POST" %}
 
-                        {% for etudiant in pagination.data %}
+                          {% for search in search %}
 
                             <tr>
-                                <th>{{ etudiant.nom | upper}}</th>
-                                <td>{{ etudiant.prenoms | upper}}</td>
-                                <td>{{ etudiant.matricule | upper}}</td>
-                                <td>{{ etudiant.classe | upper}}</td>
-
-                                <td><img src="{{ asset('/uploads/'~ etudiant.imageFile) }}" class="image-circle" height="35" width="35"></td>
+                              <td>{{ search.nom}}</td>
+                              <td>{{ search.prenoms}}</td>
+                              <td>{{ search.matricule}}</td>
+                              <td>{{ search.classe}}</td>
+                              <td><img src="{{ asset('/uploads/'~ search.imageFile) }}" alt="" class="img-circle mx-auto mb-3" height="40" width="40"></td>
                             </tr>
-                    
-                        {% endfor %}
+
+                          {% endfor %}
+
+                      {% else %}
+
+                          {% for etudiant in pagination.data %}
+
+                            <tr>
+                              <td>{{ etudiant.nom}}</td>
+                              <td>{{ etudiant.prenoms}}</td>
+                              <td>{{ etudiant.matricule}}</td>
+                              <td>{{ etudiant.classe}}</td>
+                              <td><img src="{{ asset('/uploads/'~ etudiant.imageFile) }}" alt="" class="img-circle mx-auto mb-3" height="40" width="40"></td>
+                            </tr>
+
+                          {% endfor %}
+
+                      {% endif %}
+
+                        
 
                     </tbody>
                 </table>

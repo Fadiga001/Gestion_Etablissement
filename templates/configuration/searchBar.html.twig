@@ -1,9 +1,11 @@
-{{ form_start(form) }}
+{{ form_start(form, {'class': 'form-inline' }) }}
 
      <div class="input-group">
-        {{ form_widget(recherche) }}
+        {{ form_widget(form.recherche) }}
         <span class="input-group-append">
-            <button type="submit" class="btn btn-primary">Rechercher</button>
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-search text-muted"></i>
+            </button>
         </span>
     </div>
 

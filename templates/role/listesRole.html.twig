@@ -43,9 +43,6 @@
                         <tr>
                             <th>{{ roles.title}}</th>
                             <td>
-                                 <a class="btn btn-primary" href="{{ path('editer_roles', {'id': roles.id})}}">
-                                    <i class="fa fa-pencil-square" aria-hidden="true"></i>
-                                </a>
 
                                 {% include 'configuration/btnDelete.html.twig' with {
                                     'btnDelete': 'fa fa-trash' ,
@@ -53,7 +50,9 @@
                                     'SBody': 'Voulez-vous supprimer ce role?',
                                     'path': "delete_role",
                                     'param': {'id': roles.id },
-                                    'paths': 'listes_roles'
+                                    'paths': 'listes_roles',
+                                    'pathEdit': 'editer_roles',
+                                    'paraEdit': {'id': roles.id},
 
                                }%}              
                             </td>

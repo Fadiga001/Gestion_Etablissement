@@ -200,7 +200,7 @@ class ClassesController extends AbstractController
         $classe = $classeRepo->findOneById($id);
         $matiere = $matRepo->findOneById($idMat);
         $note = $noteRepo->listeNoteParEtudiant($matricule,$matiere->getDenomination());
-        $mat = $noteRepo->findOneByEtudiants($matricule);
+        $mat = $noteRepo->findOneByMatricules($matricule);
 
      
 

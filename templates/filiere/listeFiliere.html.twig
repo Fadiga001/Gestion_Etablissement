@@ -48,9 +48,6 @@
                             <td>{{ filiere.denomination }}</td>
                             <td>{{ filiere.directeur }}</td>
                             <td>
-                                 <a class="btn btn-primary" href="{{ path('editerFiliere', {'denomination' : filiere.denomination}) }}">
-                                    <i class="fa fa-pencil-square" aria-hidden="true"></i>
-                                </a>
 
                                 {% include 'configuration/btnDelete.html.twig' with {
                                     'btnDelete': 'fa fa-trash' ,
@@ -58,7 +55,9 @@
                                     'SBody': 'Voulez-vous supprimer cette filière?',
                                     'path': "deleteFiliere",
                                     'param': {'denomination': filiere.denomination },
-                                    'paths': 'liste_filiere'
+                                    'paths': 'liste_filiere',
+                                    'pathEdit': 'editerFiliere',
+                                    'paramEdit': {'denomination' : filiere.denomination},
 
                                }%}
 

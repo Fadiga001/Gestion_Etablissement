@@ -190,13 +190,13 @@ class EtudiantRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('e')
                 ->join('e.classe', 'c')
+                ->join('e.anneeScolaire', 'a')
+                ->andwhere('a.active = :active')
+                ->setParameter('active', true)
                 ->andWhere('e.nom LIKE :val
-                OR e.prenoms LIKE :val
-                OR e.matricule LIKE :val
-                OR e.examenPrepare LIKE :val
-                OR e.filieres LIKE :val
-                OR c.denomination LIKE :val
-                ')
+                            OR e.prenoms LIKE :val
+                            OR e.matricule LIKE :val
+                            OR c.denomination LIKE :val')
                 ->setParameter('val', $search)
                 ->orderBy('e.id', 'DESC')
                 ->getQuery()

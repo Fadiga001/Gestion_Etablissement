@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Etudiant;
 use App\Form\EtudiantType;
+use App\Form\searchBarType;
 use App\Form\searchFormType;
 use App\Form\ReinscriptionType;
 use App\Repository\NoterRepository;
@@ -26,14 +27,27 @@ class EtudiantController extends AbstractController
 {
     #[Route('/etudiant/liste-des/differents-etudiants/{page<\d+>?1}', name: 'liste_etudiants')]
     #[IsGranted("ROLE_USER")]
-    public function index(paginationServices $pagination, Request $request, $page=1): Response
+    public function index(paginationServices $pagination, EtudiantRepository $etudiantRepo, Request $request, $page=1): Response
     {
+
+        $form = $this->createForm(searchBarType::class);
+        $form->handleRequest($request);
+
+        $search = [];
+        if($form->isSubmitted() && $form->isValid())
+        {
+          $nom = $form->getData();
+          $search = $etudiantRepo->findBySearch($nom);
+        }
+
 
        $pagination->setEntityClass(Etudiant::class)
                   ->setPage($page);
     
         return $this->render('etudiant/listeEtudiant.html.twig', [
-            'pagination'=>$pagination
+            'pagination'=>$pagination,
+            'form'=>$form->createView(),
+            'search'=>$search,
         ]);
 
     }

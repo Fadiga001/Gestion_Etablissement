@@ -60,9 +60,6 @@
                                     <td><img src="{{ asset('/uploads/'~ user.imageFile) }}" class="image-circle" height="35" width="35"></td>
                                 
                                     <td class="ms-4">
-                                         <a class="btn btn-primary" href="{{ path('edit_user', {'id': user.id} )}}">
-                                            <i class="fa fa-pencil-square" aria-hidden="true"></i>
-                                        </a>
 
                                         {% if user != app.getUser %}
                                             {% include 'configuration/btnDelete.html.twig' with {
@@ -71,7 +68,9 @@
                                                     'SBody': 'Voulez-vous supprimer cet utilisateur?',
                                                     'path': "delete_user",
                                                     'param': {'id': user.id },
-                                                    'paths': 'liste_users'
+                                                    'paths': 'liste_users',
+                                                    'pathEdit': 'edit_user',
+                                                    'paramEdit': {'id': user.id},
 
                                             }%}
                                         {% endif %}

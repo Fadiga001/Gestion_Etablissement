@@ -52,9 +52,6 @@
                             <td>{{ mat.TypeMatiere | upper}}</td>
                            
                             <td class="ms-4">
-                                 <a class="btn btn-primary" href="{{ path('editer_matieres', {'denomination': mat.denomination} )}}">
-                                    <i class="fa fa-pencil-square" aria-hidden="true"></i>
-                                </a>
 
                                 {% include 'configuration/btnDelete.html.twig' with {
                                     'btnDelete': 'fa fa-trash' ,
@@ -62,7 +59,9 @@
                                     'SBody': 'Voulez-vous supprimer cette classe?',
                                     'path': "delete_matiere",
                                     'param': {'denomination': mat.denomination },
-                                    'paths': 'liste_matieres'
+                                    'paths': 'liste_matieres',
+                                    'pathEdit': 'editer_matieres',
+                                    'paramEdit': {'denomination': mat.denomination},
 
                                }%}
 

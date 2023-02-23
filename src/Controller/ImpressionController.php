@@ -425,10 +425,11 @@ class ImpressionController extends AbstractController
         //Calcul des moyennes générales annuelles des étudiants et leurs rangs
 
         $listeNotesGenerales = $noteRepo->findAll();
+        $listeClasse = $etudiantRepo->classeAReinscrire($classe);
         $moyenneAnnuelles = [];
         $notesAnnuelles = [];
         
-        for($i=0; $i<sizeof($etudiantClasse); $i++)
+        for($i=0; $i<sizeof($listeClasse); $i++)
         {
 
 
@@ -439,7 +440,7 @@ class ImpressionController extends AbstractController
             for($j=0; $j<sizeof($listeNotesGenerales); $j++)
             {
 
-                if($etudiantClasse[$i]->getMatricule() == $listeNotesGenerales[$j]->getMatricules() && $etudiantClasse[$i]->getClasse() == $listeNotesGenerales[$j]->getClasses() &&  $listeNotesGenerales[$j]->getAnnee() == $anneeActive && $listeNotesGenerales[$j]->getSemestre() == 'PREMIER SEMESTRE')
+                if($listeClasse[$i]->getMatricule() == $listeNotesGenerales[$j]->getMatricules() && $listeClasse[$i]->getClasse() == $listeNotesGenerales[$j]->getClasses() &&  $listeNotesGenerales[$j]->getAnnee() == $anneeActive && $listeNotesGenerales[$j]->getSemestre() == 'PREMIER SEMESTRE')
                 { 
                     $somCoeffSemestre1[$i] = $somCoeffSemestre1[$i] + $listeNotesGenerales[$j]->getMatiere()->getCoefficient();
                     $somMoySemestre1[$i] = $somMoySemestre1[$i] + ($listeNotesGenerales[$j]->getMatiere()->getCoefficient() * $listeNotesGenerales[$j]->getMoyenne());
@@ -464,7 +465,7 @@ class ImpressionController extends AbstractController
             for($j=0; $j<sizeof($listeNotesGenerales); $j++)
             {
 
-                if($etudiantClasse[$i]->getMatricule() == $listeNotesGenerales[$j]->getMatricules() && $etudiantClasse[$i]->getClasse() == $listeNotesGenerales[$j]->getClasses() &&  $listeNotesGenerales[$j]->getAnnee() == $anneeActive && $listeNotesGenerales[$j]->getSemestre() == 'DEUXIEME SEMESTRE')
+                if($listeClasse[$i]->getMatricule() == $listeNotesGenerales[$j]->getMatricules() && $listeClasse[$i]->getClasse() == $listeNotesGenerales[$j]->getClasses() &&  $listeNotesGenerales[$j]->getAnnee() == $anneeActive && $listeNotesGenerales[$j]->getSemestre() == 'DEUXIEME SEMESTRE')
                 { 
                     $somCoeffSemestre2[$i] = $somCoeffSemestre2[$i] + $listeNotesGenerales[$j]->getMatiere()->getCoefficient();
                     $somMoySemestre2[$i] = $somMoySemestre2[$i] + ($listeNotesGenerales[$j]->getMatiere()->getCoefficient() * $listeNotesGenerales[$j]->getMoyenne());
@@ -485,14 +486,14 @@ class ImpressionController extends AbstractController
             if( $moySemestre1[$i] == 0 && $moySemestre2[$i] == 0)
             {
                 $notesEtud[$i] = ($moySemestre1[$i] + $moySemestre2[$i]) / 2 ;
-                $etudiantClasse[$i]->setMoyenne(0);
-                $notesAnnuelles[$i] = $etudiantClasse[$i];
+                $listeClasse[$i]->setMoyenne(0);
+                $notesAnnuelles[$i] = $listeClasse[$i];
                 $moyenneAnnuelles[$i] = $notesEtud[$i] ;
             }else{
 
                 $notesEtud[$i] = ($moySemestre1[$i] + $moySemestre2[$i]) / 2;
-                $etudiantClasse[$i]->setMoyenne($notesEtud[$i]);
-                $notesAnnuelles[$i] = $etudiantClasse[$i];
+                $listeClasse[$i]->setMoyenne($notesEtud[$i]);
+                $notesAnnuelles[$i] = $listeClasse[$i];
                 $moyenneAnnuelles[$i] = $notesEtud[$i] ;
 
             }

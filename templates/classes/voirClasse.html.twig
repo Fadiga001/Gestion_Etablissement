@@ -7,16 +7,16 @@
 
   {% include 'home/navbar.html.twig' %}
 
-   <div class="container">
+   <div class="container" style="max-width: 95%; ">
 
        {% include 'configuration/messageFlash.html.twig' %}
 
 
-   <div class="card" >
-        <div class="card-header">
-            {% include 'configuration/btnRetour.html.twig' with {
-                'path': 'liste_classes',
-                'text_header': 'GESTION DES CLASSES'
+        <div class="card" >
+            <div class="card-header">
+                {% include 'configuration/btnRetour.html.twig' with {
+                    'path': 'liste_classes',
+                    'text_header': 'GESTION DES CLASSES'
                 } %}
            
             
@@ -26,9 +26,9 @@
 
                 {% for classe in classe %}
 
-                    <div class="col-md-3">
+                    <div class="col-md-2">
 
-                        <div class="card border-info mb-3 text-center" style="max-width: 13rem; height: 17rem;">
+                        <div class="card border-info mb-3 text-center" style="max-width: 18rem; height: 20rem;">
                             <div class="card-header alert alert-primary">
                                 <img src="{{ asset('dist/img/salle.jpg') }}" height="70" width="70" class="img-circle mx-auto ">
                             </div>

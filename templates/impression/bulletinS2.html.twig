@@ -137,7 +137,7 @@
 
                             {% if listeMat.denomination == matGen.matiere.denomination %}
 
-                                {% set coef = matGen.moyenne %} 
+                                {{matGen.moyenne}} <br>
 
                             {% endif %}
     
@@ -281,6 +281,8 @@
 
                                  {{ matProfs.moyenne | number_format(2) }} <br>
 
+                            {% else %}
+                                00.00 <br>
                             {% endif %}
     
                         {% endfor %}
@@ -292,15 +294,11 @@
 
                     {% for listeMat in listeMat %}
 
-                        {% for matProfs in matProfs %}
+                        {% if listeMat.TypeMatiere == "MATIERES PROFESSIONNELLES" %}
 
-                            {% if listeMat.denomination == matProfs.matiere.denomination %}
+                            {{listeMat.coefficient | number_format(2) }}<br>
 
-                                 {{ matProfs.matiere.coefficient | number_format(2)}} <br>
-
-                            {% endif %}
-    
-                        {% endfor %}
+                        {% endif %}
 
                     {% endfor %}
 
@@ -309,15 +307,31 @@
 
                     {% for listeMat in listeMat %}
 
+                        {% set moyAvecCoef = 0 %}
+
                         {% for matProfs in matProfs %}
 
                             {% if listeMat.denomination == matProfs.matiere.denomination %}
 
-                                 {{ (matProfs.moyenne * matProfs.matiere.coefficient) | number_format(2)}} <br>
+                                 {% set moyAvecCoef = (matProfs.moyenne * matProfs.matiere.coefficient) %}
 
                             {% endif %}
     
                         {% endfor %}
+
+                        {% if moyAvecCoef == 0 %}
+
+                            {% if listeMat.TypeMatiere == "MATIERES PROFESSIONNELLES" %}
+
+                                00.00<br>
+
+                            {% endif %}
+
+                        {% else %}
+
+                            {{moyAvecCoef | number_format(2) }} <br>
+
+                        {% endif %}
 
                     {% endfor %}
 
@@ -378,7 +392,7 @@
                  Moyenne : 
 
                 {% if somCoeffmatProfs == 0 %}
-                    0
+                    00.00
                 {% else %}
                  
                     {{ (somMoymatProfs / somCoeffmatProfs) | number_format(3)}}
@@ -408,11 +422,14 @@
         <tr> 
             <th class="fin">MOYENNE DEUXIEME SEMESTRE </th> 
             <th class="fin"> 
+                {% set  moyGen = 0 %}
                 {% if somCoeffmatProfs == 0 %}
-                    0
+                    00.00
                 {% else %}
                  
-                    {{ ( ((somMoymatProfs / somCoeffmatProfs) + (somMoyMatGen / somCoeffMatGen)) / 2 )  | number_format(3) }}
+                    {% set  moyGen = ( ((somMoymatProfs / somCoeffmatProfs) + (somMoyMatGen / somCoeffMatGen)) / 2 ) %}
+
+                    {{ moyGen  | number_format(3) }}
 
                 {% endif %}
 
@@ -425,7 +442,7 @@
 
                     {% if notes.matricule == etudiant.matricule and notes.classe == etudiant.classe and notes.anneeScolaire == anneeActive %}
 
-                        {% if notes.moyenne == 0 %}
+                        {% if moyGen == 0 %}
                             
                         {% else %}
                            
