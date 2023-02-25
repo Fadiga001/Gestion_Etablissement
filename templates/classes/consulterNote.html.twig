@@ -103,7 +103,7 @@
                                         {% endfor %}
 
                                         {% if note == 0 %}
-                                            ...
+                                            00
                                         {% else %}
                                             {{ note }}
                                         {% endif %}
@@ -120,7 +120,7 @@
                                         {% endfor %}
 
                                         {% if note == 0 %}
-                                            ...
+                                            00
                                         {% else %}
                                             {{ note }}
                                         {% endif %}
@@ -135,26 +135,17 @@
                                             {% endif %}
                                         {% endfor %}
                                          {% if moy == 0 %}
-                                            ...
+                                            00
                                         {% else %}
                                             {{ moy }}
                                         {% endif %}
                                     </td>
 
                                     <td>
-                                        {% set moy = 0 %}
-                                        {% for listenote in listenote %}
-                                            {% if etudiant.matricule == listenote.matricules and matiere == listenote.matiere and etudiant.classe == listenote.classes and etudiant.anneeScolaire == listenote.annee %}
-                                                {% set moy = listenote.moyenne %}
-                                            {% endif %}
-                                        {% endfor %}
-                                         {% if moy == 0 %}
-                                            ...
-                                        {% else %}
-                                            <a class="btn btn-primary" href="{{ path('edit_note',{'id': classe.id, 'idMat': matiere.id, 'matricule': etudiant.matricule})}}">
-                                                Modifier
-                                            </a>
-                                        {% endif %}
+                                           
+                                        <a class="btn btn-primary" href="{{ path('edit_note',{'id': classe.id, 'idMat': matiere.id, 'matricule': etudiant.matricule})}}">
+                                            Modifier
+                                        </a>
                                          
                                     </td>
                                  

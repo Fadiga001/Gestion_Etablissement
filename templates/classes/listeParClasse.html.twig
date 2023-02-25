@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>Titre de la page</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+
+    .table1{
+        margin: auto;
+        width: 100%;
+    }
+
+
+    caption{
+        margin-left: 35%; 
+        margin-right: 35%; 
+        border: 2px solid skyblue;
+        border-collapse: collapse;
+        padding: 2px;
+    }
+
+.note{
+    border-collapse: collapse;
+    width: 100%;
+}
+
+ .entete, .titre, .contenu, .fin  {
+        border: 1px solid black;
+}
+
+.entete, .titre, .fin{
+    font-size: 13px;
+}
+
+
+
+.contenu{
+    font-size: 13px;
+}
+
+.coeff{
+    text-align: center;
+}
+
+.observation{
+    margin: auto;
+    width: 100%;
+    text-align : center;
+    padding : 3px;
+}
+
+
+.obs-td{
+    text-decoration: underline;
+}
+
+.left>p{
+    text-align: center;
+    font-size: 12px;
+}
+
+.left{
+    width: 40%;
+}
+
+.right-text>p{
+    text-align: center;
+    font-size: 12px;
+    border: 1px solid black;
+    padding: 8px;
+
+}
+
+.table1 td>p {
+    font-size: 12px;
+}
+
+
+
+
+
+
+    
+
+  </style>
+</head>
+<body>
+
+    <table class="table1">
+
+        <tr> 
+            <td class="left"> 
+                <p> 
+                    Groupe Ecoles d'Ingénieurs AGITEL FORMATION <br>Titres et Diplômes accrédités par le CAMES <br>
+                    Membre de l'ACCSB
+                </p>
+            </td>  
+            <td >
+                
+            </td> 
+            <td class="right-text">
+                <p> ANNEE ACADEMIQUE {{anneeActive}} </p>
+            </td> 
+        </tr>
+
+    </table>
+    <hr>
+
+    <table class="table1">
+
+        <tr> 
+            <td class="left">
+                <p> Classe : {{ classe.codeClasse }}</p>
+                <p> Cours du jour </p>
+            </td> 
+
+            <td>  
+            
+            </td> 
+            <td class="right-text"> <p> RELEVE DES NOTES </p> </td> 
+        </tr>
+
+    </table>
+
+    <table class="table1">
+  
+        <tr> 
+            <td> 
+                <P> Matière: ...................................................................................................................................................................................................................... </P>
+                <P> Nom et Prénoms du Professeur: ................................................................................................................................................................................ </P>
+            </td>  
+        </tr>
+
+    </table>
+
+    <table class="note">
+        
+        <tr> 
+            <th class="titre">N°</th>  
+            <th class="titre">Nom et Prénoms </th> 
+            <th class="titre" colspan="3">Interro <br> Ecrites</th> 
+
+            <th class="titre" colspan="3">Devoirs <br> Surveillés</th>
+    
+            <th class="titre">Partiel</th> 
+            <th class="titre">MOYENNE</th> 
+            <th class="titre">Signature</th> 
+        </tr>
+
+        {% for cle, etudiant in etudiant %}
+            <tr> 
+            
+                <th class="contenu"> {{ cle }} </th>  
+                <td class="contenu"> {{ etudiant.nom | upper}} {{ etudiant.prenoms }} ({{ etudiant.dateNaissance | date('d/m/Y') }}) </td> 
+                <td class="contenu">  </td>  
+                <td class="contenu"></td> 
+                <td class="contenu"> </td>  
+                <td class="contenu"></td> 
+                <td class="contenu"> </td> 
+                <td class="contenu"> </td> 
+                <td class="contenu"> </td> 
+                <td class="contenu"> </td> 
+                <td class="contenu"> </td> 
+          
+            </tr>
+        {% endfor %} 
+
+    </table>
+
+</body>
+</html>

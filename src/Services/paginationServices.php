@@ -35,7 +35,7 @@ class paginationServices
         // 1) Calculer l'offset
         $offset = $this->currentPage * $this->limit - $this->limit;
 
-        // 2) Demander au repository de troyver les elements
+        // 2) Demander au repository de trouver les elements
         $anneeRepo = $this->manager->getRepository(AnneeAcademique::class);
         $anneeActive = $anneeRepo->findOneByActive(true);
         $repo = $this->manager->getRepository($this->entityClass);

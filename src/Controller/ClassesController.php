@@ -3,14 +3,16 @@
 namespace App\Controller;
 
 use DateTime;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use App\Entity\Noter;
 use App\Entity\Classe;
+use App\Entity\Moyenne;
 use App\Entity\Etudiant;
 use App\Form\ClasseType;
 use App\Form\semestreType;
 use App\Form\NoteEtudiantType;
 use App\Entity\AnneeAcademique;
-use App\Entity\Moyenne;
 use App\Repository\NoterRepository;
 use App\Repository\ClasseRepository;
 use App\Repository\EtudiantRepository;
@@ -110,46 +112,78 @@ class ClassesController extends AbstractController
         $etudiant = $etudiantRepo->listeEtudiantDuneClasseEtAnnee($id);
         $classe = $classeRepo->findOneById($id);
         $matiere = $matRepo->listeMatieresParClasse($id);
-        $listeNote = $noteRepo->findAll();
 
-       
-        for($i=0; $i<sizeof($etudiant); $i++)
-        {
-            $somme = 0;
-            $mat = '';
-            $classes = '';
-            $semestre = '';
-            $matricule ='';
-            for($j=0; $j<sizeof($listeNote); $j++)
-            {
-                for($k=0; $k<sizeof($matiere); $k++)
-                {
-                    if($etudiant[$i]->getMatricule() == $listeNote[$j]->getEtudiants() && $etudiant[$i]->getClasse() == $listeNote[$j]->getClasses() && $etudiant[$i]->getAnneeScolaire() == $listeNote[$j]->getAnnee() && $listeNote[$j]->getSemestre() == 'PREMIER SEMESTRE' && $listeNote[$j]->getMatieres()== $matiere[$k]->getDenomination())
-                    {
-                        $somme = $somme + $listeNote[$j]->getNoteEtudiant();
-                        $mat = $matiere[$k]->getDenomination();
-                        $matricule = $etudiant[$i]->getMatricule();
-                        $semestre = $listeNote[$j]->getSemestre();
-                        $classes = $etudiant[$i]->getClasse();
-                    }
-                }
-                
-            }
-
-
-            $moyenne = ( $somme / 2 );
-            
-            
-            
-        }
-
-       
 
         return $this->render('classes/detailsClasse.html.twig', [
             'etudiant' => $etudiant,
             'classe' => $classe,
             'matiere'=> $matiere,
         ]);
+    }
+
+
+
+    #[Route('/classes/voir-les-differentes-classes/details-classe/{id}/listeClasse', name: 'listeClasseEtudiant')]
+    public function listeClasse(EtudiantRepository $etudiantRepo, Classe $classe, $id, ClasseRepository $classeRepo, AnneeAcademiqueRepository $anneeRepo, EntityManagerInterface $manager): Response
+    {
+
+        $etudiant = $etudiantRepo->listeEtudiantDuneClasseEtAnnee($id);
+        $classe = $classeRepo->findOneById($id);
+        $anneeActive = $anneeRepo->findOneByActive(true);
+
+        arsort($etudiant);
+
+        $new_etudiant = array();
+        $index_new_values = 1;
+        foreach($etudiant as $cle => $valeur) {
+	        $new_etudiant[$index_new_values] = $etudiant[$cle];
+	        $index_new_values++;
+        }
+
+
+
+        //On definie les options du PDF
+        $pdfOptions = new Options();
+
+        //On definie la police par defaut
+        $pdfOptions->set('defaultFont', 'Arial');
+        $pdfOptions->setIsRemoteEnabled(true);
+
+        //On instancie le DOMPDF
+        $dompdf = new Dompdf();
+        $context = stream_context_create([
+            'ssl'=> [
+                'verify_peer'=>FALSE,
+                'verify_peer_name'=>FALSE,
+                'allow_self_signed'=>True
+            ]
+        ]);
+
+        $dompdf->setHttpContext($context);
+
+        //On génère le html
+        $html = $this->renderView('classes/listeParClasse.html.twig', [
+
+            'etudiant'=>$new_etudiant,
+            'classe'=>$classe,
+            'anneeActive'=>$anneeActive,
+            
+        ]);
+
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+
+        //On génère un nom de fichier
+        $fichier = 'liste-classe-'.$classe->getCodeClasse().'.pdf';
+
+        //On envoie le pdf au navigateur
+        $dompdf->stream($fichier, [
+            'Attachment' =>true
+        ]);
+
+        
+        return new Response();
     }
 
 
@@ -275,32 +309,46 @@ class ClassesController extends AbstractController
                     $note = new Noter;
 
                     $mat = $etudiant[$i]->getMatricule();
-                    $noteClasses =(float) $noteClasse[$i];
-                    $notePartiels = (float) $notePartiel[$i];
+                    $noteClasses = $noteClasse[$i];
+                    $notePartiels =  $notePartiel[$i];
 
-                    $moy = (float) ($noteClasses+$notePartiels)/2 ;
-                 
+                    $moy = ($noteClasses+$notePartiels)/2 ;
 
-                    if($noteClasses > 20 || $noteClasses < 0 || $notePartiels > 20 || $notePartiels < 0)
+                    for($j = 0; $j<sizeof($listeNote); $j++)
                     {
-                        $this ->addFlash('danger', 'Les notes doivent être comprises entre 0-20');
+                        if($listeNote[$j]->getClasses() == $classe && $listeNote[$j]->getMatiere() == $matiere && $listeNote[$j]->getAnnee()== $anneeActive && $listeNote[$j]->getSemestre() == 'PREMIER SEMESTRE' )
+                        {
+                            $this ->addFlash('danger', 'Cette matière a déjà été notée donc vous pouvez modifier les notes dans la session consulter');
 
-                        return $this->redirectToRoute('donner_note', ['id'=>$id, 'idMat'=>$idMat]);
+                            return $this->redirectToRoute('donner_note', ['id'=>$id, 'idMat'=>$idMat]);
+                        }else{
 
-                    }else{
+                            if($noteClasses > 20 || $noteClasses < 0 || $notePartiels > 20 || $notePartiels < 0)
+                            {
+                                $this ->addFlash('danger', 'Les notes doivent être comprises entre 0-20');
 
-                        $note->setMatricules($etudiant[$i])
-                        ->setClasses($classe)
-                        ->setMatiere($matiere)
-                        ->setSemestre('PREMIER SEMESTRE')
-                        ->setAnnee($anneeActive->getAnneeScolaire())
-                        ->setProf($matiere->getProf())
-                        ->setNoteClasse($noteClasses)
-                        ->setNotePartiel($notePartiels)
-                        ->setMoyenne($moy);
+                                return $this->redirectToRoute('donner_note', ['id'=>$id, 'idMat'=>$idMat]);
 
-                        $manager->persist($note);
+                            }else{
+
+                                $note->setMatricules($etudiant[$i])
+                                ->setClasses($classe)
+                                ->setMatiere($matiere)
+                                ->setSemestre('PREMIER SEMESTRE')
+                                ->setAnnee($anneeActive->getAnneeScolaire())
+                                ->setProf($matiere->getProf())
+                                ->setNoteClasse($noteClasses)
+                                ->setNotePartiel($notePartiels)
+                                ->setMoyenne($moy);
+
+                                $manager->persist($note);
+                            }
+                            
+                        }
+
                     }
+                 
+     
 
                 }
 
@@ -325,24 +373,38 @@ class ClassesController extends AbstractController
 
                     $moy = (float) ($noteClasses+$notePartiels)/2 ;
 
-                    if($noteClasses > 20 || $noteClasses < 0 || $notePartiels > 20 || $notePartiels < 0)
+                    for($j = 0; $j<sizeof($listeNote); $j++)
                     {
-                        $this ->addFlash('danger', 'Les notes doivent être comprises entre 0-20');
+                        if($listeNote[$j]->getClasses() == $classe && $listeNote[$j]->getMatiere() == $matiere && $listeNote[$j]->getAnnee()== $anneeActive && $listeNote[$j]->getSemestre() == 'DEUXIEME SEMESTRE' )
+                        {
+                            $this ->addFlash('danger', 'Cette matière a déjà été notée donc vous pouvez modifier les notes dans la session consulter');
 
-                        return $this->redirectToRoute('donner_note', ['id'=>$id, 'idMat'=>$idMat]);
+                            return $this->redirectToRoute('donner_note', ['id'=>$id, 'idMat'=>$idMat]);
+                        }else{
 
-                    }else{
-                        $note->setMatricules($etudiant[$i])
-                        ->setClasses($classe)
-                        ->setMatieres($matiere)
-                        ->setSemestre('DEUXIEME SEMESTRE')
-                        ->setAnnee($anneeActive->getAnneeScolaire())
-                        ->setProf($matiere->getProf())
-                        ->setNoteClasse($noteClasses)
-                        ->setNotePartiel($notePartiels)
-                        ->setMoyenne($moy);
+                            if($noteClasses > 20 || $noteClasses < 0 || $notePartiels > 20 || $notePartiels < 0)
+                            {
+                                $this ->addFlash('danger', 'Les notes doivent être comprises entre 0-20');
 
-                        $manager->persist($note);
+                                return $this->redirectToRoute('donner_note', ['id'=>$id, 'idMat'=>$idMat]);
+
+                            }else{
+
+                                $note->setMatricules($etudiant[$i])
+                                ->setClasses($classe)
+                                ->setMatiere($matiere)
+                                ->setSemestre('DEUXIEME SEMESTRE')
+                                ->setAnnee($anneeActive->getAnneeScolaire())
+                                ->setProf($matiere->getProf())
+                                ->setNoteClasse($noteClasses)
+                                ->setNotePartiel($notePartiels)
+                                ->setMoyenne($moy);
+
+                                $manager->persist($note);
+                            }
+                            
+                        }
+
                     }
 
                 }
