@@ -6,9 +6,9 @@
   <link rel="stylesheet" href="style.css">
   <style>
 
-    .table1{
+   .table1{
         margin: auto;
-        width: 50%;
+        width: 55%;
         font-size: 12px;
     }
 
@@ -16,7 +16,7 @@
 
     caption{
         margin-left: 35%; 
-        margin-top: 10%; 
+        margin-top: 8%; 
         margin-right: 35%; 
         border: 2px solid skyblue;
         border-collapse: collapse;
@@ -55,7 +55,7 @@
     margin: auto;
     width: 100%;
     text-align : center;
-    padding : 1px;
+    padding : 3px;
 }
 
 
@@ -69,26 +69,21 @@
 }
  
 
-</style>
-
+  </style>
 
 </head>
+{% for etudiant in etudiant %}
 <body>
+
+    
 
     <table class="table1">
   
         <caption>DEUXIEME SEMESTRE</caption>
 
         <tr> 
-            <td class="left"> <span>ANNEE SCOLAIRE : {{ anneeActive }} </span></td>  
-            <td class="right"> <span>{{ 'now' | date('d/m/Y h:i') }} </span></td> 
-        </tr>
-
-    </table>
-    <table class="table1">
-
-        <tr> 
-            <td>CLASSE : {{ classe.denomination | upper }}</td> 
+            <td class="left"> <span>ANNEE SCOLAIRE : {{ anneeActive }} </span></td> 
+            <td class="right"> <span>{{ 'now' | date('d/m/Y h:i') }} </span></td>  
         </tr>
 
     </table>
@@ -96,7 +91,15 @@
     <table class="table1">
 
         <tr> 
-            <td>NOM & PRENOMS : {{ etudiant.nom|upper}} {{ etudiant.prenoms|upper}}</td> 
+            <td>CLASSE : {{ classe.denomination|upper}}</td> 
+        </tr>
+
+    </table>
+
+    <table class="table1">
+
+        <tr> 
+            <td>NOM & PRENOMS : {{ etudiant.nom|upper}} {{ etudiant.prenoms|upper}}</td>
             <td class="right"> <span>MATRICULE : {{ etudiant.matricule }} </span></td> 
         </tr>
 
@@ -105,8 +108,8 @@
     <table class="table1">
   
         <tr> 
-            <td class="left"> <span>DATE DE NAISSANCE : {{ etudiant.dateNaissance|date('d/m/Y') }} </span></td>  
-            <td class="right"> <span>LIEU DE NAISSANCE : {{ etudiant.lieuNaissance | upper }} </span></td> 
+            <td class="left"> <span>DATE DE NAISSANCE: {{ etudiant.dateNaissance|date('d/m/Y') }} </span></td>  
+            <td class="right"> <span>LIEU DE NAISSANCE: {{ etudiant.lieuNaissance | upper }} </span></td> 
         </tr>
 
     </table>
@@ -146,22 +149,24 @@
                     {% endfor %}
 
                 </td>  
+
                 <td class="contenu coeff">
 
                     {% for listeMat in listeMat %}
-                        
+
                         {% set moyGen = 0 %}
-                        {% for matGen in matGen %}
 
-                            {% if listeMat.denomination == matGen.matiere.denomination %}
+                        {% for NoteMatGen in NoteMatGen %}
 
-                                {% set moyGen = matGen.moyenne %} 
+                            {% if listeMat.denomination == NoteMatGen.matiere.denomination and NoteMatGen.matricules == etudiant.matricule and NoteMatGen.classes == etudiant.classe and NoteMatGen.annee == etudiant.anneeScolaire %}
+
+                                {% set moyGen = NoteMatGen.moyenne %} 
 
                             {% endif %}
     
                         {% endfor %}
 
-                         {% if moyGen == 0 %}
+                        {% if moyGen == 0 %}
 
                             {% if listeMat.TypeMatiere == "MATIERES GENERALES" %}
 
@@ -175,9 +180,8 @@
 
                         {% endif %}
 
+                    {% endfor %}     
 
-                    {% endfor %}
-                    
                 </td> 
                 <td class="contenu coeff">
 
@@ -191,23 +195,25 @@
 
                     {% endfor %}
 
+                    
                 </td> 
                 <td class="contenu coeff">
 
                     {% for listeMat in listeMat %}
 
-                        {% set moyAvecCoefGen = 0 %}
-                        {% for matGen in matGen %}
+                        {% set moyGenAvecCoef = 0 %}
 
-                            {% if listeMat.denomination == matGen.matiere.denomination %}
+                        {% for NoteMatGen in NoteMatGen %}
 
-                                {% set moyAvecCoefGen = (matGen.moyenne * matGen.matiere.coefficient) %}
+                            {% if listeMat.denomination == NoteMatGen.matiere.denomination and NoteMatGen.matricules == etudiant.matricule and NoteMatGen.classes == etudiant.classe and NoteMatGen.annee == etudiant.anneeScolaire %}
+
+                                {% set moyGenAvecCoef = moyGenAvecCoef + (NoteMatGen.moyenne * NoteMatGen.matiere.coefficient )  %} 
 
                             {% endif %}
     
                         {% endfor %}
 
-                        {% if moyAvecCoefGen == 0 %}
+                        {% if moyGenAvecCoef == 0 %}
 
                             {% if listeMat.TypeMatiere == "MATIERES GENERALES" %}
 
@@ -217,92 +223,94 @@
 
                         {% else %}
 
-                            {{moyAvecCoefGen | number_format(2) }} <br>
+                            {{moyGenAvecCoef | number_format(2) }} <br>
 
                         {% endif %}
 
-                    {% endfor %}
+                    {% endfor %}  
                 
                 </td> 
                 <td class="contenu">
 
                     {% for listeMat in listeMat %}
 
-                        {% if listeMat.TypeMatiere == "MATIERES GENERALES" %}
+                        {% for NoteMatGen in NoteMatGen %}
 
-                            {{listeMat.prof }}<br>
+                            {% if listeMat.denomination == NoteMatGen.matiere.denomination and NoteMatGen.matricules == etudiant.matricule and NoteMatGen.classes == etudiant.classe and NoteMatGen.annee == etudiant.anneeScolaire %}
 
-                        {% endif %}
+                                {{ NoteMatGen.matiere.prof }} <br>
+
+                            {% endif %}
+    
+                        {% endfor %}
 
                     {% endfor %}
 
-
+                   
                 </td> 
                 <td class="contenu">
-                    {% for matGen in matGen %}
-                        
-                        {% if matGen.moyenne == 0 and matGen.moyenne <= 7 %}
+                    {% for NoteMatGen in NoteMatGen %}
+
+                        {% if  NoteMatGen.matricules == etudiant.matricule and NoteMatGen.classes == etudiant.classe and NoteMatGen.annee == etudiant.anneeScolaire %}
+
+                            {% if NoteMatGen.moyenne >=0 and NoteMatGen.moyenne <= 7 %}
                                 BLAME <br>
-                        {% elseif matGen.moyenne > 7 and matGen.moyenne < 10 %}
+                            {% elseif NoteMatGen.moyenne > 7 and NoteMatGen.moyenne < 10 %}
                                 INSUFFISANT <br>
-                        {% elseif matGen.moyenne >= 10 and matGen.moyenne < 12 %}
+                            {% elseif NoteMatGen.moyenne >= 10 and NoteMatGen.moyenne < 12 %}
                                 PASSABLE <br>
-                        {% elseif matGen.moyenne >= 12 and matGen.moyenne < 14 %}
+                            {% elseif NoteMatGen.moyenne >= 12 and NoteMatGen.moyenne < 14 %}
                                 ASSEZ-BIEN <br>
-                        {% elseif matGen.moyenne >= 14 and matGen.moyenne < 16 %}
+                            {% elseif NoteMatGen.moyenne >= 14 and NoteMatGen.moyenne < 16 %}
                                 BIEN <br>
-                        {% elseif matGen.moyenne >= 16 and matGen.moyenne < 18 %}
+                            {% elseif NoteMatGen.moyenne >= 16 and NoteMatGen.moyenne < 18 %}
                                 TRES-BIEN <br>
-                        {% elseif matGen.moyenne >= 18 and matGen.moyenne < 20 %}
+                            {% elseif NoteMatGen.moyenne >= 18 and NoteMatGen.moyenne < 20 %}
                                 EXCELLENT <br>
-                        {% elseif moyGen == 0 %}
-                            BLAME <br>
+                            {% endif %}
+
                         {% endif %}
+    
                     {% endfor %}
+                 
                 </td> 
           
             
         </tr>
         <tr> 
             
-            <th class="titre"> MOYENNE DES MATIERES GENERALES </th>  
+            <th class="fin"> MOYENNE DES MATIERES GENERALES </th>  
             <th class="fin"> </th> 
 
             <th class="fin"> 
-
                 {% set somCoeffMatGen = 0 %}
+                {% set somMoyMatGen = 0 %}
+                {% for NoteMatGen in NoteMatGen %}
 
-                {% for listeMat in listeMat %}
+                    {% if  NoteMatGen.matricules == etudiant.matricule and NoteMatGen.classes == etudiant.classe and NoteMatGen.annee == etudiant.anneeScolaire %}
 
-                    {% if listeMat.TypeMatiere == "MATIERES GENERALES" %}
-
-                        {% set somCoeffMatGen = (somCoeffMatGen + listeMat.coefficient) %}
+                        {% set somCoeffMatGen = somCoeffMatGen + NoteMatGen.matiere.coefficient %} 
+                        {% set somMoyMatGen = somMoyMatGen + (NoteMatGen.matiere.coefficient * NoteMatGen.moyenne) %} 
 
                     {% endif %}
-
+    
                 {% endfor %}
-
                 {{ somCoeffMatGen | number_format(2) }}
 
             </th> 
 
 
             <th class="fin">  
-
-                {% set somMoyMatGen = 0 %}
-
-                {% for matGen in matGen %}
-                    {% set somMoyMatGen = somMoyMatGen + (matGen.moyenne * matGen.matiere.coefficient) %}
-                {% endfor %}
-
+              
                 {{ somMoyMatGen | number_format(2) }}
 
             </th> 
+
             <th class="fin">  
                  Moyenne : 
                 
                 {% if somCoeffMatGen == 0 %}
-                    00.00
+                    0
                 {% else %}
                     {{ (somMoyMatGen / somCoeffMatGen) | number_format(3)}}
                 {% endif %}
@@ -340,19 +348,19 @@
 
                     {% for listeMat in listeMat %}
 
-                        {% set moy = 0 %}
+                        {% set CoeffMatProfs = 0 %}
 
-                        {% for matProfs in matProfs %}
+                        {% for NoteMatProfs in NoteMatProfs %}
 
-                            {% if listeMat.denomination == matProfs.matiere.denomination %}
+                            {% if listeMat.denomination == NoteMatProfs.matiere.denomination and NoteMatProfs.matricules == etudiant.matricule and NoteMatProfs.classes == etudiant.classe and NoteMatProfs.annee == etudiant.anneeScolaire %}
 
-                                 {% set moy =  matProfs.moyenne %} 
+                                {% set CoeffMatProfs = CoeffMatProfs +  NoteMatProfs.matiere.coefficient  %} 
 
                             {% endif %}
     
                         {% endfor %}
 
-                        {% if moy == 0 %}
+                        {% if CoeffMatProfs == 0 %}
 
                             {% if listeMat.TypeMatiere == "MATIERES PROFESSIONNELLES" %}
 
@@ -362,11 +370,13 @@
 
                         {% else %}
 
-                            {{moy | number_format(2) }} <br>
+                            {{CoeffMatProfs | number_format(2) }} <br>
 
                         {% endif %}
 
-                    {% endfor %}
+                    {% endfor %}  
+
+                    
 
                 </td> 
                 <td class="contenu coeff">
@@ -375,30 +385,32 @@
 
                         {% if listeMat.TypeMatiere == "MATIERES PROFESSIONNELLES" %}
 
-                            {{listeMat.coefficient | number_format(2) }}<br>
+                            {{ listeMat.coefficient | number_format(2) }} <br>
 
                         {% endif %}
 
                     {% endfor %}
+
+                    
 
                 </td> 
                 <td class="contenu coeff">
 
                     {% for listeMat in listeMat %}
 
-                        {% set moyAvecCoef = 0 %}
+                        {% set moyMatAvecCoef = 0 %}
 
-                        {% for matProfs in matProfs %}
+                        {% for NoteMatProfs in NoteMatProfs %}
 
-                            {% if listeMat.denomination == matProfs.matiere.denomination %}
+                            {% if listeMat.denomination == NoteMatProfs.matiere.denomination and NoteMatProfs.matricules == etudiant.matricule and NoteMatProfs.classes == etudiant.classe and NoteMatProfs.annee == etudiant.anneeScolaire %}
 
-                                 {% set moyAvecCoef = (matProfs.moyenne * matProfs.matiere.coefficient) %}
+                                {% set moyMatAvecCoef = moyMatAvecCoef + (NoteMatProfs.moyenne * NoteMatProfs.matiere.coefficient )  %} 
 
                             {% endif %}
     
                         {% endfor %}
 
-                        {% if moyAvecCoef == 0 %}
+                        {% if moyMatAvecCoef == 0 %}
 
                             {% if listeMat.TypeMatiere == "MATIERES PROFESSIONNELLES" %}
 
@@ -408,47 +420,55 @@
 
                         {% else %}
 
-                            {{moyAvecCoef | number_format(2) }} <br>
+                            {{moyMatAvecCoef | number_format(2) }} <br>
 
                         {% endif %}
 
-                    {% endfor %}
+                    {% endfor %}  
 
                 </td> 
                 <td class="contenu">
 
                     {% for listeMat in listeMat %}
 
-                        {% if listeMat.TypeMatiere == "MATIERES PROFESSIONNELLES" %}
+                        {% for NoteMatProfs in NoteMatProfs %}
 
-                            {{listeMat.prof}}<br>
+                            {% if listeMat.denomination == NoteMatProfs.matiere.denomination and NoteMatProfs.matricules == etudiant.matricule and NoteMatProfs.classes == etudiant.classe and NoteMatProfs.annee == etudiant.anneeScolaire %}
 
-                        {% endif %}
+                                {{ listeMat.prof }} <br>
+
+                            {% endif %}
+    
+                        {% endfor %}
 
                     {% endfor %}
 
 
+                    
                 </td> 
                 <td class="contenu">
-                    {% for matProfs in matProfs %}
-                        
-                        {% if matProfs.moyenne == 0 and matProfs.moyenne <= 7 %}
+                    {% for NoteMatProfs in NoteMatProfs %}
+
+                        {% if  NoteMatProfs.matricules == etudiant.matricule and NoteMatProfs.classes == etudiant.classe and NoteMatProfs.annee == etudiant.anneeScolaire %}
+
+                            {% if NoteMatProfs.moyenne >=0 and NoteMatProfs.moyenne <= 7 %}
                                 BLAME <br>
-                        {% elseif matProfs.moyenne > 7 and matProfs.moyenne < 10 %}
+                            {% elseif NoteMatProfs.moyenne > 7 and NoteMatProfs.moyenne < 10 %}
                                 INSUFFISANT <br>
-                        {% elseif matProfs.moyenne >= 10 and matProfs.moyenne < 12 %}
+                            {% elseif NoteMatProfs.moyenne >= 10 and NoteMatProfs.moyenne < 12 %}
                                 PASSABLE <br>
-                        {% elseif matProfs.moyenne >= 12 and matProfs.moyenne < 14 %}
+                            {% elseif NoteMatProfs.moyenne >= 12 and NoteMatProfs.moyenne < 14 %}
                                 ASSEZ-BIEN <br>
-                        {% elseif matProfs.moyenne >= 14 and matProfs.moyenne < 16 %}
+                            {% elseif NoteMatProfs.moyenne >= 14 and NoteMatProfs.moyenne < 16 %}
                                 BIEN <br>
-                        {% elseif matProfs.moyenne >= 16 and matProfs.moyenne < 18 %}
+                            {% elseif NoteMatProfs.moyenne >= 16 and NoteMatProfs.moyenne < 18 %}
                                 TRES-BIEN <br>
-                        {% elseif matProfs.moyenne >= 18 and matProfs.moyenne <= 20 %}
+                            {% elseif NoteMatProfs.moyenne >= 18 and NoteMatProfs.moyenne < 20 %}
                                 EXCELLENT <br>
-                        {% else %}
-                            BLAME <br>
+                            {% endif %}
+
                         {% endif %}
+    
                     {% endfor %}
                 </td> 
           
@@ -459,43 +479,31 @@
             <th class="fin"> </th> 
 
             <th class="fin"> 
-
                 {% set somCoeffmatProfs = 0 %}
+                {% set somMoymatProfs = 0 %}
+                {% for NoteMatProfs in NoteMatProfs %}
 
-                {% for listeMat in listeMat %}
+                    {% if  NoteMatProfs.matricules == etudiant.matricule and NoteMatProfs.classes == etudiant.classe and NoteMatProfs.annee == etudiant.anneeScolaire %}
 
-                    {% if listeMat.TypeMatiere == "MATIERES PROFESSIONNELLES" %}
-
-                        {% set somCoeffmatProfs = somCoeffmatProfs + listeMat.coefficient %}
+                        {% set somCoeffmatProfs = somCoeffmatProfs + NoteMatProfs.matiere.coefficient %} 
+                        {% set somMoymatProfs = somMoymatProfs + (NoteMatProfs.matiere.coefficient * NoteMatProfs.moyenne) %} 
 
                     {% endif %}
-
+    
                 {% endfor %}
                
                 {{ somCoeffmatProfs | number_format(2) }}
-
             </th> 
             <th class="fin">  
-
-                {% set SomMoyAvecCoefMatProf = 0 %}
-
-                {% for matProfs in matProfs %}
-
-                    {% set SomMoyAvecCoefMatProf = SomMoyAvecCoefMatProf + (matProfs.moyenne * matProfs.matiere.coefficient) %}
-    
-                {% endfor %}
-
-                {{ SomMoyAvecCoefMatProf | number_format(2)}}
                
-
-
+                {{ somMoymatProfs | number_format(2) }}
             </th> 
             <th class="fin">  
 
                  Moyenne : 
 
                 {% if somCoeffmatProfs == 0 %}
-                    00.00
+                    0
                 {% else %}
                  
                     {{ (somMoymatProfs / somCoeffmatProfs) | number_format(3)}}
@@ -541,11 +549,11 @@
 
             <th class="fin" colspan="2">
                 CLASSEMENT : 
-                {% for cle, notes in moyenneClasse %}
+                {% for cle, notes in moyenneAnnuelle %}
 
                     {% if notes.matricule == etudiant.matricule and notes.classe == etudiant.classe and notes.anneeScolaire == anneeActive %}
 
-                        {% if moyGen == 0 %}
+                        {% if notes.moyenne == 0 %}
                             
                         {% else %}
                            
@@ -604,6 +612,8 @@
             
             
 
+
+
         </tr>
 
         <tr> 
@@ -654,7 +664,11 @@
         </tr>
 
     </table>
+
     <p class="nb"><strong>NB </strong>: Veuillez conserver l'original de ce relevé de notes (bulletin) qui vous sera exigé lors de votre réinscription à la rentrée *** Aucun duplicata ne sera délivré.</p>
 
+    
 </body>
+
+{% endfor %}
 </html>

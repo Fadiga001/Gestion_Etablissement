@@ -78,14 +78,15 @@ class ImpressionController extends AbstractController
     public function tousLesBulletinsSemestre1(AnneeAcademiqueRepository $anneeRepo, EtudiantRepository $etudiantRepo, NoterRepository $noteRepo, ClasseRepository $classeRepo, MatieresRepository $matieresRepo, $classe, $anneeActive ): Response
     {
         $anneeActive = $anneeRepo->findOneByActive(true);
-
-        $NoteMatGen = $noteRepo->NoteParTypeMatiere('PREMIER SEMESTRE','MATIERES GENERALES');
-        $NoteMatProfs = $noteRepo->NoteParTypeMatiere('PREMIER SEMESTRE','MATIERES PROFESSIONNELLES');
-
         $classes = $classeRepo->findOneByCodeClasse($classe);
 
+        $NoteMatGen = $noteRepo->NoteParTypeMatiere('PREMIER SEMESTRE','MATIERES GENERALES', $anneeActive->getAnneeScolaire(),$classes->getDenomination());
+        $NoteMatProfs = $noteRepo->NoteParTypeMatiere('PREMIER SEMESTRE','MATIERES PROFESSIONNELLES', $anneeActive->getAnneeScolaire(),$classes->getDenomination());
+
+        
+
         $etudiantClasse = $etudiantRepo->classeAReinscrire($classe);
-        $listeNotes = $noteRepo->listeNote('PREMIER SEMESTRE');
+        $listeNotes = $noteRepo->listeNote('PREMIER SEMESTRE',$anneeActive->getAnneeScolaire(),$classes->getDenomination());
         $listeMat = $matieresRepo->MatieresParClasse($classe);
         $classes = $classeRepo->findOneByCodeClasse($classe);
         $directeur = $classeRepo->DirecteurDeFiliere($classe);
@@ -239,26 +240,284 @@ class ImpressionController extends AbstractController
 
 
 
-
-    //Tous les bulletins de premier semestre
-    #[Route('/impression/{matricule}/{classe}/{anneeActive}', name: 'bulletin_impression')]
-    public function bulletinSemestre1(AnneeAcademiqueRepository $anneeRepo, EtudiantRepository $etudiantRepo, NoterRepository $noteRepo, ClasseRepository $classeRepo, MatieresRepository $matieresRepo, $matricule, $classe, $anneeActive ): Response
+    //Tous les bulletins deuxieme semestre
+    #[Route('/impression/semestre2/{classe}/{anneeActive}', name: 'bulletins_classes_S2')]
+    public function tousLesbulletinsS2(AnneeAcademiqueRepository $anneeRepo, EtudiantRepository $etudiantRepo, NoterRepository $noteRepo, ClasseRepository $classeRepo, MatieresRepository $matieresRepo, $classe, $anneeActive ): Response
     {
         $anneeActive = $anneeRepo->findOneByActive(true);
-        $matProfs = $noteRepo->NoteParEtudiant($matricule, 'PREMIER SEMESTRE','MATIERES PROFESSIONNELLES');
-        $matGen = $noteRepo->NoteParEtudiant($matricule, 'PREMIER SEMESTRE','MATIERES GENERALES');
-        $matArt = $noteRepo->NoteParEtudiant($matricule, 'PREMIER SEMESTRE','MATIERES ARTISTIQUES');
-
-
-
-        $NoteMatGen = $noteRepo->NoteParTypeMatiere('PREMIER SEMESTRE','MATIERES GENERALES');
-        $NoteMatProfs = $noteRepo->NoteParTypeMatiere('PREMIER SEMESTRE','MATIERES PROFESSIONNELLES');
-
-        $etudiant = $etudiantRepo->findOneByMatricule($matricule);
         $classes = $classeRepo->findOneByCodeClasse($classe);
 
+
+        $NoteMatGen = $noteRepo->NoteParTypeMatiere('DEUXIEME SEMESTRE','MATIERES GENERALES', $anneeActive->getAnneeScolaire(),$classes->getDenomination());
+        $NoteMatProfs = $noteRepo->NoteParTypeMatiere('DEUXIEME SEMESTRE','MATIERES PROFESSIONNELLES', $anneeActive->getAnneeScolaire(),$classes->getDenomination());
+
+
+
         $etudiantClasse = $etudiantRepo->classeAReinscrire($classe);
-        $listeNotes = $noteRepo->listeNote('PREMIER SEMESTRE');
+        $listeNotes = $noteRepo->listeNote('DEUXIEME SEMESTRE', $anneeActive->getAnneeScolaire(),$classes->getDenomination());
+        $listeMat = $matieresRepo->MatieresParClasse($classe);
+        $classes = $classeRepo->findOneByCodeClasse($classe);
+        $directeur = $classeRepo->DirecteurDeFiliere($classe);
+
+        
+
+        //Calcul des moyennes par etudiants, par trimestre et le rang de l'étudiant
+        $notesClasse = [];
+        $moyenne = [];
+        for($i=0; $i<sizeof($etudiantClasse); $i++)
+        {
+            $somCoeffMatGenEtud[$i] = 0;
+            $somMoyMatGenEtud[$i] = 0;
+
+            for($j=0; $j<sizeof($NoteMatGen); $j++)
+            {
+
+                if($etudiantClasse[$i]->getMatricule() == $NoteMatGen[$j]->getMatricules() && $etudiantClasse[$i]->getClasse() == $NoteMatGen[$j]->getClasses() &&  $NoteMatGen[$j]->getAnnee() == $anneeActive)
+                { 
+                    $somCoeffMatGenEtud[$i] = $somCoeffMatGenEtud[$i] + $NoteMatGen[$j]->getMatiere()->getCoefficient();
+                    $somMoyMatGenEtud[$i] = $somMoyMatGenEtud[$i] + ($NoteMatGen[$j]->getMatiere()->getCoefficient() * $NoteMatGen[$j]->getMoyenne());
+                }
+            }
+
+            $moyMatGen[$i] = 0;
+
+            if($somCoeffMatGenEtud[$i] == 0)
+            {
+                $somCoeffMatGenEtud[$i] = 0;
+            }else{
+                $moyMatGen[$i] = ($somMoyMatGenEtud[$i] / $somCoeffMatGenEtud[$i]);
+            }
+
+            
+
+
+            $somCoeffMatProfsEtud[$i] = 0;
+            $somMoyMatProfsEtud[$i] = 0;
+
+            for($j=0; $j<sizeof($NoteMatProfs); $j++)
+            {
+
+                if($etudiantClasse[$i]->getMatricule() == $NoteMatProfs[$j]->getMatricules() && $etudiantClasse[$i]->getClasse() == $NoteMatProfs[$j]->getClasses() &&  $NoteMatProfs[$j]->getAnnee() == $anneeActive)
+                { 
+                    $somCoeffMatProfsEtud[$i] = $somCoeffMatProfsEtud[$i] + $NoteMatProfs[$j]->getMatiere()->getCoefficient();
+                    $somMoyMatProfsEtud[$i] = $somMoyMatProfsEtud[$i] + ($NoteMatProfs[$j]->getMatiere()->getCoefficient() * $NoteMatProfs[$j]->getMoyenne());
+                }
+            }
+
+            $moyMatProf[$i] = 0;
+
+            if($somCoeffMatProfsEtud[$i] == 0)
+            {
+                $moyMatProf[$i] = 0;
+            }else{
+                $moyMatProf[$i] = ($somMoyMatProfsEtud[$i] / $somCoeffMatProfsEtud[$i]);
+            }
+            
+
+            if( $moyMatProf[$i] == 0 && $moyMatGen[$i] == 0)
+            {
+                $notesEtud[$i] = ($moyMatGen[$i] + $moyMatProf[$i]) / 2 ;
+                $etudiantClasse[$i]->setMoyenne(0);
+                $notesClasse[$i] = $etudiantClasse[$i] ;
+                $moyenne[$i]= $notesEtud[$i];
+            }else{
+
+                $notesEtud[$i] = ($moyMatGen[$i] + $moyMatProf[$i]) / 2 ;
+                $etudiantClasse[$i]->setMoyenne($notesEtud[$i]);
+                $notesClasse[$i] = $etudiantClasse[$i] ;
+                $moyenne[$i]= $notesEtud[$i];
+
+            }
+
+           
+        }
+
+        arsort($moyenne);
+        
+
+        $tableNotes = [];
+        $indicesNotes = 1;
+        foreach($moyenne as $cle => $valeur) {
+	        $tableNotes[$indicesNotes] = $notesClasse[$cle];
+	        $indicesNotes++;
+        }
+
+
+
+
+
+        //Calcul des moyennes générales annuelles des étudiants et leurs rangs
+
+        $listeNotesGenerales = $noteRepo->findAll();
+        $listeClasse = $etudiantRepo->classeAReinscrire($classe);
+        $moyenneAnnuelles = [];
+        $notesAnnuelles = [];
+        
+        for($i=0; $i<sizeof($listeClasse); $i++)
+        {
+
+
+            // Calcul des sommes de coefficients et de moyennes du premier semestre
+            $somCoeffSemestre1[$i] = 0;
+            $somMoySemestre1[$i] = 0;
+
+            for($j=0; $j<sizeof($listeNotesGenerales); $j++)
+            {
+
+                if($listeClasse[$i]->getMatricule() == $listeNotesGenerales[$j]->getMatricules() && $listeClasse[$i]->getClasse() == $listeNotesGenerales[$j]->getClasses() &&  $listeNotesGenerales[$j]->getAnnee() == $anneeActive && $listeNotesGenerales[$j]->getSemestre() == 'PREMIER SEMESTRE')
+                { 
+                    $somCoeffSemestre1[$i] = $somCoeffSemestre1[$i] + $listeNotesGenerales[$j]->getMatiere()->getCoefficient();
+                    $somMoySemestre1[$i] = $somMoySemestre1[$i] + ($listeNotesGenerales[$j]->getMatiere()->getCoefficient() * $listeNotesGenerales[$j]->getMoyenne());
+                }
+            }
+
+            $moySemestre1[$i] = 0;
+
+            if($somCoeffSemestre1[$i] == 0)
+            {
+                $somCoeffSemestre1[$i] = 0;
+            }else{
+                $moySemestre1[$i] = ($somMoySemestre1[$i] / $somCoeffSemestre1[$i]);
+            }
+
+
+
+            // Calcul des sommes de coefficients et de moyennes du deuxième semestre
+            $somCoeffSemestre2[$i] = 0;
+            $somMoySemestre2[$i] = 0;
+
+            for($j=0; $j<sizeof($listeNotesGenerales); $j++)
+            {
+
+                if($listeClasse[$i]->getMatricule() == $listeNotesGenerales[$j]->getMatricules() && $listeClasse[$i]->getClasse() == $listeNotesGenerales[$j]->getClasses() &&  $listeNotesGenerales[$j]->getAnnee() == $anneeActive && $listeNotesGenerales[$j]->getSemestre() == 'DEUXIEME SEMESTRE')
+                { 
+                    $somCoeffSemestre2[$i] = $somCoeffSemestre2[$i] + $listeNotesGenerales[$j]->getMatiere()->getCoefficient();
+                    $somMoySemestre2[$i] = $somMoySemestre2[$i] + ($listeNotesGenerales[$j]->getMatiere()->getCoefficient() * $listeNotesGenerales[$j]->getMoyenne());
+                }
+            }
+
+            $moySemestre2[$i] = 0;
+
+            if($somCoeffSemestre2[$i] == 0)
+            {
+                $somCoeffSemestre2[$i] = 0;
+            }else{
+                $moySemestre2[$i] = ($somMoySemestre2[$i] / $somCoeffSemestre2[$i]);
+            }
+
+
+            //Calcul des moyennes générales par étudiants
+            if( $moySemestre1[$i] == 0 && $moySemestre2[$i] == 0)
+            {
+                $notesEtud[$i] = ($moySemestre1[$i] + $moySemestre2[$i]) / 2 ;
+                $listeClasse[$i]->setMoyenne(0);
+                $notesAnnuelles[$i] = $listeClasse[$i];
+                $moyenneAnnuelles[$i] = $notesEtud[$i] ;
+            }else{
+
+                $notesEtud[$i] = ($moySemestre1[$i] + $moySemestre2[$i]) / 2;
+                $listeClasse[$i]->setMoyenne($notesEtud[$i]);
+                $notesAnnuelles[$i] = $listeClasse[$i];
+                $moyenneAnnuelles[$i] = $notesEtud[$i] ;
+
+            }
+
+
+
+        }
+
+
+        //tri des moyennes annuelles par valeurs
+        arsort($moyenneAnnuelles);
+        
+
+        //repositionnement des indices des moyennes triées
+        $tableAnnuel = array();
+        $indice = 1;
+        foreach($moyenneAnnuelles as $key => $valeur) {
+	        $tableAnnuel[$indice] = $notesAnnuelles[$key];
+	        $indice++;
+        }  
+
+
+
+        //On definie les options du PDF
+        $pdfOptions = new Options();
+
+        //On definie la police par defaut
+        $pdfOptions->set('defaultFont', 'Arial');
+        $pdfOptions->setIsRemoteEnabled(true);
+
+        //On instancie le DOMPDF
+        $dompdf = new Dompdf();
+        $context = stream_context_create([
+            'ssl'=> [
+                'verify_peer'=>FALSE,
+                'verify_peer_name'=>FALSE,
+                'allow_self_signed'=>True
+            ]
+        ]);
+
+        $dompdf->setHttpContext($context);
+
+        //On génère le html
+        $html = $this->renderView('impression/tousLesBulletinsS2.html.twig', [
+            'anneeActive'=>$anneeActive,
+            'classe'=>$classes,
+            'etudiant' =>$etudiantClasse,
+            'listeNote' => $listeNotes,
+            'totalMat' =>sizeof($listeMat),
+            'NoteMatGen'=>$NoteMatGen,
+            'NoteMatProfs'=>$NoteMatProfs,
+            'moyenneClasse'=>$tableNotes,
+            'anneeActive' => $anneeActive,
+            'directeur'=>$directeur,
+            'listeMat'=>$listeMat,
+            'moyenneAnnuelle'=>$tableAnnuel,
+
+        ]);
+
+        
+
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'landscape');
+        $dompdf->render();
+
+        //On génère un nom de fichier
+        $fichier = 'tous-bulletins-deuxième-semestre'. $classes->getCodeClasse(). '.pdf';
+
+        //On envoie le pdf au navigateur
+        $dompdf->stream($fichier, [
+            'Attachment' =>true
+        ]);
+
+        
+        return new Response();
+    }
+
+
+
+
+    //Tous les bulletins de premier semestre
+    #[Route('/impression/{id}/{classe}/{anneeActive}', name: 'bulletin_impression')]
+    public function bulletinSemestre1(AnneeAcademiqueRepository $anneeRepo, EtudiantRepository $etudiantRepo, NoterRepository $noteRepo, ClasseRepository $classeRepo, MatieresRepository $matieresRepo, $id, $classe, $anneeActive ): Response
+    {
+        $anneeActive = $anneeRepo->findOneByActive(true);
+        $classes = $classeRepo->findOneByCodeClasse($classe);
+        $etudiant = $etudiantRepo->findOneById($id);
+
+        $matProfs = $noteRepo->NoteParEtudiant($etudiant->getMatricule(), 'PREMIER SEMESTRE','MATIERES PROFESSIONNELLES', $anneeActive->getAnneeScolaire(),$classes->getDenomination());
+        $matGen = $noteRepo->NoteParEtudiant($etudiant->getMatricule(), 'PREMIER SEMESTRE','MATIERES GENERALES', $anneeActive->getAnneeScolaire(),$classes->getDenomination());
+        $matArt = $noteRepo->NoteParEtudiant($etudiant->getMatricule(), 'PREMIER SEMESTRE','MATIERES ARTISTIQUES', $anneeActive->getAnneeScolaire(),$classes->getDenomination());
+
+
+
+        $NoteMatGen = $noteRepo->NoteParTypeMatiere('PREMIER SEMESTRE','MATIERES GENERALES', $anneeActive->getAnneeScolaire(),$classes->getDenomination());
+        $NoteMatProfs = $noteRepo->NoteParTypeMatiere('PREMIER SEMESTRE','MATIERES PROFESSIONNELLES', $anneeActive->getAnneeScolaire(),$classes->getDenomination());
+
+
+        $etudiantClasse = $etudiantRepo->classeAReinscrire($classe);
+        $listeNotes = $noteRepo->listeNote('PREMIER SEMESTRE',$anneeActive->getAnneeScolaire(),$classes->getDenomination());
         $listeMat = $matieresRepo->MatieresParClasse($classe);
         $classes = $classeRepo->findOneByCodeClasse($classe);
         $directeur = $classeRepo->DirecteurDeFiliere($classe);
@@ -441,32 +700,30 @@ class ImpressionController extends AbstractController
     }
 
 
-    
 
 
 
 
-
-
-
-    #[Route('/impression/semestre2/{matricule}/{classe}/{anneeActive}', name: 'bulletin_impressionS2')]
-    public function bulletinSemestre2(AnneeAcademiqueRepository $anneeRepo, EtudiantRepository $etudiantRepo, NoterRepository $noteRepo, ClasseRepository $classeRepo, MatieresRepository $matieresRepo, $matricule, $classe, $anneeActive ): Response
+    //les bulletins du deuxieme semestre
+    #[Route('/impression/semestre2/{id}/{classe}/{anneeActive}', name: 'bulletin_impressionS2')]
+    public function bulletinSemestre2(AnneeAcademiqueRepository $anneeRepo, EtudiantRepository $etudiantRepo, NoterRepository $noteRepo, ClasseRepository $classeRepo, MatieresRepository $matieresRepo, $id, $classe, $anneeActive ): Response
     {
         $anneeActive = $anneeRepo->findOneByActive(true);
-        $matProfs = $noteRepo->NoteParEtudiant($matricule, 'DEUXIEME SEMESTRE','MATIERES PROFESSIONNELLES');
-        $matGen = $noteRepo->NoteParEtudiant($matricule, 'DEUXIEME SEMESTRE','MATIERES GENERALES');
-        $matArt = $noteRepo->NoteParEtudiant($matricule, 'DEUXIEME SEMESTRE','MATIERES ARTISTIQUES');
-
-
-        $NoteMatGen = $noteRepo->NoteParTypeMatiere('DEUXIEME SEMESTRE','MATIERES GENERALES');
-        $NoteMatProfs = $noteRepo->NoteParTypeMatiere('DEUXIEME SEMESTRE','MATIERES PROFESSIONNELLES');
-
-
-        $etudiant = $etudiantRepo->findOneByMatricule($matricule);
+        $etudiant = $etudiantRepo->findOneById($id);
         $classes = $classeRepo->findOneByCodeClasse($classe);
 
+        $matProfs = $noteRepo->NoteParEtudiant($etudiant->getMatricule(), 'DEUXIEME SEMESTRE','MATIERES PROFESSIONNELLES', $anneeActive->getAnneeScolaire(),$classes->getDenomination());
+        $matGen = $noteRepo->NoteParEtudiant($etudiant->getMatricule(), 'DEUXIEME SEMESTRE','MATIERES GENERALES', $anneeActive->getAnneeScolaire(),$classes->getDenomination());
+        $matArt = $noteRepo->NoteParEtudiant($etudiant->getMatricule(), 'DEUXIEME SEMESTRE','MATIERES ARTISTIQUES', $anneeActive->getAnneeScolaire(),$classes->getDenomination());
+
+
+        $NoteMatGen = $noteRepo->NoteParTypeMatiere('DEUXIEME SEMESTRE','MATIERES GENERALES', $anneeActive->getAnneeScolaire(),$classes->getDenomination());
+        $NoteMatProfs = $noteRepo->NoteParTypeMatiere('DEUXIEME SEMESTRE','MATIERES PROFESSIONNELLES', $anneeActive->getAnneeScolaire(),$classes->getDenomination());
+
+
+
         $etudiantClasse = $etudiantRepo->classeAReinscrire($classe);
-        $listeNotes = $noteRepo->listeNote('DEUXIEME SEMESTRE');
+        $listeNotes = $noteRepo->listeNote('DEUXIEME SEMESTRE', $anneeActive->getAnneeScolaire(),$classes->getDenomination());
         $listeMat = $matieresRepo->MatieresParClasse($classe);
         $classes = $classeRepo->findOneByCodeClasse($classe);
         $directeur = $classeRepo->DirecteurDeFiliere($classe);

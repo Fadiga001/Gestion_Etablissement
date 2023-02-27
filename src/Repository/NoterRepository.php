@@ -55,18 +55,22 @@ class NoterRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-    public function listeNote($semestre): array
+    public function listeNote($semestre,$annee,$classe): array
     {
         return $this->createQueryBuilder('n')
             ->select('n')
-            ->Where('n.semestre = :semestre')
+            ->andWhere('n.semestre = :semestre')
             ->setParameter('semestre', $semestre)
+            ->andWhere('n.Annee = :Annee')
+            ->setParameter('Annee', $annee)
+            ->andWhere('n.Classes = :Classes')
+            ->setParameter('Classes', $classe)
             ->getQuery()
             ->getResult()
         ;
     }
 
-    public function NoteParEtudiant($matricule,$semestre,$denomination): array
+    public function NoteParEtudiant($matricule,$semestre,$denomination,$annee,$classe): array
     {
         return $this->createQueryBuilder('n')
             ->select('n')
@@ -79,12 +83,16 @@ class NoterRepository extends ServiceEntityRepository
             ->setParameter('matricule', $matricule)
             ->andWhere('n.semestre = :semestre')
             ->setParameter('semestre', $semestre)
+            ->andWhere('n.Annee = :Annee')
+            ->setParameter('Annee', $annee)
+            ->andWhere('n.Classes = :Classes')
+            ->setParameter('Classes', $classe)
             ->getQuery()
             ->getResult()
         ;
     }
 
-    public function NoteParTypeMatiere($semestre,$denomination): array
+    public function NoteParTypeMatiere($semestre,$denomination,$annee,$classe): array
     {
         return $this->createQueryBuilder('n')
             ->select('n')
@@ -94,6 +102,10 @@ class NoterRepository extends ServiceEntityRepository
             ->setParameter('denomination', $denomination)
             ->andWhere('n.semestre = :semestre')
             ->setParameter('semestre', $semestre)
+            ->andWhere('n.Annee = :Annee')
+            ->setParameter('Annee', $annee)
+            ->andWhere('n.Classes = :Classes')
+            ->setParameter('Classes', $classe)
             ->getQuery()
             ->getResult()
         ;

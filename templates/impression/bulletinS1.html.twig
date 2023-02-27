@@ -8,7 +8,7 @@
 
     .table1{
         margin: auto;
-        width: 55%;
+        width: 50%;
         font-size: 12px;
     }
 
@@ -16,7 +16,7 @@
 
     caption{
         margin-left: 35%; 
-        margin-top: 8%; 
+        margin-top: 10%; 
         margin-right: 35%; 
         border: 2px solid skyblue;
         border-collapse: collapse;
@@ -289,26 +289,11 @@
 
             <th class="fin">  
 
-                    {% set somMoyMatGen = 0 %}
+                {% set somMoyMatGen = 0 %}
 
-                    {% for listeMat in listeMat %}
-
-                        {% set SomMoyAvecCoefGen = 0 %}
-
-                        {% for matGen in matGen %}
-
-                            {% if listeMat.denomination == matGen.matiere.denomination %}
-
-                                {% set SomMoyAvecCoefGen = SomMoyAvecCoefGen + (matGen.moyenne * matGen.matiere.coefficient) %}
-
-                            {% endif %}
-    
-                        {% endfor %}
-
-                        {% set somMoyMatGen = SomMoyAvecCoefGen %}
-
-
-                    {% endfor %}
+                {% for matGen in matGen %}
+                    {% set somMoyMatGen = somMoyMatGen + (matGen.moyenne * matGen.matiere.coefficient) %}
+                {% endfor %}
 
                 {{ somMoyMatGen | number_format(2) }}
 
@@ -492,28 +477,15 @@
             </th> 
             <th class="fin">  
 
-                {% set somMoymatProfs = 0 %}
+                {% set SomMoyAvecCoefMatProf = 0 %}
 
-                    {% for listeMat in listeMat %}
+                {% for matProfs in matProfs %}
 
-                        {% set SomMoyAvecCoefMatProf = 0 %}
-
-                        {% for matProfs in matProfs %}
-
-                            {% if listeMat.denomination == matProfs.matiere.denomination %}
-
-                                {% set SomMoyAvecCoefMatProf = SomMoyAvecCoefMatProf + (matProfs.moyenne * matProfs.matiere.coefficient) %}
-
-                            {% endif %}
+                    {% set SomMoyAvecCoefMatProf = SomMoyAvecCoefMatProf + (matProfs.moyenne * matProfs.matiere.coefficient) %}
     
-                        {% endfor %}
+                {% endfor %}
 
-                        {% set somMoymatProfs = SomMoyAvecCoefMatProf %}
-
-
-                    {% endfor %}
-
-                {{ somMoymatProfs | number_format(2) }}
+                {{ SomMoyAvecCoefMatProf | number_format(2)}}
                
 
 

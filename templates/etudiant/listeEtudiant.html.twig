@@ -61,7 +61,7 @@
                             <th scope="col">Classe</th>
                             <th scope="col">photo</th>
                         
-                            <th class="ms-5">Actions</th>
+                            <th class="ms-5 text-center">Actions</th>
         
                         </tr>
                     </thead>
@@ -77,9 +77,12 @@
                               <td>{{ search.matricule}}</td>
                               <td>{{ search.classe}}</td>
                               <td><img src="{{ asset('/uploads/'~ search.imageFile) }}" alt="" class="img-circle mx-auto mb-3" height="40" width="40"></td>
-                              <td class="ms-4">
+                              <td class="ms-4 text-center">
                                     <a class="btn btn-primary" href="{{ path('details_etudiant', {'id': search.id}) }}">
                                         Détails
+                                    </a>
+                                    <a class="btn btn-danger" href="{{ path('delete_etudiant', {'id': etudiant.id}) }}">
+                                        Supprimer
                                     </a>
                                 </td>
                             
@@ -97,9 +100,12 @@
                               <td>{{ etudiant.matricule}}</td>
                               <td>{{ etudiant.classe}}</td>
                               <td><img src="{{ asset('/uploads/'~ etudiant.imageFile) }}" alt="" class="img-circle mx-auto mb-3" height="40" width="40"></td>
-                              <td class="ms-4">
+                              <td class="ms-4 text-center">
                                     <a class="btn btn-primary" href="{{ path('details_etudiant', {'id': etudiant.id}) }}">
                                         Détails
+                                    </a>
+                                    <a class="btn btn-danger" href="{{ path('delete_etudiant', {'id': etudiant.id}) }}">
+                                        Supprimer
                                     </a>
                                 </td>
                             </tr>

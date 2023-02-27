@@ -6,25 +6,27 @@
   <link rel="stylesheet" href="style.css">
   <style>
 
-    .table1{
+   .table1{
         margin: auto;
-        width: 70%;
+        width: 55%;
+        font-size: 12px;
     }
 
 
+
     caption{
-        margin-top: 13%;
         margin-left: 35%; 
+        margin-top: 8%; 
         margin-right: 35%; 
         border: 2px solid skyblue;
         border-collapse: collapse;
         padding: 2px;
-        
     }
 
 .note{
+    margin: auto;
     border-collapse: collapse;
-    width: 100%;
+    width: 85%;
 }
 
  .entete, .titre, .contenu, .fin  {
@@ -32,13 +34,17 @@
 }
 
 .entete, .titre, .fin{
-    font-size: 13px;
+    font-size: 12px;
+}
+
+.titre{
+    text-align: left;
 }
 
 
 
 .contenu{
-    font-size: 13px;
+    font-size: 12px;
 }
 
 .coeff{
@@ -57,11 +63,14 @@
     text-decoration: underline;
 }
 
-
-
-    
+.nb{
+    font-size: 12px;
+    text-align: center;
+}
+ 
 
   </style>
+
 </head>
 {% for etudiant in etudiant %}
 <body>
@@ -73,8 +82,8 @@
         <caption>PREMIER SEMESTRE</caption>
 
         <tr> 
-            <td class="left"> <span>Annéee Scolaire : {{ anneeActive }} </span></td>  
-            <td class="right"> <span>Matricule : {{ etudiant.matricule }} </span></td> 
+            <td class="left"> <span>ANNEE SCOLAIRE : {{ anneeActive }} </span></td> 
+            <td class="right"> <span>{{ 'now' | date('d/m/Y h:i') }} </span></td>  
         </tr>
 
     </table>
@@ -82,10 +91,16 @@
     <table class="table1">
 
         <tr> 
-            <td>Classe : {{ classe.denomination|upper}}</td> 
+            <td>CLASSE : {{ classe.denomination|upper}}</td> 
         </tr>
+
+    </table>
+
+    <table class="table1">
+
         <tr> 
-            <td>Nom & Prénoms : {{ etudiant.nom|upper}} {{ etudiant.prenoms|upper}}</td> 
+            <td>NOM & PRENOMS : {{ etudiant.nom|upper}} {{ etudiant.prenoms|upper}}</td>
+            <td class="right"> <span>MATRICULE : {{ etudiant.matricule }} </span></td> 
         </tr>
 
     </table>
@@ -93,8 +108,8 @@
     <table class="table1">
   
         <tr> 
-            <td class="left"> <span>Date de naissance : {{ etudiant.dateNaissance|date('d/m/Y') }} </span></td>  
-            <td class="right"> <span>Lieu de naissance : {{ etudiant.lieuNaissance }} </span></td> 
+            <td class="left"> <span>DATE DE NAISSANCE: {{ etudiant.dateNaissance|date('d/m/Y') }} </span></td>  
+            <td class="right"> <span>LIEU DE NAISSANCE: {{ etudiant.lieuNaissance | upper }} </span></td> 
         </tr>
 
     </table>
@@ -134,13 +149,47 @@
                     {% endfor %}
 
                 </td>  
+
+                <td class="contenu coeff">
+
+                    {% for listeMat in listeMat %}
+
+                        {% set moyGen = 0 %}
+
+                        {% for NoteMatGen in NoteMatGen %}
+
+                            {% if listeMat.denomination == NoteMatGen.matiere.denomination and NoteMatGen.matricules == etudiant.matricule and NoteMatGen.classes == etudiant.classe and NoteMatGen.annee == etudiant.anneeScolaire %}
+
+                                {% set moyGen = NoteMatGen.moyenne %} 
+
+                            {% endif %}
+    
+                        {% endfor %}
+
+                        {% if moyGen == 0 %}
+
+                            {% if listeMat.TypeMatiere == "MATIERES GENERALES" %}
+
+                                00.00<br>
+
+                            {% endif %}
+
+                        {% else %}
+
+                            {{moyGen | number_format(2) }} <br>
+
+                        {% endif %}
+
+                    {% endfor %}     
+
+                </td> 
                 <td class="contenu coeff">
 
                     {% for listeMat in listeMat %}
 
                         {% if listeMat.TypeMatiere == "MATIERES GENERALES" %}
 
-                             {{ listeMat.coefficient | number_format(2) }} <br>
+                            {{listeMat.coefficient | number_format(2) }}<br>
 
                         {% endif %}
 
@@ -152,35 +201,33 @@
 
                     {% for listeMat in listeMat %}
 
-                        {% for NoteMatGen in NoteMatGen %}
-
-                            {% if listeMat.denomination == NoteMatGen.matiere.denomination and NoteMatGen.matricules == etudiant.matricule and NoteMatGen.classes == etudiant.classe and NoteMatGen.annee == etudiant.anneeScolaire %}
-
-                                {{ NoteMatGen.matiere.coefficient | number_format(2) }} <br>
-
-                            {% endif %}
-    
-                        {% endfor %}
-
-                    {% endfor %}
-
-                    
-                </td> 
-                <td class="contenu coeff">
-
-                    {% for listeMat in listeMat %}
+                        {% set moyGenAvecCoef = 0 %}
 
                         {% for NoteMatGen in NoteMatGen %}
 
                             {% if listeMat.denomination == NoteMatGen.matiere.denomination and NoteMatGen.matricules == etudiant.matricule and NoteMatGen.classes == etudiant.classe and NoteMatGen.annee == etudiant.anneeScolaire %}
 
-                                {{ (NoteMatGen.moyenne * NoteMatGen.matiere.coefficient) | number_format(2) }} <br>
+                                {% set moyGenAvecCoef = moyGenAvecCoef + (NoteMatGen.moyenne * NoteMatGen.matiere.coefficient )  %} 
 
                             {% endif %}
     
                         {% endfor %}
 
-                    {% endfor %}
+                        {% if moyGenAvecCoef == 0 %}
+
+                            {% if listeMat.TypeMatiere == "MATIERES GENERALES" %}
+
+                                00.00<br>
+
+                            {% endif %}
+
+                        {% else %}
+
+                            {{moyGenAvecCoef | number_format(2) }} <br>
+
+                        {% endif %}
+
+                    {% endfor %}  
                 
                 </td> 
                 <td class="contenu">
@@ -301,17 +348,35 @@
 
                     {% for listeMat in listeMat %}
 
+                        {% set CoeffMatProfs = 0 %}
+
                         {% for NoteMatProfs in NoteMatProfs %}
 
                             {% if listeMat.denomination == NoteMatProfs.matiere.denomination and NoteMatProfs.matricules == etudiant.matricule and NoteMatProfs.classes == etudiant.classe and NoteMatProfs.annee == etudiant.anneeScolaire %}
 
-                                {{ NoteMatProfs.moyenne | number_format(2) }} <br>
+                                {% set CoeffMatProfs = CoeffMatProfs +  NoteMatProfs.matiere.coefficient  %} 
 
                             {% endif %}
     
                         {% endfor %}
 
-                    {% endfor %}
+                        {% if CoeffMatProfs == 0 %}
+
+                            {% if listeMat.TypeMatiere == "MATIERES PROFESSIONNELLES" %}
+
+                                00.00<br>
+
+                            {% endif %}
+
+                        {% else %}
+
+                            {{CoeffMatProfs | number_format(2) }} <br>
+
+                        {% endif %}
+
+                    {% endfor %}  
+
+                    
 
                 </td> 
                 <td class="contenu coeff">
@@ -333,18 +398,33 @@
 
                     {% for listeMat in listeMat %}
 
+                        {% set moyMatAvecCoef = 0 %}
+
                         {% for NoteMatProfs in NoteMatProfs %}
 
                             {% if listeMat.denomination == NoteMatProfs.matiere.denomination and NoteMatProfs.matricules == etudiant.matricule and NoteMatProfs.classes == etudiant.classe and NoteMatProfs.annee == etudiant.anneeScolaire %}
 
-                                {{ (NoteMatProfs.moyenne * NoteMatProfs.matiere.coefficient) | number_format(2) }} <br>
+                                {% set moyMatAvecCoef = moyMatAvecCoef + (NoteMatProfs.moyenne * NoteMatProfs.matiere.coefficient )  %} 
 
                             {% endif %}
     
                         {% endfor %}
 
-                    {% endfor %}
+                        {% if moyMatAvecCoef == 0 %}
 
+                            {% if listeMat.TypeMatiere == "MATIERES PROFESSIONNELLES" %}
+
+                                00.00<br>
+
+                            {% endif %}
+
+                        {% else %}
+
+                            {{moyMatAvecCoef | number_format(2) }} <br>
+
+                        {% endif %}
+
+                    {% endfor %}  
 
                 </td> 
                 <td class="contenu">
@@ -355,7 +435,7 @@
 
                             {% if listeMat.denomination == NoteMatProfs.matiere.denomination and NoteMatProfs.matricules == etudiant.matricule and NoteMatProfs.classes == etudiant.classe and NoteMatProfs.annee == etudiant.anneeScolaire %}
 
-                                {{ NoteMatProfs.matiere.prof }} <br>
+                                {{ listeMat.prof }} <br>
 
                             {% endif %}
     
@@ -395,7 +475,7 @@
             
         </tr>
         <tr> 
-            <th class="fin"> MOYENNE DES MATIERES PROFESSIONNELLES </th> 
+            <th class="titre"> MOYENNE DES MATIERES PROFESSIONNELLES </th> 
             <th class="fin"> </th> 
 
             <th class="fin"> 
@@ -435,7 +515,7 @@
         </tr>
 
         <tr> 
-            <th class="fin">TOTAUX </th> 
+            <th class="titre">TOTAUX </th> 
             <th class="fin"> </th> 
 
             <th class="fin"> 
@@ -451,13 +531,16 @@
         </tr>
 
         <tr> 
-            <th class="fin">MOYENNE PREMIER SEMESTRE </th> 
+            <th class="titre">MOYENNE PREMIER SEMESTRE </th> 
             <th class="fin"> 
-                {% if somCoeffmatProfs == 0 %}
-                    0
+                {% set  moyGen = 0 %}
+                {% if somCoeffmatProfs == 0 and somCoeffMatGen == 0 %}
+                    00.00
                 {% else %}
                  
-                    {{ ( ((somMoymatProfs / somCoeffmatProfs) + (somMoyMatGen / somCoeffMatGen)) / 2 )  | number_format(3) }}
+                    {% set  moyGen = ( ((somMoymatProfs / somCoeffmatProfs) + (somMoyMatGen / somCoeffMatGen)) / 2 ) %}
+
+                    {{ moyGen  | number_format(2) }}
 
                 {% endif %}
 
@@ -545,6 +628,8 @@
         </tr>
 
     </table>
+
+    <p class="nb"><strong>NB </strong>: Veuillez conserver l'original de ce relevé de notes (bulletin) qui vous sera exigé lors de votre réinscription à la rentrée *** Aucun duplicata ne sera délivré.</p>
 
     
 </body>

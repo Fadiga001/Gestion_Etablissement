@@ -78,7 +78,7 @@
                                     <td>{{etudiant.prenoms}}</td>
                                     <td>{{etudiant.dateNaissance|date('d-m-Y')}}</td>
                                     <td>
-                                        <a href="{{ path('bulletin_impression', {'matricule': etudiant.matricule, 'classe':classe.codeClasse, 'anneeActive': anneeActive})}}" class="btn btn-primary">Imprimer le Bulletin</a>
+                                        <a href="{{ path('bulletin_impression', {'id': etudiant.id, 'classe':classe.codeClasse, 'anneeActive': anneeActive})}}" class="btn btn-primary">Imprimer le Bulletin</a>
                                     </td>
                                 </tr>
                             {% endfor %}

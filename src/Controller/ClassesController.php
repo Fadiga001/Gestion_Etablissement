@@ -190,9 +190,10 @@ class ClassesController extends AbstractController
 
 
     #[Route('/classes/voir-les-differentes-classes/details-classe/{id}/{idMat}', name: 'consulter_note')]
-    public function Consulter(EtudiantRepository $etudiantRepo, MatieresRepository $matRepo, NoterRepository $noteRepo, Classe $classe, $id, $idMat, ClasseRepository $classeRepo, Request $request): Response
+    public function Consulter(EtudiantRepository $etudiantRepo, MatieresRepository $matRepo, NoterRepository $noteRepo, Classe $classe, $id, $idMat, ClasseRepository $classeRepo,AnneeAcademiqueRepository $anneeRepo, Request $request): Response
     {
 
+        $anneeActive= $anneeRepo->findOneByActive(true);
         $etudiant = $etudiantRepo->listeEtudiantDuneClasseEtAnnee($id);
         $classe = $classeRepo->findOneById($id);
         $matiere = $matRepo->findOneById($idMat);
@@ -204,7 +205,7 @@ class ClassesController extends AbstractController
         $semestre = [];
         if($form->isSubmitted() && $form->isValid()){
             $semestre = $form->getData();
-            $listenote = $noteRepo->listeNote($semestre);
+            $listenote = $noteRepo->listeNote($semestre, $anneeActive->getAnneeScolaire(),$classe->getDenomination());
          
         }
 
@@ -314,16 +315,9 @@ class ClassesController extends AbstractController
 
                     $moy = ($noteClasses+$notePartiels)/2 ;
 
-                    for($j = 0; $j<sizeof($listeNote); $j++)
+                    if(empty($listeNote))
                     {
-                        if($listeNote[$j]->getClasses() == $classe && $listeNote[$j]->getMatiere() == $matiere && $listeNote[$j]->getAnnee()== $anneeActive && $listeNote[$j]->getSemestre() == 'PREMIER SEMESTRE' )
-                        {
-                            $this ->addFlash('danger', 'Cette matière a déjà été notée donc vous pouvez modifier les notes dans la session consulter');
-
-                            return $this->redirectToRoute('donner_note', ['id'=>$id, 'idMat'=>$idMat]);
-                        }else{
-
-                            if($noteClasses > 20 || $noteClasses < 0 || $notePartiels > 20 || $notePartiels < 0)
+                        if($noteClasses > 20 || $noteClasses < 0 || $notePartiels > 20 || $notePartiels < 0)
                             {
                                 $this ->addFlash('danger', 'Les notes doivent être comprises entre 0-20');
 
@@ -343,10 +337,45 @@ class ClassesController extends AbstractController
 
                                 $manager->persist($note);
                             }
-                            
-                        }
+                    }else{
 
+                        for($j = 0; $j<sizeof($listeNote); $j++)
+                        {
+                            if($listeNote[$j]->getClasses() == $classe && $listeNote[$j]->getMatiere() == $matiere && $listeNote[$j]->getAnnee()== $anneeActive->getAnneeScolaire() && $listeNote[$j]->getSemestre() == 'PREMIER SEMESTRE' )
+                            {
+                                $this ->addFlash('danger', 'Cette matière a déjà été notée donc vous pouvez modifier les notes dans la session consulter');
+
+                                return $this->redirectToRoute('donner_note', ['id'=>$id, 'idMat'=>$idMat]);
+                            }else{
+
+                                if($noteClasses > 20 || $noteClasses < 0 || $notePartiels > 20 || $notePartiels < 0)
+                                {
+                                    $this ->addFlash('danger', 'Les notes doivent être comprises entre 0-20');
+
+                                    return $this->redirectToRoute('donner_note', ['id'=>$id, 'idMat'=>$idMat]);
+
+                                }else{
+
+                                    $note->setMatricules($etudiant[$i])
+                                    ->setClasses($classe)
+                                    ->setMatiere($matiere)
+                                    ->setSemestre('PREMIER SEMESTRE')
+                                    ->setAnnee($anneeActive->getAnneeScolaire())
+                                    ->setProf($matiere->getProf())
+                                    ->setNoteClasse($noteClasses)
+                                    ->setNotePartiel($notePartiels)
+                                    ->setMoyenne($moy);
+
+                                    $manager->persist($note);
+                                }
+                            
+                            }
+
+                        }
+                        
                     }
+
+                    
                  
      
 
@@ -357,6 +386,7 @@ class ClassesController extends AbstractController
                 $this ->addFlash('success', 'Les notes ont été attribuées avec succès');    
                 
                 return $this->redirectToRoute('donner_note', ['id'=>$id, 'idMat'=>$idMat]);
+
                 
 
             }else if($anneeActive->getFinPremierSemestre() <= $an && $anneeActive->getFin() >= $an)
@@ -373,16 +403,9 @@ class ClassesController extends AbstractController
 
                     $moy = (float) ($noteClasses+$notePartiels)/2 ;
 
-                    for($j = 0; $j<sizeof($listeNote); $j++)
+                    if(empty($listeNote))
                     {
-                        if($listeNote[$j]->getClasses() == $classe && $listeNote[$j]->getMatiere() == $matiere && $listeNote[$j]->getAnnee()== $anneeActive && $listeNote[$j]->getSemestre() == 'DEUXIEME SEMESTRE' )
-                        {
-                            $this ->addFlash('danger', 'Cette matière a déjà été notée donc vous pouvez modifier les notes dans la session consulter');
-
-                            return $this->redirectToRoute('donner_note', ['id'=>$id, 'idMat'=>$idMat]);
-                        }else{
-
-                            if($noteClasses > 20 || $noteClasses < 0 || $notePartiels > 20 || $notePartiels < 0)
+                        if($noteClasses > 20 || $noteClasses < 0 || $notePartiels > 20 || $notePartiels < 0)
                             {
                                 $this ->addFlash('danger', 'Les notes doivent être comprises entre 0-20');
 
@@ -402,10 +425,44 @@ class ClassesController extends AbstractController
 
                                 $manager->persist($note);
                             }
-                            
-                        }
+                    }else{
 
+                        for($j = 0; $j<sizeof($listeNote); $j++)
+                        {
+                            if($listeNote[$j]->getClasses() == $classe && $listeNote[$j]->getMatiere() == $matiere && $listeNote[$j]->getAnnee()== $anneeActive->getAnneeScolaire() && $listeNote[$j]->getSemestre() == 'DEUXIEME SEMESTRE' )
+                            {
+                                $this ->addFlash('danger', 'Cette matière a déjà été notée donc vous pouvez modifier les notes dans la session consulter');
+
+                                return $this->redirectToRoute('donner_note', ['id'=>$id, 'idMat'=>$idMat]);
+                            }else{
+
+                                if($noteClasses > 20 || $noteClasses < 0 || $notePartiels > 20 || $notePartiels < 0)
+                                {
+                                    $this ->addFlash('danger', 'Les notes doivent être comprises entre 0-20');
+
+                                    return $this->redirectToRoute('donner_note', ['id'=>$id, 'idMat'=>$idMat]);
+
+                                }else{
+
+                                    $note->setMatricules($etudiant[$i])
+                                    ->setClasses($classe)
+                                    ->setMatiere($matiere)
+                                    ->setSemestre('DEUXIEME SEMESTRE')
+                                    ->setAnnee($anneeActive->getAnneeScolaire())
+                                    ->setProf($matiere->getProf())
+                                    ->setNoteClasse($noteClasses)
+                                    ->setNotePartiel($notePartiels)
+                                    ->setMoyenne($moy);
+
+                                    $manager->persist($note);
+                                }
+                            
+                            }
+
+                        }
+                        
                     }
+
 
                 }
 

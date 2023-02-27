@@ -268,5 +268,19 @@ class EtudiantController extends AbstractController
     }
 
 
+    #[Route('/etudiant/delete/{id}', name: 'delete_etudiant')]
+    public function supprimer(Etudiant $etudiant, EntityManagerInterface $entityManager): Response
+    {
+
+        $entityManager->remove($etudiant);
+        $entityManager->flush();
+
+        $this->addFlash('danger', 'Etudiant supprimé avec succès');
+
+        return $this->redirectToRoute('liste_etudiants');
+       
+    }
+
+
     
 }

@@ -53,6 +53,12 @@
                         </div>
                     </div>
 
+                    <div class="row d-flex justify-content-center mb-2">
+                        <a href="{{ path('bulletins_classes_S2', {'classe': classe.codeClasse, 'anneeActive': anneeActive })}}">
+                            <h2 class="btn btn-primary">Tirer les bulletins de la classe</h2>
+                        </a>        
+                    </div>
+
                     <table class="table table-hover">
                         <thead class="thead-dark">
                             <tr>
@@ -72,7 +78,7 @@
                                     <td>{{etudiant.prenoms}}</td>
                                     <td>{{etudiant.dateNaissance|date('d-m-Y')}}</td>
                                     <td>
-                                        <a href="{{ path('bulletin_impressionS2', {'matricule': etudiant.matricule, 'classe':classe.codeClasse, 'anneeActive': anneeActive})}}" class="btn btn-primary">Imprimer le Bulletin</a>
+                                        <a href="{{ path('bulletin_impressionS2', {'id': etudiant.id, 'classe':classe.codeClasse, 'anneeActive': anneeActive})}}" class="btn btn-primary">Imprimer le Bulletin</a>
                                     </td>
                                 </tr>
                             {% endfor %}
