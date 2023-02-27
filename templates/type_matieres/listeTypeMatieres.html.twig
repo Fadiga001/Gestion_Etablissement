@@ -29,7 +29,7 @@
         </div>
             <div class="card-body">
 
-                 <table class="table table-hover">
+                 <table class="table table-hover text-center">
                 <thead class="thead-dark">
                     <tr>
                         <th scope="col">Dénomination</th>
@@ -48,7 +48,7 @@
                             <td class="ms-4">
 
                             {% include 'configuration/btnDelete.html.twig' with {
-                                    'btnDelete': 'fa fa-trash' ,
+                                    'btnDelete': 'Supprimer' ,
                                     'Text_Delete': 'SUPPRESSION',
                                     'SBody': 'Voulez-vous supprimer ce role?',
                                     'path': "delete_typeMatiere",

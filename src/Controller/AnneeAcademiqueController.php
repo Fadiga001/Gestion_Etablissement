@@ -22,7 +22,6 @@ class AnneeAcademiqueController extends AbstractController
     * Affichage de la liste des années academiques
     */
     #[Route('/annee/academique', name: 'liste_annee')]
-    #[IsGranted("ROLE_USER")]
     public function index(AnneeAcademiqueRepository $anneeRepo, Request $request, SessionInterface $session): Response
     {
         $annee = $anneeRepo->findAll();

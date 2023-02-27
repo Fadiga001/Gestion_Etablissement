@@ -105,6 +105,9 @@ class Etudiant
      #[ORM\OneToMany(mappedBy: 'matricules', targetEntity: Noter::class)]
      private Collection $noters;
 
+     #[ORM\Column(length: 255, nullable: true)]
+     private ?string $examensPrepares = null;
+
      public function __construct()
      {
          $this->noters = new ArrayCollection();
@@ -409,6 +412,18 @@ class Etudiant
                 $noter->setMatricules(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getExamensPrepares(): ?string
+    {
+        return $this->examensPrepares;
+    }
+
+    public function setExamensPrepares(string $examensPrepares): self
+    {
+        $this->examensPrepares = $examensPrepares;
 
         return $this;
     }

@@ -19,7 +19,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class HomeController extends AbstractController
 {
     #[Route('/school-save-acceuil/{page<\d+>?1}', name: 'app_home')]
-    #[IsGranted("ROLE_USER")]
     public function index(paginationServices $pagination, GalerieRepository $galerieRepository, EtudiantRepository $etudiantRepo,  UserRepository $userRepo, ClasseRepository $classeRepo, ProfesseursRepository $professeursRepos, Request $request, $page = 1): Response
     {
 

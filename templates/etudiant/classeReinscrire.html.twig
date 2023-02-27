@@ -50,25 +50,26 @@
                         <div class="container mb-3">
                             <div class="jumbotron">
                                 <h3> FILIERE : {{ classe.filiere.denomination }}<h3>
-                                <h4> Classe : {{ classe.denomination }}<h4>
-                                <p> Année active : {{ anneeActive }}</p>
+                                <h4> CLASSE : {{ classe.denomination }}<h4>
+                                <p> ANNEE ACTIVE : {{ anneeActive }}</p>
                             </div>
                         </div>
 
                         <table class="table table-hover mt-5">
                             <thead class="thead-dark">
-                                <tr>
+                                <tr class="text-center">
                                     <th scope="col">Nom</th>
                                     <th scope="col">Prénoms</th>
                                     <th scope="col">Matricule</th>
                                     <th scope="col">Moyenne générale</th>
+                                    <th scope="col">Statut</th>
                                     <th class="ms-5">Actions</th>
         
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for etudiant in etudiant %}
-                                    <tr>
+                                    <tr class="text-center">
 
                                         <td>{{etudiant.nom}}</td>
                                         <td>{{etudiant.prenoms}}</td>
@@ -100,17 +101,24 @@
                                         <td>
                                             {% if moy >= 10 and moy <= 20 %}
 
-                                                {% if etudiant.reinscrire %}
-                                                    <h5 class="text-success"> Valider <h5>
-                                                {% else %}
-                                                    <a href="{{ path('etudiant_reinscrit', {'classe': etudiant.classe ,'matricule': etudiant.matricule}) }}" class="btn btn-primary">Réinscrire</a>
-                                                {% endif %}
+                                                <h5 class="text-success"> Admis <h5>
 
                                             {% else %}
 
-                                               <h5 class="text-danger"> Ajourné <h5>
+                                               <h5 class="btn bg-red"> Ajourné <h5>
 
                                             {% endif %}
+                                        </td>
+
+                                        <td>
+
+
+                                            {% if etudiant.reinscrire %}
+                                                <h5 class="btn bg-green"> Valider <h5>
+                                            {% else %}
+                                                <a href="{{ path('etudiant_reinscrit', {'classe': etudiant.classe ,'matricule': etudiant.matricule, 'moyenne': moy}) }}" class="btn btn-primary">Réinscrire</a>
+                                            {% endif %}
+
                                         </td>
                                     </tr>
                                 {% endfor %}

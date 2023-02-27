@@ -21,10 +21,11 @@ class searchEtudiantParAnneeType extends AbstractType
     {
         $builder
           
-            ->add('annee', TextType::class, [
+            ->add('annee', EntityType::class, [
+                'class'=> AnneeAcademique::class,
+                'choice_label'=> 'AnneeScolaire',
                 'attr'=>[
-                    'class'=>'group-form ',
-                    'placeholder'=> '2021-2022'
+                    'class'=>'form-select'
                 ]
             ])
            

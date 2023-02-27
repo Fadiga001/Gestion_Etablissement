@@ -15,7 +15,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 class MatieresController extends AbstractController
 {
     #[Route('/matieres', name: 'liste_matieres')]
-    #[IsGranted("ROLE_USER")]
     public function index(MatieresRepository $matieresRepo): Response
     {
 

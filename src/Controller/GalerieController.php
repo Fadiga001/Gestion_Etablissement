@@ -15,7 +15,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class GalerieController extends AbstractController
 {
     #[Route('/', name: 'liste_photo', methods: ['GET'])]
-    #[IsGranted("ROLE_USER")]
     public function index(GalerieRepository $galerieRepository): Response
     {
       

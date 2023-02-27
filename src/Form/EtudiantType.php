@@ -92,6 +92,17 @@ class EtudiantType extends AbstractType
                     'class'=>'form-select'
                 ]
             ])
+            ->add('examensPrepares', ChoiceType::class, [
+                'label'=> 'Examen Preparé',
+                'attr'=> [
+                    'class'=> 'form-select'
+                ],
+                'choices'=> [
+                    'BTS' => 'BTS',
+                    'BTS AP'=> 'BTS AP'
+                ], 
+            
+            ])
             ->add('photo', FileType::class, [
                 'label' => 'Ajouter une photo (fichier image)',
 

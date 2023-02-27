@@ -1,11 +1,11 @@
                                      <a class="btn btn-primary" href="{{ path(pathEdit, paramEdit)}}">
-                                        <i class="fa fa-pencil-square" aria-hidden="true"></i>
+                                        Modifier
                                     </a>
 
 
 
                                     <a class="btn btn-danger" href="#" data-toggle="modal" data-target="#exampleModal">
-                                        <i class="{{btnDelete}}" aria-hidden="true"></i>
+                                        {{btnDelete}}
                                     </a>
 
                                     <!-- Modal -->
@@ -26,14 +26,14 @@
                                                 </div>
                                                 <div class="modal-body">
 
-                                                    {% if btnDelete == 'fa fa-trash' %}
+                                                    {% if btnDelete == 'Supprimer' %}
                                                         {{ SBody}}
                                                     {% endif %}
                                                     
                                                 </div>
                                                 <div class="modal-footer">
 
-                                                    {% if btnDelete == 'fa fa-trash' %}
+                                                    {% if btnDelete == 'Supprimer' %}
                                                         <a class="btn btn-danger" href="{{ path(path, param) }}">
                                                              Oui
                                                         </a>

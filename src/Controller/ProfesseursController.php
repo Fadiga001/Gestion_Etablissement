@@ -17,7 +17,6 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 class ProfesseursController extends AbstractController
 {
     #[Route('/professeurs', name: 'liste_prof')]
-    #[IsGranted("ROLE_USER")]
     public function index(ProfesseursRepository $profRepo): Response
     {
 

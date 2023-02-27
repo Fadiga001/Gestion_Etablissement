@@ -33,11 +33,11 @@
                 <thead class="thead-dark">
                     <tr>
                         <th scope="col">Dénomination</th>
-                        <th scope="col">Professeurs</th>
-                        <th scope="col">Coefficients</th>
-                        <th scope="col">Type de matière</th>
+                        <th scope="col" class="text-center">Professeurs</th>
+                        <th scope="col" class="text-center">Coefficients</th>
+                        <th scope="col" class="text-center">Type de matière</th>
                        
-                        <th class="ms-5">Actions</th>
+                        <th class="ms-5" class="text-center">Actions</th>
     
                     </tr>
                 </thead>
@@ -47,14 +47,14 @@
 
                         <tr>
                             <th>{{ mat.denomination | upper}}</th>
-                            <td>{{ mat.prof | upper}}</td>
-                            <td>{{ mat.coefficient | upper}}</td>
-                            <td>{{ mat.TypeMatiere | upper}}</td>
+                            <td class="text-center">{{ mat.prof | upper}}</td>
+                            <td class="text-center">{{ mat.coefficient | upper}}</td>
+                            <td class="text-center">{{ mat.TypeMatiere | upper}}</td>
                            
-                            <td class="ms-4">
+                            <td class="ms-4 text-center">
 
                                 {% include 'configuration/btnDelete.html.twig' with {
-                                    'btnDelete': 'fa fa-trash' ,
+                                    'btnDelete': 'Supprimer' ,
                                     'Text_Delete': 'SUPPRESSION',
                                     'SBody': 'Voulez-vous supprimer cette classe?',
                                     'path': "delete_matiere",

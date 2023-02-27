@@ -12,6 +12,7 @@ use App\Repository\ClasseRepository;
 use App\Services\paginationServices;
 use App\Repository\EtudiantRepository;
 use App\Repository\MatieresRepository;
+use App\Form\searchEtudiantParAnneeType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\AnneeAcademiqueRepository;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,7 +27,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 class EtudiantController extends AbstractController
 {
     #[Route('/etudiant/liste-des/differents-etudiants/{page<\d+>?1}', name: 'liste_etudiants')]
-    #[IsGranted("ROLE_USER")]
     public function index(paginationServices $pagination, EtudiantRepository $etudiantRepo, Request $request, $page=1): Response
     {
 
@@ -118,9 +118,11 @@ class EtudiantController extends AbstractController
 
 
 
+
         if ($form->isSubmitted() && $form->isValid()) {
 
             $classe = $form->get('codeClasse')->getData();
+
 
             $listeEtudiant = $etudiantRepository->classeAReinscrire($classe->getCodeClasse());
 
@@ -148,9 +150,9 @@ class EtudiantController extends AbstractController
     
 
 
-    #[Route('/inscrire/etudiants/classeReinscrite/{classe}/{matricule}/valider', name: 'etudiant_reinscrit')]
+    #[Route('/inscrire/etudiants/classeReinscrite/{classe}/{matricule}/{moyenne}/valider', name: 'etudiant_reinscrit')]
     #[ParamConverter('etudiant', options: ['mapping' => ['matricule' => 'matricule']])]
-    public function Reinscription( Request $request, EtudiantRepository $etudiantRepository, AnneeAcademiqueRepository $anneeRepo, NoterRepository $noteRepo, ClasseRepository $classeRepo, $matricule,$classe, EntityManagerInterface $manager): Response
+    public function Reinscription( Request $request, EtudiantRepository $etudiantRepository, AnneeAcademiqueRepository $anneeRepo, NoterRepository $noteRepo, ClasseRepository $classeRepo, $matricule,$classe, $moyenne, EntityManagerInterface $manager): Response
     {
 
         $classes = $classeRepo->findOneByDenomination($classe);
@@ -158,52 +160,55 @@ class EtudiantController extends AbstractController
         $etudiants = $etudiantRepository->findOneByMatricule($matricule);
 
 
-        $newEtudiant = new Etudiant;
-        $form = $this->createForm(ReinscriptionType::class);
-        $form->handleRequest($request);
+            $newEtudiant = new Etudiant;
+            $form = $this->createForm(ReinscriptionType::class);
+            $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid())
-        {
-            $an = $form->get('anneeScolaire')->getData();
-            $clas = $form->get('classe')->getData();
+            if($form->isSubmitted() && $form->isValid())
+            {
+                $an = $form->get('anneeScolaire')->getData();
+                $clas = $form->get('classe')->getData();
 
-            $newEtudiant->setMatricule($etudiants->getMatricule());
-            $newEtudiant->setNom($etudiants->getNom());
-            $newEtudiant->setPrenoms($etudiants->getPrenoms());
-            $newEtudiant->setDateInscription($etudiants->getDateInscription());
-            $newEtudiant->setDateNaissance($etudiants->getDateNaissance());
-            $newEtudiant->setLieuNaissance($etudiants->getLieuNaissance());
-            $newEtudiant->setPaysNaissance($etudiants->getPaysNaissance());
-            $newEtudiant->setSexe($etudiants->getSexe());
-            $newEtudiant->setAdresse($etudiants->getAdresse());
-            $newEtudiant->setTelephone($etudiants->getTelephone());
-            $newEtudiant->setNationalite($etudiants->getNationalite());
-            $newEtudiant->setEtablissementDeProvenance($etudiants->getEtablissementDeProvenance());
-            $newEtudiant->setPersonneAContacter($etudiants->getPersonneAContacter());
-            $newEtudiant->setAdresseDePersonneAContacter($etudiants->getAdresseDePersonneAContacter());
-            $newEtudiant->setTelephoneDePersonneAContacter($etudiants->getTelephoneDePersonneAContacter());
-            $newEtudiant->setStatus($etudiants->getStatus());
-            $newEtudiant->setImageFile($etudiants->getImageFile());
-            $newEtudiant->setAnneeScolaire($an);
-            $newEtudiant->setClasse($clas);
-            $etudiants->setReinscrire(true);
-
-
-            $manager->persist($newEtudiant);
-            $manager->flush();
+                $newEtudiant->setMatricule($etudiants->getMatricule());
+                $newEtudiant->setNom($etudiants->getNom());
+                $newEtudiant->setPrenoms($etudiants->getPrenoms());
+                $newEtudiant->setDateInscription($etudiants->getDateInscription());
+                $newEtudiant->setDateNaissance($etudiants->getDateNaissance());
+                $newEtudiant->setLieuNaissance($etudiants->getLieuNaissance());
+                $newEtudiant->setPaysNaissance($etudiants->getPaysNaissance());
+                $newEtudiant->setSexe($etudiants->getSexe());
+                $newEtudiant->setAdresse($etudiants->getAdresse());
+                $newEtudiant->setTelephone($etudiants->getTelephone());
+                $newEtudiant->setNationalite($etudiants->getNationalite());
+                $newEtudiant->setEtablissementDeProvenance($etudiants->getEtablissementDeProvenance());
+                $newEtudiant->setPersonneAContacter($etudiants->getPersonneAContacter());
+                $newEtudiant->setAdresseDePersonneAContacter($etudiants->getAdresseDePersonneAContacter());
+                $newEtudiant->setTelephoneDePersonneAContacter($etudiants->getTelephoneDePersonneAContacter());
+                $newEtudiant->setStatus($etudiants->getStatus());
+                $newEtudiant->setImageFile($etudiants->getImageFile());
+                $newEtudiant->setAnneeScolaire($an);
+                $newEtudiant->setClasse($clas);
+                $newEtudiant->setClasse($etudiants->getExamensPrepares());
+                $etudiants->setReinscrire(true);
 
 
-            $this->addFlash('success', "L'étudiant a été réinscrire avec succès");
-            return $this->redirectToRoute('classe_reinscrite');
+                $manager->persist($newEtudiant);
+                $manager->flush();
 
-        }
+
+                $this->addFlash('success', "L'étudiant a été réinscrire avec succès");
+                return $this->redirectToRoute('classe_reinscrite');
+
+            }
+        
         
         
 
 
         return $this->renderForm('etudiant/reinscription.html.twig', [
             'form' => $form,
-            'etudiants' =>$etudiants
+            'etudiants' =>$etudiants,
+            'moyenne'=>$moyenne,
         ]);
     }
 

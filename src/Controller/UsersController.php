@@ -20,7 +20,7 @@ class UsersController extends AbstractController
     public function index(UserRepository $userRepo): Response
     {
         
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+       
         $users = $userRepo->findAll();
         return $this->render('users/listeUsers.html.twig', [
             'user' => $users,

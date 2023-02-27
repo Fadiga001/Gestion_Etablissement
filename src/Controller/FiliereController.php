@@ -15,7 +15,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class FiliereController extends AbstractController
 {
     #[Route('/filiere', name: 'liste_filiere')]
-    #[IsGranted("ROLE_USER")]
     public function index(FiliereRepository $filiereRepo): Response
     {
 

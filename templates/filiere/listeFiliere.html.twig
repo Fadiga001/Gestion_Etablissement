@@ -29,7 +29,7 @@
         </div>
             <div class="card-body">
 
-                 <table class="table">
+                 <table class="table text-center">
                 <thead class="thead-dark">
                     <tr>
                         <th scope="col">Code de la Filière</th>
@@ -50,7 +50,7 @@
                             <td>
 
                                 {% include 'configuration/btnDelete.html.twig' with {
-                                    'btnDelete': 'fa fa-trash' ,
+                                    'btnDelete': 'Supprimer' ,
                                     'Text_Delete': 'SUPPRESSION',
                                     'SBody': 'Voulez-vous supprimer cette filière?',
                                     'path': "deleteFiliere",

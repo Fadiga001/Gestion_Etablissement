@@ -15,7 +15,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class RoleController extends AbstractController
 {
     #[Route('/', name: 'listes_roles', methods: ['GET'])]
-    #[IsGranted("ROLE_USER")]
     public function index(RoleRepository $roleRepository): Response
     {
         return $this->render('role/listesRole.html.twig', [

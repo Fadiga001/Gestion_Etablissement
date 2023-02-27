@@ -15,7 +15,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class TypeMatieresController extends AbstractController
 {
     #[Route('/type/matieres', name: 'liste_typeMatiere')]
-    #[IsGranted("ROLE_USER")]
     public function index(TypeMatieresRepository $typeMatieresRepo): Response
     {
 

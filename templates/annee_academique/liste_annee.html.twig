@@ -30,7 +30,7 @@
         </div>
             <div class="card-body">
 
-                 <table class="table">
+                 <table class="table text-center">
                 <thead class="thead-dark">
                     <tr>
                         <th scope="col">Année scolaire</th>
@@ -38,7 +38,7 @@
                         <th scope="col">Fin du 1er semestre</th>
                         <th scope="col">Fin</th>
                         <th scope="col">Statut</th>
-                        <th scope="col">Actions</th>
+                        <th scope="col" class="text-center">Actions</th>
     
                     </tr>
                 </thead>
@@ -62,12 +62,14 @@
                                     </h4>
                                 {% endif %}
                             </td>
-                            <th>
+                            <th class="text-center">
                                 {% if annee.active %}
                                     <a class="btn btn-danger" href="{{ path('activer', {'id': annee.id})}}">Desactiver</a>
                                 {% else %}
-                                    <a class="btn btn-primary" href="{{ path('activer', {'id': annee.id})}}">Activer</a>
+                                    <a class="btn btn-success" href="{{ path('activer', {'id': annee.id})}}">Activer</a>
                                 {% endif %}
+
+                                <a class="btn btn-primary" href="{{ path('annee_edit', {'anneeScolaire': annee.AnneeScolaire})}}">Modifer</a>
                             </th>
                             
                         </tr>

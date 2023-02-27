@@ -1,3 +1,4 @@
+use App\Form\searchEtudiantParAnneeType;
 <!DOCTYPE html>
 <html lang="fr">
 {% include 'home/head.html.twig' %}
@@ -29,30 +30,30 @@
                         <div class="container mb-3">
                             <div class="jumbotron">
                                 <h3> {{ etudiants.nom | upper }} {{ etudiants.prenoms | upper }}<h3>
-                                <h4> Matricule : {{ etudiants.matricule }}<h4>
-                                <h4>Classe : {{ etudiants.classe }}</h4>
+                                <h4> MATRICULE : {{ etudiants.matricule }}<h4>
+                                <h4>CLASSE : {{ etudiants.classe }}</h4>
                             </div>
                         </div>
 
-                            {{ form_start(form) }}
-                                    <div class="form-row d-flex justify-content-center">
-                                        <div class="form-group mr-5">
+                        {{ form_start(form) }}
+                            <div class="form-row d-flex justify-content-center">
+                                <div class="form-group mr-5">
 
-                                            {{ form_widget(form.anneeScolaire) }}
+                                    {{ form_widget(form.anneeScolaire) }}
                                             
-                                        </div>
-                                        <div class="form-group mr-5">
+                                </div>
+                                <div class="form-group mr-5">
                                            
-                                            {{ form_widget(form.classe) }}
+                                    {{ form_widget(form.classe) }}
                                            
-                                        </div>
-                                        <div class="form-submit">
-                                            <button type="submit" class="btn btn-primary">REINSCRIRE</button>
-                                        </div>
+                                </div>
+                                <div class="form-submit">
+                                    <button type="submit" class="btn btn-primary">REINSCRIRE</button>
+                                </div>
                                         
-                                    </div>
+                            </div>
        
-                             {{ form_end(form) }}  
+                        {{ form_end(form) }}  
 
                 </div>
                 

@@ -45,14 +45,14 @@
                             <td>
 
                                 {% include 'configuration/btnDelete.html.twig' with {
-                                    'btnDelete': 'fa fa-trash' ,
+                                    'btnDelete': 'Supprimer' ,
                                     'Text_Delete': 'SUPPRESSION',
                                     'SBody': 'Voulez-vous supprimer ce role?',
                                     'path': "delete_role",
                                     'param': {'id': roles.id },
                                     'paths': 'listes_roles',
                                     'pathEdit': 'editer_roles',
-                                    'paraEdit': {'id': roles.id},
+                                    'paramEdit': {'id': roles.id},
 
                                }%}              
                             </td>

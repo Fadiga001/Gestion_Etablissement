@@ -30,7 +30,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 class ClassesController extends AbstractController
 {
     #[Route('/classes', name: 'liste_classes')]
-    #[IsGranted("ROLE_USER")]
     public function index(ClasseRepository $classe): Response
     {
 
