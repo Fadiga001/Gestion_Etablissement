@@ -23,7 +23,6 @@ class RoleType extends AbstractType
                     'ROLE_ADMIN' => 'ROLE_ADMIN',
                     'ROLE_EDITEUR'=> 'ROLE_EDITEUR',
                     'ROLE_CONSULTER'=> 'ROLE_CONSULTER',
-                    'SUPER ADMIN'=> 'SUPER ADMIN'
                 ], 
         
             ])

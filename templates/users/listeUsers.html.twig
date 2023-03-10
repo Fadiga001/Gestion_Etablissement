@@ -19,7 +19,7 @@
                          GESTIONS DES UTILISATEURS
                     </h3>
                 </div>
-                {% if user.username == 'Super Admin' || user.username == 'Admin' %}
+                {% if app.user.username == 'Super Admin' or app.user.username == 'Admin' %}
                     <div class="col-md-5">
                         <a href="{{ path('app_register')}}" class="btn btn-warning">Enregistrer un utilisateur</a>
                     </div>

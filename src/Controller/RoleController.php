@@ -15,6 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class RoleController extends AbstractController
 {
     #[Route('/', name: 'listes_roles', methods: ['GET'])]
+    #[IsGranted('ROLE_USER')]
     public function index(RoleRepository $roleRepository): Response
     {
         return $this->render('role/listesRole.html.twig', [
@@ -23,6 +24,7 @@ class RoleController extends AbstractController
     }
 
     #[Route('/creer-un-role', name: 'creer_role', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_USER')]
     public function new(Request $request, RoleRepository $roleRepository): Response
     {
         $role = new Role();
@@ -44,6 +46,7 @@ class RoleController extends AbstractController
 
 
     #[Route('/{id}/edit', name: 'editer_roles', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_USER')]
     public function edit(Request $request, Role $role, RoleRepository $roleRepository): Response
     {
         $form = $this->createForm(RoleType::class, $role);
@@ -62,6 +65,7 @@ class RoleController extends AbstractController
     }
 
     #[Route('/{id}', name: 'delete_role', methods: ['POST'])]
+    #[IsGranted('ROLE_USER')]
     public function delete(Request $request, Role $role, RoleRepository $roleRepository): Response
     {
         if ($this->isCsrfTokenValid('delete'.$role->getId(), $request->request->get('_token'))) {

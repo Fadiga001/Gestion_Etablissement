@@ -190,7 +190,7 @@
             </ul>
           </li>
 
-
+        {% if app.user.username == 'Admin' or app.user.username == 'Super Admin' %}
           <li class="nav-item">
             <a href="#" class="nav-link">
               <i class="fa fa-gamepad" aria-hidden="true"></i>
@@ -215,7 +215,7 @@
 
             </ul>
           </li>
-
+        {% endif %}
         </ul>
       </nav>
       <!-- /.sidebar-menu -->

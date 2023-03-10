@@ -63,13 +63,31 @@
                                 {% endif %}
                             </td>
                             <th class="text-center">
-                                {% if annee.active %}
-                                    <a class="btn btn-danger" href="{{ path('activer', {'id': annee.id})}}">Desactiver</a>
-                                {% else %}
-                                    <a class="btn btn-success" href="{{ path('activer', {'id': annee.id})}}">Activer</a>
-                                {% endif %}
+                            
+                                {% if app.user.typeUtilisateur == 'ROLE_CONSULTER' and app.user.typeUtilisateur == 'ROLE_EDITEUR' %}
 
-                                <a class="btn btn-primary" href="{{ path('annee_edit', {'anneeScolaire': annee.AnneeScolaire})}}">Modifer</a>
+                                    {% if annee.active %}
+                                        <a class="btn btn-danger" href="{{ path('activer', {'id': annee.id})}}" >
+                                            <input type="button" value="Desactiver" desabled="true">
+                                        </a>
+                                    {% else %}
+                                        <a class="btn btn-success" href="{{ path('activer', {'id': annee.id})}}" desabled>Activer</a>
+                                    {% endif %}
+
+                                    <a class="btn btn-primary" href="{{ path('annee_edit', {'anneeScolaire': annee.AnneeScolaire})}}" desabled>Modifer</a>
+
+                                {% else %}
+
+                                    {% if annee.active %}
+                                        <a class="btn btn-danger" href="{{ path('activer', {'id': annee.id})}}" >Desactiver</a>
+                                    {% else %}
+                                        <a class="btn btn-success" href="{{ path('activer', {'id': annee.id})}}" >Activer</a>
+                                    {% endif %}
+
+                                    <a class="btn btn-primary" href="{{ path('annee_edit', {'anneeScolaire': annee.AnneeScolaire})}}" >Modifer</a>
+
+                                {% endif %}   
+                            
                             </th>
                             
                         </tr>

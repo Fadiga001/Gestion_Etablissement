@@ -15,6 +15,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 class MatieresController extends AbstractController
 {
     #[Route('/matieres', name: 'liste_matieres')]
+    #[IsGranted('ROLE_USER')]
     public function index(MatieresRepository $matieresRepo): Response
     {
 
@@ -25,6 +26,7 @@ class MatieresController extends AbstractController
     }
 
     #[Route('/matieres/creation_de_matieres', name: 'creer_matieres')]
+    #[IsGranted('ROLE_USER')]
     public function crerMatiere(Request $request, EntityManagerInterface $entityManager): Response
     {
 
@@ -59,6 +61,7 @@ class MatieresController extends AbstractController
     }
 
     #[Route('/matieres/modification_de_matieres/{denomination}', name: 'editer_matieres')]
+    #[IsGranted('ROLE_USER')]
     public function editMatiere(Matieres $matiere, Request $request, EntityManagerInterface $entityManager): Response
     {
 
@@ -93,6 +96,7 @@ class MatieresController extends AbstractController
 
 
     #[Route('/matieres/modification_matiere_par/{denomination}', name: 'delete_matiere')]
+    #[IsGranted('ROLE_USER')]
     public function supprimer(Matieres $matiere, EntityManagerInterface $entityManager): Response
     {
 

@@ -28,7 +28,7 @@ class Professeurs
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $matricule = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $statut = null;
 
 

@@ -17,6 +17,7 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 class ProfesseursController extends AbstractController
 {
     #[Route('/professeurs', name: 'liste_prof')]
+    #[IsGranted('ROLE_USER')]
     public function index(ProfesseursRepository $profRepo): Response
     {
 
@@ -29,7 +30,7 @@ class ProfesseursController extends AbstractController
 
 
     #[Route('/professeurs/creer_professeurs', name: 'creer_prof')]
-
+    #[IsGranted('ROLE_USER')]
     public function creer_prof( Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
 
@@ -79,7 +80,7 @@ class ProfesseursController extends AbstractController
 
 
     #[Route('/professeurs/modifier_professeurs/{nom}', name: 'edit_prof')]
-
+    #[IsGranted('ROLE_USER')]
     public function edit_prof(Professeurs $profs, Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
 
@@ -129,6 +130,7 @@ class ProfesseursController extends AbstractController
 
 
     #[Route('/professeurs/delete_professeurs/{nom}', name: 'delete_prof')]
+    #[IsGranted('ROLE_USER')]
     public function supprimer(Professeurs $prof, EntityManagerInterface $entityManager): Response
     {
 

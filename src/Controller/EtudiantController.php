@@ -27,6 +27,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 class EtudiantController extends AbstractController
 {
     #[Route('/etudiant/liste-des/differents-etudiants/{page<\d+>?1}', name: 'liste_etudiants')]
+    #[IsGranted('ROLE_USER')]
     public function index(paginationServices $pagination, EtudiantRepository $etudiantRepo, Request $request, $page=1): Response
     {
 
@@ -55,6 +56,7 @@ class EtudiantController extends AbstractController
 
 
     #[Route('/inscrire/etudiants', name: 'inscrire_etudiants', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_USER')]
     public function new(Request $request, EtudiantRepository $etudiantRepository, SluggerInterface $slugger): Response
     {
         $etudiant = new Etudiant();
@@ -104,6 +106,7 @@ class EtudiantController extends AbstractController
 
 
     #[Route('/inscrire/etudiants/classeReinscrite', name: 'classe_reinscrite')]
+    #[IsGranted('ROLE_USER')]
     public function classeReinscrite(Request $request, EtudiantRepository $etudiantRepository, AnneeAcademiqueRepository $anneeRepo, NoterRepository $noteRepo, MatieresRepository $matieresRepo): Response
     {
 
@@ -152,6 +155,7 @@ class EtudiantController extends AbstractController
 
     #[Route('/inscrire/etudiants/classeReinscrite/{classe}/{matricule}/{moyenne}/valider', name: 'etudiant_reinscrit')]
     #[ParamConverter('etudiant', options: ['mapping' => ['matricule' => 'matricule']])]
+    #[IsGranted('ROLE_USER')]
     public function Reinscription( Request $request, EtudiantRepository $etudiantRepository, AnneeAcademiqueRepository $anneeRepo, NoterRepository $noteRepo, ClasseRepository $classeRepo, $matricule,$classe, $moyenne, EntityManagerInterface $manager): Response
     {
 
@@ -217,6 +221,7 @@ class EtudiantController extends AbstractController
 
 
     #[Route('/etudiant/liste-des/differents-etudiants/details-etudiants/{id}', name: 'details_etudiant', methods: ['GET'])]
+    #[IsGranted('ROLE_USER')]
     public function show(Etudiant $etudiant): Response
     {
         return $this->render('etudiant/detailsEtudiant.html.twig', [
@@ -274,6 +279,7 @@ class EtudiantController extends AbstractController
 
 
     #[Route('/etudiant/delete/{id}', name: 'delete_etudiant')]
+    #[IsGranted('ROLE_USER')]
     public function supprimer(Etudiant $etudiant, EntityManagerInterface $entityManager): Response
     {
 

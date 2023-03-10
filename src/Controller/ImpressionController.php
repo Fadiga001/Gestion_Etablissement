@@ -2,23 +2,25 @@
 
 namespace App\Controller;
 
-use App\Form\searchFormType;
-use App\Repository\EtudiantRepository;
-use App\Repository\AnneeAcademiqueRepository;
-use App\Repository\ClasseRepository;
-use App\Repository\MatieresRepository;
-use App\Repository\NoterRepository;
 use Dompdf\Dompdf;
 use Dompdf\Options;
-use phpDocumentor\Reflection\PseudoTypes\True_;
+use App\Form\searchFormType;
+use App\Repository\NoterRepository;
+use App\Repository\ClasseRepository;
+use App\Repository\EtudiantRepository;
+use App\Repository\MatieresRepository;
+use App\Repository\AnneeAcademiqueRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use phpDocumentor\Reflection\PseudoTypes\True_;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class ImpressionController extends AbstractController
 {
     #[Route('/impression', name: 'app_impression')]
+    #[IsGranted('ROLE_USER')]
     public function index(AnneeAcademiqueRepository $anneeRepo, EtudiantRepository $etudiantRepo, Request $request ): Response
     {
         $anneeActive = $anneeRepo->findOneByActive(true);
@@ -46,6 +48,7 @@ class ImpressionController extends AbstractController
 
 
     #[Route('/impression/semestre2', name: 'impression_semestre2')]
+    #[IsGranted('ROLE_USER')]
     public function semestre2(AnneeAcademiqueRepository $anneeRepo, EtudiantRepository $etudiantRepo, Request $request ): Response
     {
         $anneeActive = $anneeRepo->findOneByActive(true);
@@ -75,6 +78,7 @@ class ImpressionController extends AbstractController
 
     //Tous les bulletins du premier semestre
     #[Route('/impression/{classe}/{anneeActive}', name: 'bulletin_classe_S1')]
+    #[IsGranted('ROLE_USER')]
     public function tousLesBulletinsSemestre1(AnneeAcademiqueRepository $anneeRepo, EtudiantRepository $etudiantRepo, NoterRepository $noteRepo, ClasseRepository $classeRepo, MatieresRepository $matieresRepo, $classe, $anneeActive ): Response
     {
         $anneeActive = $anneeRepo->findOneByActive(true);
@@ -242,6 +246,7 @@ class ImpressionController extends AbstractController
 
     //Tous les bulletins deuxieme semestre
     #[Route('/impression/semestre2/{classe}/{anneeActive}', name: 'bulletins_classes_S2')]
+    #[IsGranted('ROLE_USER')]
     public function tousLesbulletinsS2(AnneeAcademiqueRepository $anneeRepo, EtudiantRepository $etudiantRepo, NoterRepository $noteRepo, ClasseRepository $classeRepo, MatieresRepository $matieresRepo, $classe, $anneeActive ): Response
     {
         $anneeActive = $anneeRepo->findOneByActive(true);
@@ -500,6 +505,7 @@ class ImpressionController extends AbstractController
 
     //Tous les bulletins de premier semestre
     #[Route('/impression/{id}/{classe}/{anneeActive}', name: 'bulletin_impression')]
+    #[IsGranted('ROLE_USER')]
     public function bulletinSemestre1(AnneeAcademiqueRepository $anneeRepo, EtudiantRepository $etudiantRepo, NoterRepository $noteRepo, ClasseRepository $classeRepo, MatieresRepository $matieresRepo, $id, $classe, $anneeActive ): Response
     {
         $anneeActive = $anneeRepo->findOneByActive(true);
@@ -706,6 +712,7 @@ class ImpressionController extends AbstractController
 
     //les bulletins du deuxieme semestre
     #[Route('/impression/semestre2/{id}/{classe}/{anneeActive}', name: 'bulletin_impressionS2')]
+    #[IsGranted('ROLE_USER')]
     public function bulletinSemestre2(AnneeAcademiqueRepository $anneeRepo, EtudiantRepository $etudiantRepo, NoterRepository $noteRepo, ClasseRepository $classeRepo, MatieresRepository $matieresRepo, $id, $classe, $anneeActive ): Response
     {
         $anneeActive = $anneeRepo->findOneByActive(true);

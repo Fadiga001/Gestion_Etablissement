@@ -15,6 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class FiliereController extends AbstractController
 {
     #[Route('/filiere', name: 'liste_filiere')]
+    #[IsGranted('ROLE_USER')]
     public function index(FiliereRepository $filiereRepo): Response
     {
 
@@ -25,6 +26,7 @@ class FiliereController extends AbstractController
     }
 
     #[Route('/filiere/Creation_De_Filiere', name: 'creerfiliere')]
+    #[IsGranted('ROLE_USER')]
     public function CreerFiliere(Request $request, EntityManagerInterface $manager): Response
     {
 
@@ -49,7 +51,7 @@ class FiliereController extends AbstractController
     }
 
     #[Route('/filiere/Modification-De-Filiere/{denomination}', name: 'editerFiliere')]
-  
+    #[IsGranted('ROLE_USER')]
     public function EditerFiliere(Filiere $filiere, Request $request, EntityManagerInterface $manager): Response
     {
 
@@ -74,6 +76,7 @@ class FiliereController extends AbstractController
     }
 
     #[Route('/filiere/suppresion-d-une-filière/{denomination}', name: 'deleteFiliere')]
+    #[IsGranted('ROLE_USER')]
     public function deleteFiliere(Filiere $filiere, EntityManagerInterface $manager): Response
     {
 

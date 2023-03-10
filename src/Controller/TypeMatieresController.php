@@ -15,6 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class TypeMatieresController extends AbstractController
 {
     #[Route('/type/matieres', name: 'liste_typeMatiere')]
+    #[IsGranted('ROLE_USER')]
     public function index(TypeMatieresRepository $typeMatieresRepo): Response
     {
 
@@ -26,6 +27,7 @@ class TypeMatieresController extends AbstractController
 
 
     #[Route('/type/matieres/creer_type_matiere', name: 'creer_typeMatiere')]
+    #[IsGranted('ROLE_USER')]
     public function creerTypeMatiere(Request $request, EntityManagerInterface $entityManager): Response
     {
 
@@ -52,6 +54,7 @@ class TypeMatieresController extends AbstractController
     }
 
     #[Route('/type/matieres/editer_type_matiere/{denomination}', name: 'editer_typeMatiere')]
+    #[IsGranted('ROLE_USER')]
     public function edtiterTypeMatiere(TypeMatieres $TypeMatiere, Request $request, EntityManagerInterface $entityManager): Response
     {
 
@@ -77,6 +80,7 @@ class TypeMatieresController extends AbstractController
     }
 
     #[Route('/matieres/modification_de_type_matiere_par/{denomination}', name: 'delete_typeMatiere')]
+    #[IsGranted('ROLE_USER')]
     public function supprimer(TypeMatieres $TypeMatiere, EntityManagerInterface $entityManager): Response
     {
 

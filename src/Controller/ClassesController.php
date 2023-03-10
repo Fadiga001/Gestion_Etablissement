@@ -30,6 +30,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 class ClassesController extends AbstractController
 {
     #[Route('/classes', name: 'liste_classes')]
+    #[IsGranted('ROLE_USER')]
     public function index(ClasseRepository $classe): Response
     {
 
@@ -66,6 +67,7 @@ class ClassesController extends AbstractController
     }
 
     #[Route('/classes/modifier-une-classe/{denomination}', name: 'editer_classes')]
+    #[IsGranted('ROLE_USER')]
     public function editerClasse(Classe $classe, Request $request, EntityManagerInterface $manager): Response
     {
 
@@ -91,6 +93,7 @@ class ClassesController extends AbstractController
     }
 
     #[Route('/classes/voir-les-differentes-classes', name: 'voir_classes')]
+    #[IsGranted('ROLE_USER')]
     public function voirClasse(ClasseRepository $classeRepo, EtudiantRepository $etudiant): Response
     {
 
@@ -123,6 +126,7 @@ class ClassesController extends AbstractController
 
 
     #[Route('/classes/voir-les-differentes-classes/details-classe/{id}/listeClasse', name: 'listeClasseEtudiant')]
+    #[IsGranted('ROLE_USER')]
     public function listeClasse(EtudiantRepository $etudiantRepo, Classe $classe, $id, ClasseRepository $classeRepo, AnneeAcademiqueRepository $anneeRepo, EntityManagerInterface $manager): Response
     {
 
@@ -189,6 +193,7 @@ class ClassesController extends AbstractController
 
 
     #[Route('/classes/voir-les-differentes-classes/details-classe/{id}/{idMat}', name: 'consulter_note')]
+    #[IsGranted('ROLE_USER')]
     public function Consulter(EtudiantRepository $etudiantRepo, MatieresRepository $matRepo, NoterRepository $noteRepo, Classe $classe, $id, $idMat, ClasseRepository $classeRepo,AnneeAcademiqueRepository $anneeRepo, Request $request): Response
     {
 
@@ -227,6 +232,7 @@ class ClassesController extends AbstractController
 
     #[Route('/classes/voir-les-differentes-classes/details-classe/{id}/{idMat}/{matricule}/edit', name: 'edit_note')]
     #[ParamConverter('noter', options: ['mapping' => ['matricule' => 'etudiants']])]
+    #[IsGranted('ROLE_USER')]
     public function edit(EtudiantRepository $etudiantRepo, MatieresRepository $matRepo, NoterRepository $noteRepo, Classe $classe, $id, $idMat, $matricule, ClasseRepository $classeRepo, Request $request, EntityManagerInterface $manager): Response
     {
 
@@ -280,6 +286,7 @@ class ClassesController extends AbstractController
 
 
     #[Route('/classes/voir-les-differentes-classes/details-classe/{id}/{idMat}/noter', name: 'donner_note')]
+    #[IsGranted('ROLE_USER')]
     public function donnerNote(EtudiantRepository $etudiantRepo, MatieresRepository $matRepo, Classe $classe, $id, $idMat, ClasseRepository $classeRepo, AnneeAcademiqueRepository $anneeRepo, Request $request, NoterRepository $noteRepo, EntityManagerInterface $manager): Response
     {
 
@@ -492,6 +499,7 @@ class ClassesController extends AbstractController
     
 
     #[Route('/classes/delete-classe/{denomination}', name: 'delete_classe')]
+    #[IsGranted('ROLE_USER')]
     public function supprimer(classe $classe, EntityManagerInterface $entityManager): Response
     {
 

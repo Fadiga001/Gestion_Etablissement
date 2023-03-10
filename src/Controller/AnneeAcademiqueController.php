@@ -22,6 +22,7 @@ class AnneeAcademiqueController extends AbstractController
     * Affichage de la liste des années academiques
     */
     #[Route('/annee/academique', name: 'liste_annee')]
+    #[IsGranted('ROLE_USER')]
     public function index(AnneeAcademiqueRepository $anneeRepo, Request $request, SessionInterface $session): Response
     {
         $annee = $anneeRepo->findAll();
@@ -40,6 +41,7 @@ class AnneeAcademiqueController extends AbstractController
     */
 
     #[Route('/annee/academique/creer_annees', name: 'creer_annee')]
+    #[IsGranted('ROLE_USER')]
     public function CreerAnnee( Request $request, EntityManagerInterface $entitymanager): Response
     {
 
@@ -99,7 +101,7 @@ class AnneeAcademiqueController extends AbstractController
 
     #[Route('/annee/academique/edit/{anneeScolaire}', name: 'annee_edit')]
     #[ParamConverter('annees_academik', options: ['mapping' => ['anneeScolaire' => 'AnneeScolaire']])]
-    
+    #[IsGranted('ROLE_USER')]
     public function editAnnee(AnneeAcademique $annees_academik, Request $request, EntityManagerInterface $entitymanager): Response
     {
 
