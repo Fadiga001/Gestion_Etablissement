@@ -2,10 +2,13 @@
 
 namespace App\Controller;
 
+
 use App\Entity\Etudiant;
+use App\Form\csvFormType;
 use App\Form\EtudiantType;
 use App\Form\searchBarType;
 use App\Form\searchFormType;
+use App\Services\uploadercsv;
 use App\Form\ReinscriptionType;
 use App\Repository\NoterRepository;
 use App\Repository\ClasseRepository;
@@ -276,6 +279,60 @@ class EtudiantController extends AbstractController
             'form' => $form,
         ]);
     }
+
+
+    #[Route('/etudiant/uploadCSV/', name: 'uploadcsv')]
+    #[IsGranted('ROLE_USER')]
+    public function UploadCSV(Request $request, uploadercsv $file_uploader, EntityManagerInterface $em): Response
+    {
+
+        $form = $this->createForm(csvFormType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) 
+        {
+          $file = $form['upload_file']->getData();
+
+          if ($file) 
+          {
+            $file_name = $file_uploader->upload($file);
+            if (null !== $file_name) // for example
+            {
+              $directory = $file_uploader->getTargetDirectory();
+              $full_path = $directory.'/'.$file_name;
+
+              if(($handle = fopen($full_path, "r")) !== false )
+                {
+                    while(($data = fgetcsv($handle)) !== false )
+                    {
+                        $etudiant = new Etudiant();
+                        
+                        dd($data[0]);
+                    }
+
+                    fclose($handle);
+                }
+
+              // Do what you want with the full path file...
+              // Why not read the content or parse it !!!
+            }
+            else
+            {
+              // Oups, an error occured !!!
+            }
+          }
+
+          
+          
+
+        
+        }
+        
+        return $this->render('etudiant/uploadcsv.html.twig', [
+            'form'=>$form->createView()
+        ]);
+    }
+
 
 
     #[Route('/etudiant/delete/{id}', name: 'delete_etudiant')]
