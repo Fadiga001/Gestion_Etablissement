@@ -300,18 +300,7 @@ class EtudiantController extends AbstractController
             {
               $directory = $file_uploader->getTargetDirectory();
               $full_path = $directory.'/'.$file_name;
-
-              if(($handle = fopen($full_path, "r")) !== false )
-                {
-                    while(($data = fgetcsv($handle)) !== false )
-                    {
-                        $etudiant = new Etudiant();
-                        
-                        dd($data[0]);
-                    }
-
-                    fclose($handle);
-                }
+              $fileOpen = fopen($full_path,'r');
 
               // Do what you want with the full path file...
               // Why not read the content or parse it !!!
