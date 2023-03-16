@@ -300,15 +300,10 @@ class EtudiantController extends AbstractController
             {
               $directory = $file_uploader->getTargetDirectory();
               $full_path = $directory.'/'.$file_name;
-              $fileOpen = fopen($full_path,'r');
 
-              // Do what you want with the full path file...
-              // Why not read the content or parse it !!!
             }
-            else
-            {
-              // Oups, an error occured !!!
-            }
+            
+            
           }
 
           
