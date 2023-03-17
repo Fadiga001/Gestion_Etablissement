@@ -15,13 +15,21 @@ use App\Repository\ClasseRepository;
 use App\Services\paginationServices;
 use App\Repository\EtudiantRepository;
 use App\Repository\MatieresRepository;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use App\Form\searchEtudiantParAnneeType;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Serializer\Serializer;
 use App\Repository\AnneeAcademiqueRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Encoder\CsvEncoder;
+use Symfony\Component\Serializer\Encoder\JsonEncode;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Encoder\YamlEncoder;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -293,16 +301,54 @@ class EtudiantController extends AbstractController
         {
           $file = $form['upload_file']->getData();
 
+          
           if ($file) 
           {
+
+         
+            $spreadsheet = IOFactory::load($file);
+            $worksheet = $spreadsheet->getActiveSheet();
+
+            $data = [];
+            
+            foreach ($worksheet->getRowIterator() as $row) {
+                // Initialisation du tableau de données pour une ligne
+                $rowData = [];
+                // Boucle sur chaque cellule de la ligne
+                foreach ($row->getCellIterator() as $cell) {
+                    // Ajout de la valeur de la cellule au tableau de données
+                    $rowData[] = $cell->getValue();
+                }
+                // Ajout de la ligne au tableau de données
+                $data[] = $rowData;
+            }
+            
+
             $file_name = $file_uploader->upload($file);
             if (null !== $file_name) // for example
             {
               $directory = $file_uploader->getTargetDirectory();
               $full_path = $directory.'/'.$file_name;
+              $fileExtension = pathinfo($full_path, PATHINFO_EXTENSION);
+              
+              $normalisers = [new ObjectNormalizer()];
+              $encoders = [
+                new CsvEncoder(),
+                new XmlEncoder(),
+                new YamlEncoder(),
+                new JsonEncoder(),
+              ];
+
+              $seralisers = new Serializer($normalisers, $encoders);
+              $fileString = file_get_contents($full_path);
+
+              $data = $seralisers->decode($fileString, $fileExtension);
+
+              dd($data);
+
 
             }
-            
+
             
           }
 
