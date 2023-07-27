@@ -112,6 +112,25 @@ class NoterRepository extends ServiceEntityRepository
     }
 
 
+    public function NoteParMatiere($semestre,$denomination,$annee,$classe): array
+    {
+        return $this->createQueryBuilder('n')
+            ->select('n')
+            ->join('n.matiere', 'm')
+            ->andWhere('m.denomination = :denomination')
+            ->setParameter('denomination', $denomination)
+            ->andWhere('n.semestre = :semestre')
+            ->setParameter('semestre', $semestre)
+            ->andWhere('n.Annee = :Annee')
+            ->setParameter('Annee', $annee)
+            ->andWhere('n.Classes = :Classes')
+            ->setParameter('Classes', $classe)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+
     public function editNote($matricule, $matiere): ?Noter
     {
         return $this->createQueryBuilder('n')
@@ -125,7 +144,7 @@ class NoterRepository extends ServiceEntityRepository
     }
 
 
-    public function listeNoteParEtudiant($matricule, $matiere)
+    public function listeNoteParEtudiant($matricule, $matiere,$semestre)
     {
         return $this->createQueryBuilder('n')
             ->join('n.matiere', 'm')
@@ -134,6 +153,8 @@ class NoterRepository extends ServiceEntityRepository
             ->setParameter('matricule', $matricule)
             ->andWhere('m.denomination = :denomination')
             ->setParameter('denomination', $matiere)
+            ->andWhere('n.semestre = :semestre')
+            ->setParameter('semestre', $semestre)
             ->getQuery()
             ->getSingleResult()
         ;

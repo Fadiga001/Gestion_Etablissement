@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="fr">
+{% include 'home/head.html.twig' %}
+
+<style>
+    #mat{
+        border : none;
+    }
+</style>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+  <div class="wrapper">
+
+    {% include 'home/navbar.html.twig' %}
+
+    <div class="container">
+
+       {% include 'configuration/messageFlash.html.twig' %}
+
+
+    <div class="card" >
+        <div class="card-header">
+
+            <div class="row">
+
+                  <div class="col-md-2">
+                      <a href="{{path('details_classes', {'id': classe.id} )}}" class="h2">
+                          <i class="fa fa-arrow-circle-left" aria-hidden="true"></i>
+                      </a>
+                  </div>
+                  <div class="col-md-10 text-left">
+                      <h3 class="h3">
+                          <span>TIRAGE DE PV</span>
+                      </h3>
+                  </div> 
+    
+              </div> 
+              
+        </div>
+        <div class="card-body">
+
+            <div class="row">
+                    <div class="col-md-8 ">
+                        <h4 class="text-success">Veuillez selectionner le semestre d'abord !</h4>
+                    </div>
+                    <div class="col-md-4">
+                        {{form_start(form)}}
+                            <div class="form-row">
+                                <div class="form-group mr-3">
+                                    {{ form_widget(form.semestre) }}
+                                </div>
+                                <div class="form-group">
+                                    <button class="btn btn-primary" type="submit">Valider</button>
+                                </div>
+                            </div>
+                        {{form_end(form)}}
+                    </div>
+            </div>
+
+            {% if app.request.method =="POST" %}
+                <div class="container mb-3">
+                    <div class="jumbotron">
+                        <h3> CLASSE : {{classe}}<h3>
+                        <h4> 
+                            Semestre : {% for semestre in semestre %} {{ semestre }} {% endfor %}
+                        <h4>
+
+                        <div class="row text-center">
+                            {% for semestre in semestre %} 
+                                <a href="{{path('pvParClasse', {'id': classe.id, 'semestre': semestre})}}">
+                                    <h2 class="btn btn-warning">Tirer tous les PV</h2>
+                                </a>
+                            {%endfor%}
+                        </div>   
+                    </div>
+                </div>
+
+                
+
+                <table class="table table-hover mb-5">
+                      <thead class="thead-dark">
+                          <tr>
+                              <th scope="col">Dénomination</th>
+                              <th scope="col">Professeurs</th>
+                              <th scope="col">Type de matière</th>
+                       
+                              <th class="ms-5">Actions</th>
+          
+                          </tr>
+                      </thead>
+                      <tbody>
+
+                          {% for matiere in matiere %}
+
+                              <tr>
+                                  <th>{{ matiere.denomination | upper}}</th>
+                                  <td>{{ matiere.prof | upper}}</td>
+                                  <td>{{ matiere.TypeMatiere | upper}}</td>
+                                  <td>
+
+                                    {% for semestre in semestre %} 
+                                        <a href="{{path('pvDesNotes', {'id': classe.id, 'semestre': semestre, 'mat': matiere.denomination})}}" class="btn btn-primary">
+                                            Tirer le PV
+                                        </a>
+                                    {% endfor %}
+                                    
+                                  </td>
+                              </tr>
+                      
+                          {% endfor %}
+   
+                      </tbody>
+                  </table>
+
+                
+
+            {% endif %} 
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</body>
+</html>
+
+{% include 'home/footer.html.twig' %}
+
+
+
+
+

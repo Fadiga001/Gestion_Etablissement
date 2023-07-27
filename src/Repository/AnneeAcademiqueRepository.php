@@ -74,6 +74,7 @@ class AnneeAcademiqueRepository extends ServiceEntityRepository
                     ->getResult()
         ;
     }
+    
     public function Year($annee)
     {
         return $this->createQueryBuilder('a')

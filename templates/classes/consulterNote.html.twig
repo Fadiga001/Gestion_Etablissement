@@ -33,7 +33,7 @@
                           <span>NOTES DES ELEVES</span>
                       </h3>
                   </div> 
-    
+                
               </div> 
               
         </div>
@@ -77,8 +77,9 @@
                               <th scope="col">Moyenne de classe</th>
                               <th scope="col">Note de partiel</th>
                               <th scope="col">Moyenne Obtenue</th>
+                            {% if app.user.username == 'Administrateur' or app.user.username == 'Admin' or app.user.username == 'ROLE_EDITEUR' %}  
                               <th scope="col">Actions</th>
-          
+                            {% endif %}
                           </tr>
                       </thead>
                       <tbody>
@@ -140,15 +141,16 @@
                                             {{ moy }}
                                         {% endif %}
                                     </td>
-
+                                {% if app.user.username == 'Administrateur' or app.user.username == 'Admin' or app.user.username == 'ROLE_EDITEUR' %}
                                     <td>
-                                           
-                                        <a class="btn btn-primary" href="{{ path('edit_note',{'id': classe.id, 'idMat': matiere.id, 'matricule': etudiant.matricule})}}">
-                                            Modifier
-                                        </a>
-                                         
+                                            {% for semestre in semestre %}    
+                                                <a class="btn btn-primary" href="{{ path('edit_note',{'id': classe.id, 'idMat': matiere.id, 'matricule': etudiant.matricule, 'semestre': semestre})}}">
+                                                    Modifier
+                                                </a>
+                                            {% endfor %}
+                                       
                                     </td>
-                                 
+                                {% endif %} 
                               </tr>
                       
                           {% endfor %}  

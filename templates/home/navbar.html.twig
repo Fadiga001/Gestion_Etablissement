@@ -22,14 +22,11 @@
               <span class="brand-text text-black"> {{ app.user.username }} </span>
             </a>
             <div class="dropdown-menu  dropdown-menu-right">
-              <a href="#" class="dropdown-item">
-                <i class="fa fa-user-circle mr-2" aria-hidden="true"></i> Mon compte
-              </a>
-
-              <div class="dropdown-divider"></div>
-              <a href="#" class="dropdown-item">
-                <i class="fa fa-pencil-square-o mr-2" aria-hidden="true"></i> Modifier mon compte
-              </a>
+              {% if app.user.username == 'Admin' or app.user.username == 'Administrateur' %}
+                <a href="{{ path('edit_user', {'id': app.user.id})}}" class="dropdown-item">
+                  <i class="fa fa-pencil-square-o mr-2" aria-hidden="true"></i> Modifier mon compte
+                </a>
+              {% endif %}
 
               <div class="dropdown-divider"></div>
               <a href="{{ path('app_logout')}}" class="dropdown-item">
@@ -50,7 +47,7 @@
     <!-- Brand Logo -->
 
     <a href="index3.html" class="brand-link">
-      <img src="images/img/logoAgitel.jpg" alt="Logo" class="brand-image img-circle elevation-3" style="opacity: .8"> 
+      <img src="{{asset('images/img/logoAgitel.jpg')}}" alt="Logo" class="brand-image img-circle elevation-3" style="opacity: .8"> 
       <span class="brand-text font-weight-light"> AGITEL-FORMATION </span>
     </a>
 
@@ -171,7 +168,7 @@
              
             </ul>
           </li>
-
+        {% if app.user.username == 'Admin' or app.user.username == 'Administrateur' %}
            <li class="nav-item">
             <a href="#" class="nav-link">
               <i class="fa fa-print" aria-hidden="true"></i>
@@ -196,7 +193,7 @@
             </ul>
           </li>
 
-        {% if app.user.username == 'Admin' or app.user.username == 'Super Admin' %}
+        
           <li class="nav-item">
             <a href="#" class="nav-link">
               <i class="fa fa-gamepad" aria-hidden="true"></i>

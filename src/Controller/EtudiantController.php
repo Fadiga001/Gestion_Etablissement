@@ -184,6 +184,8 @@ class EtudiantController extends AbstractController
                 $an = $form->get('anneeScolaire')->getData();
                 $clas = $form->get('classe')->getData();
 
+                $newClasse = $classeRepo->findOneByDenomination($clas->getDenomination());
+
                 $newEtudiant->setMatricule($etudiants->getMatricule());
                 $newEtudiant->setNom($etudiants->getNom());
                 $newEtudiant->setPrenoms($etudiants->getPrenoms());
@@ -202,8 +204,8 @@ class EtudiantController extends AbstractController
                 $newEtudiant->setStatus($etudiants->getStatus());
                 $newEtudiant->setImageFile($etudiants->getImageFile());
                 $newEtudiant->setAnneeScolaire($an);
-                $newEtudiant->setClasse($clas);
-                $newEtudiant->setClasse($etudiants->getExamensPrepares());
+                $newEtudiant->setClasse($newClasse);
+                $newEtudiant->setExamensPrepares($etudiants->getExamensPrepares());
                 $etudiants->setReinscrire(true);
 
 
@@ -305,46 +307,38 @@ class EtudiantController extends AbstractController
           if ($file) 
           {
 
-         
-            $spreadsheet = IOFactory::load($file);
-            $worksheet = $spreadsheet->getActiveSheet();
-
-            $data = [];
-            
-            foreach ($worksheet->getRowIterator() as $row) {
-                // Initialisation du tableau de données pour une ligne
-                $rowData = [];
-                // Boucle sur chaque cellule de la ligne
-                foreach ($row->getCellIterator() as $cell) {
-                    // Ajout de la valeur de la cellule au tableau de données
-                    $rowData[] = $cell->getValue();
-                }
-                // Ajout de la ligne au tableau de données
-                $data[] = $rowData;
-            }
-            
-
+            // Définir le nom de fichier
+           
             $file_name = $file_uploader->upload($file);
             if (null !== $file_name) // for example
             {
-              $directory = $file_uploader->getTargetDirectory();
-              $full_path = $directory.'/'.$file_name;
-              $fileExtension = pathinfo($full_path, PATHINFO_EXTENSION);
+                $directory = $file_uploader->getTargetDirectory();
+                $full_path = $directory.'/'.$file_name;
+
+                // Charger le fichier Excel
+                $spreadsheet = IOFactory::load($full_path);
+
+                // Convertir le fichier Excel en CSV
+                $csvFile = pathinfo($full_path, PATHINFO_FILENAME) . '.csv';
+                $writer = IOFactory::createWriter($spreadsheet, 'Csv');
+                $writer->save($csvFile);
+
+                $fileExtension = pathinfo($csvFile, PATHINFO_EXTENSION);
               
-              $normalisers = [new ObjectNormalizer()];
-              $encoders = [
-                new CsvEncoder(),
-                new XmlEncoder(),
-                new YamlEncoder(),
-                new JsonEncoder(),
-              ];
+                $normalisers = [new ObjectNormalizer()];
+                $encoders = [
+                    new CsvEncoder(),
+                    new XmlEncoder(),
+                    new YamlEncoder(),
+                    new JsonEncoder(),
+                ];
 
-              $seralisers = new Serializer($normalisers, $encoders);
-              $fileString = file_get_contents($full_path);
+                $seralisers = new Serializer($normalisers, $encoders);
+                $fileString = file_get_contents($csvFile);
 
-              $data = $seralisers->decode($fileString, $fileExtension);
+                $data = $seralisers->decode($fileString, $fileExtension);
 
-              dd($data);
+                dd($data);
 
 
             }

@@ -46,10 +46,17 @@
                 
                 </div>
               </div>
-              <div class="row d-flex justify-content-center mb-2">
-                <a href="{{ path('listeClasseEtudiant', {'id': classe.id})}}">
-                  <h2 class="btn btn-primary">Tirer une liste de classe</h2>
-                </a>
+              <div class="row mb-2">
+                <div class="col-md-6 text-right">
+                  <a href="{{ path('listeClasseEtudiant', {'id': classe.id})}}">
+                    <h2 class="btn btn-primary">Tirer une liste de classe</h2>
+                  </a>
+                </div>
+                <div class="col-md-6">
+                  <a href="{{ path('tousLesPv', {'id': classe.id})}}">
+                    <h2 class="btn btn-warning">Tirer les PV de classe</h2>
+                  </a>
+                </div>
               </div>
             </div>
             <div class="row mb-5 d-flex justify-content-center">
@@ -151,10 +158,14 @@
                                   <th>{{ matiere.denomination | upper}}</th>
                                   <td>{{ matiere.prof | upper}}</td>
                                   <td>{{ matiere.TypeMatiere | upper}}</td>
+
                                   <td>
-                                    <a href="{{ path('donner_note', {'id': classe.id, 'idMat': matiere.id})}}" class="btn btn-warning">
-                                      Evaluer
-                                    </a>
+                                    {% if app.user.username == 'Administrateur' or app.user.username == 'Admin' or app.user.username == 'ROLE_EDITEUR' %}
+                                        <a href="{{ path('donner_note', {'id': classe.id, 'idMat': matiere.id})}}" class="btn btn-warning">
+                                          Evaluer
+                                        </a>
+                                    {% endif %}
+                                    
                                     <a href="{{ path('consulter_note', {'id': classe.id, 'idMat': matiere.id})}}" class="btn btn-primary">
                                       Consulter
                                     </a>

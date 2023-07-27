@@ -192,6 +192,188 @@ class ClassesController extends AbstractController
 
 
 
+    //Pv de toutes les classes 
+    #[Route('/classes/voir-les-differentes-classes/details-classe/{id}/tousLesPv', name: 'tousLesPv')]
+    #[IsGranted('ROLE_USER')]
+    public function TousLesPv(EtudiantRepository $etudiantRepo, MatieresRepository $matRepo, NoterRepository $noteRepo, Classe $classe, $id, ClasseRepository $classeRepo,AnneeAcademiqueRepository $anneeRepo, Request $request): Response
+    {
+
+        $anneeActive= $anneeRepo->findOneByActive(true);
+        $etudiant = $etudiantRepo->listeEtudiantDuneClasseEtAnnee($id);
+        $classe = $classeRepo->findOneById($id);
+        $matiere = $matRepo->listeMatieresParClasse($id);
+
+
+        $form = $this->createForm(semestreType::class);
+        $form->handleRequest($request);
+
+        $listenote = [];
+        $semestre = [];
+        if($form->isSubmitted() && $form->isValid()){
+            $semestre = $form->getData();
+            $listenote = $noteRepo->listeNote($semestre, $anneeActive->getAnneeScolaire(),$classe->getDenomination());
+         
+        }
+
+
+        return $this->render('classes/tousLesPv.html.twig', [
+            'etudiant' => $etudiant,
+            'classe' => $classe,
+            'matiere'=> $matiere,
+            'id'=>$id,
+            'listenote' => $listenote,
+            'form' => $form->createView(),
+            'semestre' => $semestre
+
+        ]);
+    }
+
+
+        //Générer les PV par classe
+        #[Route('/classes/voir-les-differentes-classes/details-classe/{id}/tousLesPv/{semestre}/{mat}', name: 'pvDesNotes')]
+        #[IsGranted('ROLE_USER')]
+        public function notesDeLaClasse(EtudiantRepository $etudiantRepo, Classe $classe, $id, $semestre, $mat, MatieresRepository $matRepo, ClasseRepository $classeRepo, AnneeAcademiqueRepository $anneeRepo, NoterRepository $noteRepo, EntityManagerInterface $manager): Response
+        {
+    
+            $etudiant = $etudiantRepo->listeEtudiantDuneClasseEtAnnee($id);
+            $classe = $classeRepo->findOneById($id);
+            $anneeActive = $anneeRepo->findOneByActive(true);
+            $listeNote = $noteRepo->NoteParMatiere($semestre, $mat, $anneeActive->getAnneeScolaire(), $classe->getDenomination());
+   
+    
+            arsort($etudiant);
+    
+            $new_etudiant = array();
+            $index_new_values = 1;
+            foreach($etudiant as $cle => $valeur) {
+                $new_etudiant[$index_new_values] = $etudiant[$cle];
+                $index_new_values++;
+            }
+    
+    
+    
+            //On definie les options du PDF
+            $pdfOptions = new Options();
+    
+            //On definie la police par defaut
+            $pdfOptions->set('defaultFont', 'Arial');
+            $pdfOptions->setIsRemoteEnabled(true);
+    
+            //On instancie le DOMPDF
+            $dompdf = new Dompdf();
+            $context = stream_context_create([
+                'ssl'=> [
+                    'verify_peer'=>FALSE,
+                    'verify_peer_name'=>FALSE,
+                    'allow_self_signed'=>True
+                ]
+            ]);
+    
+            $dompdf->setHttpContext($context);
+    
+            //On génère le html
+            $html = $this->renderView('classes/pvClasse.html.twig', [
+    
+                'etudiant'=>$new_etudiant,
+                'classe'=>$classe,
+                'anneeActive'=>$anneeActive,
+                'matiere'=>$mat,
+                'listeNote'=>$listeNote,
+                'semestre'=>$semestre
+                
+            ]);
+    
+            $dompdf->loadHtml($html);
+            $dompdf->setPaper('A4', 'portrait');
+            $dompdf->render();
+    
+            //On génère un nom de fichier
+            $fichier = 'PV-Classe-'.$classe->getCodeClasse().$anneeActive.'.pdf';
+    
+            //On envoie le pdf au navigateur
+            $dompdf->stream($fichier, [
+                'Attachment' =>true
+            ]);
+    
+            
+            return new Response();
+        }
+
+
+
+        //Générer tous les PV par classe
+        #[Route('/classes/voir-les-differentes-classes/details-classe/{id}/tousLesPv/{semestre}', name: 'pvParClasse')]
+        #[IsGranted('ROLE_USER')]
+        public function pv(EtudiantRepository $etudiantRepo, Classe $classe, $id, $semestre, MatieresRepository $matRepo, ClasseRepository $classeRepo, AnneeAcademiqueRepository $anneeRepo, NoterRepository $noteRepo, EntityManagerInterface $manager): Response
+        {
+    
+            $etudiant = $etudiantRepo->listeEtudiantDuneClasseEtAnnee($id);
+            $classe = $classeRepo->findOneById($id);
+            $anneeActive = $anneeRepo->findOneByActive(true);
+            $listeNote = $noteRepo->listeNote($semestre, $anneeActive->getAnneeScolaire(), $classe->getDenomination());
+            $matiere = $matRepo->listeMatieresParClasse($id);
+   
+    
+            arsort($etudiant);
+    
+            $new_etudiant = array();
+            $index_new_values = 1;
+            foreach($etudiant as $cle => $valeur) {
+                $new_etudiant[$index_new_values] = $etudiant[$cle];
+                $index_new_values++;
+            }
+    
+    
+    
+            //On definie les options du PDF
+            $pdfOptions = new Options();
+    
+            //On definie la police par defaut
+            $pdfOptions->set('defaultFont', 'Arial');
+            $pdfOptions->setIsRemoteEnabled(true);
+    
+            //On instancie le DOMPDF
+            $dompdf = new Dompdf();
+            $context = stream_context_create([
+                'ssl'=> [
+                    'verify_peer'=>FALSE,
+                    'verify_peer_name'=>FALSE,
+                    'allow_self_signed'=>True
+                ]
+            ]);
+    
+            $dompdf->setHttpContext($context);
+    
+            //On génère le html
+            $html = $this->renderView('classes/pv.html.twig', [
+    
+                'etudiant'=>$new_etudiant,
+                'classe'=>$classe,
+                'anneeActive'=>$anneeActive,
+                'matiere'=>$matiere,
+                'listeNote'=>$listeNote,
+                'semestre'=>$semestre
+                
+            ]);
+    
+            $dompdf->loadHtml($html);
+            $dompdf->setPaper('A4', 'portrait');
+            $dompdf->render();
+    
+            //On génère un nom de fichier
+            $fichier = 'Tous-les-PV-'.$classe->getCodeClasse().$anneeActive.'.pdf';
+    
+            //On envoie le pdf au navigateur
+            $dompdf->stream($fichier, [
+                'Attachment' =>true
+            ]);
+    
+            
+            return new Response();
+        }
+
+
+
     #[Route('/classes/voir-les-differentes-classes/details-classe/{id}/{idMat}', name: 'consulter_note')]
     #[IsGranted('ROLE_USER')]
     public function Consulter(EtudiantRepository $etudiantRepo, MatieresRepository $matRepo, NoterRepository $noteRepo, Classe $classe, $id, $idMat, ClasseRepository $classeRepo,AnneeAcademiqueRepository $anneeRepo, Request $request): Response
@@ -230,18 +412,18 @@ class ClassesController extends AbstractController
 
 
 
-    #[Route('/classes/voir-les-differentes-classes/details-classe/{id}/{idMat}/{matricule}/edit', name: 'edit_note')]
+    #[Route('/classes/voir-les-differentes-classes/details-classe/{id}/{idMat}/{matricule}/{semestre}/edit', name: 'edit_note')]
     #[ParamConverter('noter', options: ['mapping' => ['matricule' => 'etudiants']])]
     #[IsGranted('ROLE_USER')]
-    public function edit(EtudiantRepository $etudiantRepo, MatieresRepository $matRepo, NoterRepository $noteRepo, Classe $classe, $id, $idMat, $matricule, ClasseRepository $classeRepo, Request $request, EntityManagerInterface $manager): Response
+    public function edit(EtudiantRepository $etudiantRepo, MatieresRepository $matRepo, NoterRepository $noteRepo, Classe $classe, $id, $idMat, $matricule, $semestre, ClasseRepository $classeRepo, Request $request, EntityManagerInterface $manager): Response
     {
 
         $etudiant = $etudiantRepo->findOneByMatricule($matricule);
         $classe = $classeRepo->findOneById($id);
         $matiere = $matRepo->findOneById($idMat);
-        $note = $noteRepo->listeNoteParEtudiant($matricule,$matiere->getDenomination());
+        $note = $noteRepo->listeNoteParEtudiant($matricule,$matiere->getDenomination(), $semestre);
         $mat = $noteRepo->findOneByMatricules($matricule);
-
+     
      
 
 

@@ -23,7 +23,7 @@ class UsersController extends AbstractController
     {
         
        
-        $users = $userRepo->findAll();
+        $users = $userRepo->tousLesUsers('SUPER ADMIN');
         return $this->render('users/listeUsers.html.twig', [
             'user' => $users,
         ]);

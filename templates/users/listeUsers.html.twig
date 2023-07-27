@@ -19,7 +19,7 @@
                          GESTIONS DES UTILISATEURS
                     </h3>
                 </div>
-                {% if app.user.username == 'Super Admin' or app.user.username == 'Admin' %}
+                {% if app.user.username == 'Administrateur' or app.user.username == 'Admin' %}
                     <div class="col-md-5">
                         <a href="{{ path('app_register')}}" class="btn btn-warning">Enregistrer un utilisateur</a>
                     </div>
@@ -49,26 +49,26 @@
                                 <tbody>
                                 {% for user in user %}
 
-                                    {% if user.username != 'Super Admin' %}
+                                    {% if user.username != 'Administrateur'%}
                        
-                                    <tr>
-                                    <th>{{ user.typeUtilisateur | upper}}</th>
-                                    <td>{{ user.username | upper}}</td>
-                                    <td>{{ user.nom | upper}}</td>
-                                    <td>{{ user.prenoms | upper}} </td>
-                                    <td>{{ user.email | upper}}</td>
-                                    <td>{{ user.telephone | upper}}</td>
+                                        <tr>
+                                            <th>{{ user.typeUtilisateur | upper}}</th>
+                                            <td>{{ user.username | upper}}</td>
+                                            <td>{{ user.nom | upper}}</td>
+                                            <td>{{ user.prenoms | upper}} </td>
+                                            <td>{{ user.email | upper}}</td>
+                                            <td>{{ user.telephone | upper}}</td>
                                     
-                                    <td><img src="{{ asset('/uploads/'~ user.imageFile) }}" class="image-circle" height="35" width="35"></td>
+                                            <td><img src="{{ asset('/uploads/'~ user.imageFile) }}" class="image-circle" height="35" width="35"></td>
                                 
-                                    <td class="ms-4">
+                                            <td class="ms-4">
                                     
-                                        <a class="btn btn-primary" href="{{ path('edit_user', {'id': user.id})}}">
-                                            Modifier
-                                        </a>
+                                                <a class="btn btn-primary" href="{{ path('edit_user', {'id': user.id})}}">
+                                                    Modifier
+                                                </a>
 
-                                    </td>
-                                </tr>
+                                            </td>
+                                        </tr>
                             {% endif %}
                         {% endfor %}
 

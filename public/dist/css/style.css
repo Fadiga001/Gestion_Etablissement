@@ -1,8 +1,15 @@
+body{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+}
+
 .main-content{
-	width: 50%;
+	width: 1000px;
 	border-radius: 20px;
 	box-shadow: 0 5px 5px rgba(0,0,0,.4);
-	margin: 5em auto;
+	margin: auto;
 	display: flex;
 	
 }
@@ -85,13 +92,14 @@ form{
 }
 .bouton{
 	transition: all .5s ease;
-	border-radius: 30px;
+	border-radius: 7px;
 	color:#008080;
-	font-weight: 600;
+	font-weight: bold;
 	background-color: #fff;
-	border: 1px solid #008080;
+	border: 3px solid #008080;
 	margin-top: 1.5em;
 	margin-bottom: 1em;
+	padding: 10px;
 	
 	
 }
