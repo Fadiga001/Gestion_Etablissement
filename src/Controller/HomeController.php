@@ -28,7 +28,7 @@ class HomeController extends AbstractController
         $lengthEtudiant = $etudiantRepo->listeEtudiantDuneAnnee();
 
 
-        $lengthUser = $userRepo->findAll();
+        $lengthUser = $userRepo->tousLesUsers('SUPER ADMIN');
         $lengthClasse = $classeRepo->findAll();
         $lengthProfs = $professeursRepos->findAll();
         $allImage = $galerieRepository->findAllImages();
