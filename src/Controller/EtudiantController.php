@@ -213,7 +213,7 @@ class EtudiantController extends AbstractController
                 $manager->flush();
 
 
-                $this->addFlash('success', "L'étudiant a été réinscrire avec succès");
+                $this->addFlash('success', "L'étudiant a été réinscrit avec succès");
                 return $this->redirectToRoute('classe_reinscrite');
 
             }

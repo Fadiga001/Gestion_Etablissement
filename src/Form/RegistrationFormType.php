@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Role;
 use App\Entity\User;
+use App\Repository\RoleRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -42,14 +43,20 @@ class RegistrationFormType extends AbstractType
             ->add('userRoles', EntityType::class, [
                 'label'=>'Roles',
                 'class'=> Role::class,
+
+                'query_builder' => function (RoleRepository $er) {
+                    return $er->createQueryBuilder('r')
+                        ->where('r.title != :val')
+                        ->setParameter('val', 'SUPER ADMIN')
+                        ;
+                },
+
                 'choice_label'=>'title',
                 'expanded'=> true,
                 'multiple'=>true,
-                'attr'=>[
-                    'class'=>'form-select',
-                    
-                ]
+                
             ])
+
             ->add('plainPassword', PasswordType::class, [
                 // instead of being set onto the object directly,
                 // this is read and encoded in the controller

@@ -51,10 +51,7 @@ class UserType extends AbstractType
                 'choice_label'=>'title',
                 'expanded'=> true,
                 'multiple'=>true,
-                'attr'=>[
-                    'class'=>'form-select',
-                    
-                ]
+                
             ])
 
             ->add('photo', FileType::class, [
